@@ -1,20 +1,26 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
 
 :root {
     --background: #050c14;
     --foreground: #ffffff;
+}
 
+.light {
+    --background: #050c14;
+    --foreground: #ffffff;
 }
 
 @theme inline {
     --color-foreground: var(--foreground);
     --color-background: var(--background);
     --breakpoint-xs: 480px;
+    --animate-springify: springify 3.5s;
+    --animate-opacify: opacify 1s ease-in;
     --animate-rotate-paa: rotatePaa 5s linear infinite;
     --animate-slide-in-up: slideInUp 0.5s ease-out forwards;
-    --animate-opacify: opacify 1s ease-in;
-    --animate-springify: springify 3.5s;
+    --animate-slide-left-to-right: slideLeftToRight 10s linear infinite;
+    --animate-slide-right-to-left: slideRightToLeft 11s linear infinite;
 
     @keyframes rotatePaa {
         0% {
@@ -70,30 +76,54 @@
             transform: translateY(445%);
         }
     }
+
+    @keyframes slideLeftToRight {
+        0% {
+            transform: translateX(0);
+        }
+        50% {
+            transform: translateX(8%);
+        }
+        100% {
+            transform: translateX(0%);
+        }
+    }
+
+    @keyframes slideRightToLeft {
+        0% {
+            transform: translateX(0);
+        }
+        50% {
+            transform: translateX(-8%);
+        }
+        100% {
+            transform: translateX(0%);
+        }
+    }
 }
 
 .xlarge-text {
-    @apply xs:text-[44.5px] text-[32px] leading-[1.1] sm:text-[60px] lg:text-[88px] xl:text-[128px];
+    @apply xs:text-[44px] text-[32px] leading-[1.1] sm:text-[56px] md:text-[68px] lg:text-[80px] xl:text-[92px] 2xl:text-[100px];
 }
 
 .large-text {
-    @apply text-[36px] leading-[1.2] md:text-[52px] xl:text-[84px];
+    @apply xs:text-[36px] text-[28px] leading-[1.2] sm:text-[44px] md:text-[52px] lg:text-[60px] xl:text-[72px] 2xl:text-[84px];
 }
 
 .md-text {
-    @apply xl:text-[60px] text-[29px] md:text-[44px];
+    @apply xs:text-[30px] text-[24px] sm:text-[36px] md:text-[42px] lg:text-[48px] xl:text-[54px] 2xl:text-[60px];
 }
 
 .base-text {
-    @apply text-[14px] md:text-[21px] xl:text-[32px];
+    @apply xs:text-[18px] text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[30px] 2xl:text-[32px];
 }
 
 .sm-text {
-    @apply text-[10px] md:text-[15px] xl:text-[20px];
+    @apply xs:text-[14px] text-[12px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[24px];
 }
 
 .xs-text {
-    @apply text-[8px] sm:text-[16px];
+    @apply xs:text-[11px] text-[10px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px];
 }
 
 .large-pad {
@@ -115,7 +145,6 @@
 .easy {
     @apply delay-150 duration-300 ease-in-out;
 }
-
 
 body {
     background: var(--background);
@@ -145,6 +174,24 @@ body {
         #ce07d5,
         #03b2d1,
         #a09612
+    );
+}
+
+.blury {
+    background: radial-gradient(
+        50% 50% at 50% 50%,
+        hsla(210, 100%, 85%, 0.06) 0,
+        hsla(210, 100%, 55%, 0.02) 80%,
+        transparent 100%
+    );
+}
+
+.blury-01 {
+    background: radial-gradient(
+        68.54% 68.72% at 55.02% 51.46%,
+        hsla(210, 100%, 85%, 0.08) 0,
+        hsla(206 89.9% 12.1% / 0.08) 50%,
+        hsla(210, 100%, 45%, 0) 80%
     );
 }
 
