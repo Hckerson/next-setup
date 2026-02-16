@@ -40,13 +40,13 @@ export default function Button({
                 isLoading ? (
                     <Loader2 className="size-6 animate-spin" />
                 ) : (
-                    <p
+                    <span
                         className={clsx(
                             "xs:text-base absolute inset-0 flex items-center justify-center text-sm transition-colors duration-150 ease-in",
                         )}
                     >
                         {children}
-                    </p>
+                    </span>
                 )
             ) : (
                 <div
@@ -60,9 +60,9 @@ export default function Button({
                             <Loader2 className="relative flex size-6 animate-spin items-center justify-center" />
                         </span>
                     )}
-                    <p className="xs:text-base flex h-full w-full items-center justify-center text-sm">
+                    <span className="xs:text-base flex h-full w-full items-center justify-center text-sm">
                         {children}
-                    </p>
+                    </span>
                 </div>
             )}
         </button>
