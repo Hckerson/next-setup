@@ -126,12 +126,20 @@
     @apply xs:text-[11px] text-[10px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] 2xl:text-[16px];
 }
 
+.xlarge-pad {
+    @apply px-10 sm:px-16 lg:px-24 xl:px-32;
+}
+
 .large-pad {
     @apply px-6 sm:px-10 lg:px-14 xl:px-20;
 }
 
 .md-pad {
     @apply px-4 md:px-8 xl:px-12;
+}
+
+.xlarge-pady {
+    @apply py-12 sm:py-20 xl:py-28;
 }
 
 .large-pady {
