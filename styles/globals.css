@@ -4,121 +4,30 @@
 :root {
     --background: #050c14;
     --foreground: #ffffff;
-    --text-yellow: #f6e820;
-    --text-brown-color: #e9721d;
-    --text-purple-color: #ac00dc;
-    --text-pink: #eb1b7580;
-    --text-gray-color: #d6d6d6;
-    --background-cyan: #0098a9;
-    --background-purple: #9b01a980;
-    --background-clay: #96573c;
-    --background-mauve: #f291c7;
-    --background-brown: #f3b02c;
-    --background-orange: #e9721d80;
-    --background-sky: #00cbe2;
     --background-red: #a90103;
-    --background-blue: #295594;
-    --background-ash: #ffffff1a;
-    --background-violet: #6973e7;
-    --background-amber: #f84812;
-    --background-green: #0f632880;
-    --background-dark-orange: #ab4f0e;
-    --background-dark-red: #7c0103;
-    --background-dark-violet: #6973e71a;
-    --background-dark-brown: #743215;
-    --background-dark-yellow: #a09612;
     --background-dark-cyan: #017885;
-    --background-dark-purple: #5f0267;
-    --background-dark-amber: #c63a0e;
-    --background-dark-green: #014b17;
     --background-shade-green: #06260f;
-    --background-shade-red: #400001;
-    --background-shade-purple: #3b0040;
-    --background-shade-brown: #5f4a1f;
-    --background-shade-cyan: #005862;
-    --background-shade-orange: #592b0b;
 }
 
 @theme inline {
+    --breakpoint-xs: 480px;
+    --color-red: var(--background-red);
+    --font-mono: var(--font-geist-mono);
+    --font-sans: var(--font-geist-sans);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
-    --color-red: var(--background-red);
-    --color-amber: var(--background-amber);
-    --color-orange: var(--background-orange);
-    --color-mauve: var(--background-mauve);
-    --color-yellow: var(--text-yellow);
-    --color-brown: var(--background-brown);
-    --color-clay: var(--background-clay);
-    --color-sky: var(--background-sky);
-    --color-green: var(--background-green);
-    --color-purple: var(--background-purple);
-    --color-ash: var(--background-ash);
-    --color-cyan: var(--background-cyan);
-    --color-blue: var(--background-blue);
-    --color-violet: var(--background-violet);
-    --color-pink: var(--text-pink);
-    --color-dark-cyan: var(--background-dark-cyan);
-    --color-dark-purple: var(--background-dark-purple);
-    --color-dark-orange: var(--background-dark-orange);
-    --color-dark-amber: var(--background-dark-amber);
-    --color-dark-violet: var(--background-dark-violet);
-    --color-dark-yellow: var(--background-dark-yellow);
-    --color-dark-brown: var(--background-dark-brown);
-    --color-dark-red: var(--background-dark-red);
-    --color-dark-purple: var(--background-dark-purple);
-    --color-dark-green: var(--background-dark-green);
-    --color-shade-green: var(--background-shade-green);
-    --color-shade-red: var(--background-shade-red);
-    --color-shade-purple: var(--background-shade-purple);
-    --color-shade-cyan: var(--background-shade-cyan);
-    --color-shade-orange: var(--background-shade-orange);
-    --color-gray: var(--text-gray-color);
-    --font-sans: var(--font-geist-sans);
-    --color-frame-background: var(--background-orange);
-    --font-mono: var(--font-geist-mono);
-    --breakpoint-xs: 480px;
-    --animate-rotate-infinitely: rotatePaa 5s linear infinite;
-    --animate-slide-in-up: slideInUp 0.5s ease-out forwards;
-    --animate-opacify: opacify 1s ease-in;
     --animate-springify: springify 3.5s;
-    --animate-caret-blink: caret-blink 1.2s ease-out infinite;
+    --animate-opacify: opacify 1s ease-in;
+    --color-dark-cyan: var(--background-dark-cyan);
+    --color-shade-green: var(--background-shade-green);
+    --animate-infinite-rotate: infinite-rotate 5s linear infinite;
 
-    @keyframes rotatePaa {
+    @keyframes infinite-rotate {
         0% {
             transform: rotate(0deg);
         }
         100% {
             transform: rotate(360deg);
-        }
-    }
-
-    @keyframes caret-blink {
-        0%,
-        70%,
-        100% {
-            opacity: 1;
-        }
-        20%,
-        50% {
-            opacity: 0;
-        }
-    }
-
-    @keyframes slideInUp {
-        0% {
-            border-radius: 50% 50% 0% 0%;
-        }
-        60% {
-            transform: translateY(-10px);
-            border-radius: 10% 10% 0% 0%;
-        }
-        90% {
-            transform: translateY(1px);
-            border-radius: 15% 15% 0% 0%;
-        }
-        100% {
-            transform: translateY(0);
-            border-radius: 0;
         }
     }
 
@@ -227,10 +136,6 @@
     @apply transition-all duration-300 ease-in-out;
 }
 
-.shadoweytext {
-    text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-    word-wrap: break-word;
-}
 
 body {
     background: var(--background);
@@ -267,56 +172,6 @@ body {
     );
 }
 
-.transparent-rainbow-box {
-    background: color-mix(in oklab, #000 70%, transparent);
-    background-clip: padding-box;
-}
-.transparent-rainbow-box::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    margin: -2.5px;
-    border-radius: inherit;
-    background: linear-gradient(
-        300deg,
-        #2a5595,
-        #bb00c2,
-        #00c241,
-        #fa9663,
-        #f6e820,
-        #e9721d,
-        #ce07d5,
-        #03b2d1,
-        #a09612
-    );
-}
-
-.sm-rainbow-box {
-    background: #000;
-    background-clip: padding-box;
-}
-.sm-rainbow-box::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    margin: -1px;
-    border-radius: inherit;
-    background: linear-gradient(
-        45deg,
-        #2a5595,
-        #bb00c2,
-        #00c241,
-        #fa9663,
-        #f6e820,
-        #e9721d,
-        #023f42,
-        #ce07d5,
-        #03b2d1,
-        #a09612
-    );
-}
 
 .gradient-link {
     background: linear-gradient(to right, #0f1729, #0c1426);
@@ -340,81 +195,6 @@ body {
     );
 }
 
-.gradient-box {
-    background: linear-gradient(to right, #0f1729, #0c1426);
-    background-clip: padding-box;
-}
-
-.gradient-box::before {
-    position: absolute;
-    inset: 0;
-    margin: -1px;
-    z-index: -1;
-    content: "";
-    border-radius: inherit;
-    background: linear-gradient(225deg, #045fe1ff, #045fe100);
-}
-
-.lime-gradient {
-    background-color: #1b2412;
-    background-clip: padding-box;
-}
-
-.lime-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top, #1b2412, #5b6d0c);
-}
-
-.nav-gradient {
-    background-color: #050c14;
-    background-clip: padding-box;
-}
-
-.nav-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1px;
-    border-radius: inherit;
-    background: linear-gradient(to top, #050c14 50%, #ffffff);
-}
-
-.mauve-gradient {
-    background-color: #1d1924;
-    background-clip: padding-box;
-}
-
-.mauve-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #1d1924, #6c445c);
-}
-
-.clay-gradient {
-    background-color: #141519;
-    background-clip: padding-box;
-}
-
-.clay-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #141519, #302220);
-}
-
 .blue-gradient {
     background-color: #051428;
     background-clip: padding-box;
@@ -430,177 +210,6 @@ body {
     background: linear-gradient(to top, #051428, #053373);
 }
 
-.blue-full {
-    background-color: #05234d;
-    background-clip: padding-box;
-}
-
-.blue-full::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top, #05234d, #044197);
-}
-
-.cyan-gradient {
-    background-color: #051d27;
-    background-clip: padding-box;
-}
-
-.cyan-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #051d27, #037085);
-}
-
-.brown-gradient {
-    background-color: #1d1d16;
-    background-clip: padding-box;
-}
-
-.brown-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #1d1d16, #806120);
-}
-
-.green-gradient {
-    background-color: #041616;
-    background-clip: padding-box;
-}
-
-.green-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #041616, #00ff3c);
-}
-
-.orange-gradient {
-    background-color: #1c1615;
-    background-clip: padding-box;
-}
-
-.orange-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #1c1615, #7c490b);
-}
-
-.threed {
-    box-shadow:
-        -3px 3px 8px 0 rgba(255, 255, 255, 0.45) inset,
-        8px -8px 16px 0 rgba(0, 0, 0, 0.5) inset;
-}
-
-.pink-gradient {
-    background-color: #1e0b23;
-    background-clip: padding-box;
-}
-
-.pink-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top, #1e0b23, #67074d);
-}
-
-.yellow-gradient {
-    background-color: #1d1f1b;
-    background-clip: padding-box;
-}
-
-.yellow-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #1d1f1b, #5c5913);
-}
-
-.violet-gradient {
-    background-color: #0f1629;
-    background-clip: padding-box;
-}
-
-.violet-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #0f1629, #522696);
-}
-
-.purple-gradient {
-    background-color: #190b27;
-    background-clip: padding-box;
-}
-
-.purple-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to top left, #190b27, #670778);
-}
-
-.pink-yellow-gradient {
-    background-color: #1e0b23;
-    background-clip: padding-box;
-}
-
-.pink-yellow-gradient::before {
-    position: absolute;
-    z-index: -1;
-    content: "";
-    inset: 0;
-    margin: -1.5px;
-    border-radius: inherit;
-    background: linear-gradient(to right, #cd00d4, #f7ca57, #eb1b75);
-}
-
-.event-box-gradient {
-    position: relative;
-    background-clip: padding-box;
-    background-color: var(--background);
-}
-
-.event-box-gradient::before {
-    position: absolute;
-    z-index: -1;
-    margin: -3px;
-    content: "";
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(45deg);
-}
 
 .dashed-line {
     width: 100%;
@@ -624,69 +233,13 @@ body {
     );
 }
 
-.glow:hover {
-    box-shadow: 0 0 35px var(--color-yellow);
-}
 
-/* Full Calendar overrides */
-.full-calendar .react-datepicker {
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column;
-    border: none;
-    background: transparent;
-}
-.full-calendar .react-datepicker__month-container {
-    width: 100% !important;
-    height: 100% !important;
-    display: flex;
-    flex-direction: column;
-}
-
-.full-calendar .react-datepicker__month {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-}
-
-.full-calendar .react-datepicker__week,
-.full-calendar .react-datepicker__day-names {
-    display: flex;
-    color: white !important;
-    font-size: 18px;
-    justify-content: space-around;
-}
-
-.full-calendar .react-datepicker__day-name {
-    color: white !important;
-    font-size: 18px;
-}
-
-/* .full-calendar .react-datepicker__day {
-    background-color: transparent !important;
-} */
-
-/* .full-calendar .react-datepicker__day:hover {
-    background-color: #216ba580 !important;
-} */
-
-.full-calendar .react-datepicker__day,
-.full-calendar .react-datepicker__time-name {
-    display: flex !important;
-    align-items: center;
-    color: white !important;
-    justify-content: center;
-    aspect-ratio: 1 / 1;
-    background-color: transparent;
-    flex-grow: 1;
-    max-width: 10%;
-}
-
-.full-calendar .react-datepicker__header,
-.full-calendar .react-datepicker__navigation {
-    background: transparent;
-    border-bottom: none;
-    display: none !important;
+/* Fix browser autofill changing input background to white */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: white !important;
 }
