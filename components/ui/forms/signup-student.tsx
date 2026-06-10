@@ -1,21 +1,27 @@
 "use client";
 import clsx from "clsx";
-import { useState } from "react";
 import Back from "../general/back";
 import Logo from "../../common/logo";
 import Button from "../../common/button";
 import FormInput from "../general/form-input";
 import { poppins } from "@/public/fonts/font";
-import { fast, slow } from "@/lib/data/mapped-data";
+import { fast, slow } from "@/lib/motion";
 import { useRegisterStudent } from "@/hooks/use-auth";
+import { useZodForm } from "@/hooks/use-zod-form";
 import FormDatePicker from "../general/form-date-picker";
 import { signupStudentSchema } from "@/lib/validations/auth";
 import MotionWrapper from "@/components/wrappers/motion-wrapper";
-
+import { getApiErrorMessage } from "@/lib/utils/get-api-error-message";
 
 export default function SignupForm() {
     const { mutate: register, isPending, error } = useRegisterStudent();
-    const [formData, setFormData] = useState({
+    const {
+        formData,
+        formErrors,
+        setField: handleCustomChange,
+        handleChange,
+        handleSubmit,
+    } = useZodForm(signupStudentSchema, {
         dob: "",
         city: "",
         email: "",
@@ -27,46 +33,15 @@ export default function SignupForm() {
         confirmPassword: "",
     });
 
-    const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        handleCustomChange(name, value);
-    };
-
-    const handleCustomChange = (name: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        if (formErrors[name]) {
-            setFormErrors((prev) => {
-                const newErrors = { ...prev };
-                delete newErrors[name];
-                return newErrors;
-            });
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setFormErrors({});
-
-        const result = signupStudentSchema.safeParse(formData);
-        if (!result.success) {
-            const errors: { [key: string]: string } = {};
-            result.error.issues.forEach((err) => {
-                if (err.path[0]) {
-                    errors[err.path[0] as string] = err.message;
-                }
-            });
-            setFormErrors(errors);
-            return;
-        }
-
-        const { confirmPassword, ...rest } = result.data;
+    const onValid = ({
+        confirmPassword,
+        ...rest
+    }: ReturnType<typeof signupStudentSchema.parse>) => {
         register({ ...rest, role: "STUDENT" });
     };
     return (
         <form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onValid)}
             className="flex size-full flex-col justify-center overflow-y-auto scroll-smooth px-1 [scrollbar-width:none]"
         >
             <div className="top-0 z-10 w-full">
@@ -246,8 +221,10 @@ export default function SignupForm() {
                             poppins.className,
                         )}
                     >
-                        {(error as any)?.response?.data?.message ||
-                            "Registration failed. Please try again."}
+                        {getApiErrorMessage(
+                            error,
+                            "Registration failed. Please try again.",
+                        )}
                     </p>
                 )}
                 <div className="w-full">
@@ -257,7 +234,7 @@ export default function SignupForm() {
                         delay={fast * 9}
                     >
                         <Button
-                            classname={clsx(
+                            className={clsx(
                                 "w-full bg-blue uppercase font-bold sm-text sm:rounded-lg rounded-md disabled:opacity-60",
                                 poppins.className,
                             )}

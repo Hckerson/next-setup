@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
     const { pathname } = request.nextUrl;
     // Read the token from a cookie set on login (Zustand localStorage is not accessible in middleware)
-    const token = request.cookies.get("playwork-token")?.value;
+    const token = request.cookies.get("app-token")?.value;
 
     const isProtected = protectedRoutes.some((route) =>
         pathname.startsWith(route),

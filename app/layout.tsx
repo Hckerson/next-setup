@@ -1,4 +1,3 @@
-import "swiper/css";
 import "../styles/globals.css";
 import { antonSc } from "@/public/fonts/font";
 import type { Metadata, Viewport } from "next";
@@ -14,26 +13,17 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://playwork.vercel.app"),
+    metadataBase: new URL("https://{{APP_URL}}"),
     title: {
-        template: "%s | Playwork",
-        default: "Playwork | Empowering Africa's Next Generation",
+        template: "%s | {{APP_NAME}}",
+        default: "{{APP_NAME}} | {{APP_TAGLINE}}",
     },
-    description:
-        "Discover, compete, and engage with Playwork. The ultimate platform for mentoring, competitions, and discovering talent. Showcasing at GITEX Africa 2026.",
-    applicationName: "Playwork",
-    keywords: [
-        "Playwork",
-        "competition",
-        "mentor",
-        "talent",
-        "submissions",
-        "EdTech Africa",
-        "GITEX 2026",
-    ],
-    authors: [{ name: "Playwork Dreams", url: "https://playwork.vercel.app" }],
-    creator: "Playwork Dreams",
-    publisher: "Playwork",
+    description: "{{APP_DESCRIPTION}}",
+    applicationName: "{{APP_NAME}}",
+    keywords: ["{{APP_NAME}}", "{{KEYWORD}}", "{{KEYWORD}}"],
+    authors: [{ name: "{{APP_NAME}}", url: "https://{{APP_URL}}" }],
+    creator: "{{APP_NAME}}",
+    publisher: "{{APP_NAME}}",
     alternates: {
         canonical: "/",
         languages: {
@@ -41,17 +31,16 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Playwork | Empowering Africa's Next Generation",
-        description:
-            "Discover, compete, and engage with Playwork. The ultimate platform for mentoring, competitions, and discovering talent.",
+        title: "{{APP_NAME}} | {{APP_TAGLINE}}",
+        description: "{{APP_DESCRIPTION}}",
         url: "/",
-        siteName: "Playwork",
+        siteName: "{{APP_NAME}}",
         images: [
             {
                 url: "/og-image.png",
                 width: 1200,
                 height: 630,
-                alt: "Playwork Platform",
+                alt: "{{APP_NAME}}",
             },
         ],
         locale: "en_US",
@@ -59,12 +48,11 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Playwork",
-        description:
-            "Discover, compete, and engage with Playwork. The ultimate platform for mentoring, competitions, and discovering talent.",
+        title: "{{APP_NAME}}",
+        description: "{{APP_DESCRIPTION}}",
         images: ["/twitter-image.png"],
-        site: "@playwork",
-        creator: "@playwork",
+        site: "@{{APP_HANDLE}}",
+        creator: "@{{APP_HANDLE}}",
     },
     robots: {
         index: true,
@@ -79,7 +67,7 @@ export const metadata: Metadata = {
     },
     appleWebApp: {
         capable: true,
-        title: "Playwork",
+        title: "{{APP_NAME}}",
         statusBarStyle: "black-translucent",
     },
 };
@@ -92,14 +80,13 @@ export default function RootLayout({
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "Playwork Dreams",
-        url: "https://playwork.vercel.app",
-        logo: "https://playwork.vercel.app/images/general/waitlist-logo.png",
-        description:
-            "The ultimate platform for mentoring, competitions, and discovering talent in Africa.",
+        name: "{{APP_NAME}}",
+        url: "https://{{APP_URL}}",
+        logo: "https://{{APP_URL}}/images/general/waitlist-logo.png",
+        description: "{{APP_DESCRIPTION}}",
         sameAs: [
-            "https://twitter.com/playwork",
-            "https://linkedin.com/company/playwork",
+            "https://twitter.com/{{APP_HANDLE}}",
+            "https://linkedin.com/company/{{APP_HANDLE}}",
         ],
     };
 

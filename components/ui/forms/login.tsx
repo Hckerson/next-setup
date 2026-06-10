@@ -1,61 +1,27 @@
 "use client";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState } from "react";
 import Logo from "../../common/logo";
 import FormInput from "../general/form-input";
 import Button from "../../common/button";
 import { poppins } from "@/public/fonts/font";
 import { useLogin } from "@/hooks/use-auth";
-import MotionWrapper from "@/components/wrappers/motion-wrapper";
-import { fast, slow } from "@/lib/data/mapped-data";
-
+import { useZodForm } from "@/hooks/use-zod-form";
 import { loginSchema } from "@/lib/validations/auth";
-import { ZodError } from "zod";
+import MotionWrapper from "@/components/wrappers/motion-wrapper";
+import { fast, slow } from "@/lib/motion";
+import { getApiErrorMessage } from "@/lib/utils/get-api-error-message";
 
 export default function LoginForm() {
     const { mutate: login, isPending, error } = useLogin();
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    });
-    const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error when user starts typing
-        if (formErrors[name]) {
-            setFormErrors((prev) => {
-                const newErrors = { ...prev };
-                delete newErrors[name];
-                return newErrors;
-            });
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setFormErrors({});
-
-        const result = loginSchema.safeParse(formData);
-        if (!result.success) {
-            const errors: { [key: string]: string } = {};
-            result.error.issues.forEach((err) => {
-                if (err.path[0]) {
-                    errors[err.path[0] as string] = err.message;
-                }
-            });
-            setFormErrors(errors);
-            return;
-        }
-
-        login(result.data);
-    };
+    const { formData, formErrors, handleChange, handleSubmit } = useZodForm(
+        loginSchema,
+        { email: "", password: "" },
+    );
 
     return (
         <form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(login)}
             className="flex size-full flex-col justify-center overflow-y-auto scroll-smooth px-1 [scrollbar-width:none]"
         >
             <div className="top-0 z-10 mb-8 w-full">
@@ -109,13 +75,13 @@ export default function LoginForm() {
                                     name="remember-me"
                                     id="remember-me"
                                 />
-                                <p className="text-[14px] font-semibold">
+                                <p className="sm-text font-semibold">
                                     Remember me
                                 </p>{" "}
                             </div>
                             <div>
                                 <Link
-                                    className="text-[14px] font-semibold"
+                                    className="sm-text font-semibold"
                                     href={"/forgot-password"}
                                 >
                                     Forgot password?
@@ -131,15 +97,17 @@ export default function LoginForm() {
                                 poppins.className,
                             )}
                         >
-                            {(error as any)?.response?.data?.message ||
-                                "Invalid credentials. Please try again."}
+                            {getApiErrorMessage(
+                                error,
+                                "Invalid credentials. Please try again.",
+                            )}
                         </p>
                     )}
 
                     <div className="w-full">
                         <MotionWrapper yOffset={50} duration={slow} delay={fast * 4}>
                             <Button
-                                classname={clsx(
+                                className={clsx(
                                     "w-full bg-blue uppercase font-bold sm-text sm:rounded-lg rounded-md disabled:opacity-60",
                                     poppins.className,
                                 )}

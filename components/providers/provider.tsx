@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import QuizProvider from "./quiz-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -19,7 +18,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <QuizProvider>{children}</QuizProvider>
+            {children}
             <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );

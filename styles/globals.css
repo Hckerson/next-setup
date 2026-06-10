@@ -60,32 +60,37 @@
     }
 }
 
+/* Fluid type scale — clamp(min, fluid, max) interpolates continuously
+   between the mobile and 2xl sizes instead of stepping at breakpoints. */
 .xxlarge-text {
-    @apply xs:text-[36px] text-[30px] leading-[1.1] sm:text-[44px] md:text-[53px] lg:text-[64px] xl:text-[76px] 2xl:text-[92px];
+    font-size: clamp(30px, 11.02px + 5.27vw, 92px);
+    line-height: 1.1;
 }
 
 .xlarge-text {
-    @apply xs:text-[29px] text-[24px] leading-[1.1] sm:text-[35px] md:text-[42px] lg:text-[50px] xl:text-[60px] 2xl:text-[72px];
+    font-size: clamp(24px, 9.31px + 4.08vw, 72px);
+    line-height: 1.1;
 }
 
 .large-text {
-    @apply xs:text-[22px] text-[18px] leading-[1.2] sm:text-[26px] md:text-[31px] lg:text-[37px] xl:text-[44px] 2xl:text-[52px];
+    font-size: clamp(18px, 7.59px + 2.89vw, 52px);
+    line-height: 1.2;
 }
 
 .md-text {
-    @apply xs:text-[18px] text-[16px] sm:text-[21px] md:text-[24px] lg:text-[28px] xl:text-[32px] 2xl:text-[36px];
+    font-size: clamp(16px, 9.88px + 1.7vw, 36px);
 }
 
 .base-text {
-    @apply xs:text-[14.5px] text-[13px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[22px] 2xl:text-[25px];
+    font-size: clamp(13px, 9.33px + 1.02vw, 25px);
 }
 
 .sm-text {
-    @apply xs:text-[11px] text-[10px] sm:text-[12px] md:text-[13.5px] lg:text-[15px] xl:text-[16.5px] 2xl:text-[18px];
+    font-size: clamp(10px, 7.55px + 0.68vw, 18px);
 }
 
 .xs-text {
-    @apply xs:text-[8.5px] text-[8px] sm:text-[9px] md:text-[9.5px] lg:text-[10.5px] xl:text-[11.5px] 2xl:text-[12.5px];
+    font-size: clamp(8px, 6.62px + 0.38vw, 12.5px);
 }
 
 .pad {
@@ -140,10 +145,6 @@
 body {
     background: var(--background);
     color: var(--foreground);
-}
-
-.recharts-wrapper *:focus {
-    outline: none;
 }
 
 .rainbow-box {

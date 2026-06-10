@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "motion/react";
 import { PropsWithChildren } from "react";
-import { fast } from "@/lib/data/mapped-data";
+import { fast } from "@/lib/motion";
 
 interface Props extends PropsWithChildren {
     delay?: number;
