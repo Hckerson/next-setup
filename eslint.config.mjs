@@ -46,21 +46,12 @@ export default tseslint.config(
     },
     {
         rules: {
-            "@typescript-eslint/no-explicit-any": "off",
-            "@typescript-eslint/no-floating-promises": "warn",
-            "@typescript-eslint/no-unsafe-argument": "warn",
-            "no-unused-vars": "off",
-            "unused-imports/no-unused-imports": "error",
             "react/jsx-uses-vars": "error",
-            "unused-imports/no-unused-vars": [
-                "warn",
-                {
-                    vars: "all",
-                    varsIgnorePattern: "^_",
-                    args: "after-used",
-                    argsIgnorePattern: "^_",
-                },
-            ],
+            "unused-imports/no-unused-imports": "error",
+            "@typescript-eslint/no-explicit-any": "error",
+            "@typescript-eslint/no-unsafe-argument": "error",
+            "@typescript-eslint/no-unused-vars": "error",
+            "@typescript-eslint/no-floating-promises": "error",
         },
     },
 );
