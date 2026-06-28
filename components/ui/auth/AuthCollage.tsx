@@ -54,7 +54,7 @@ const Column = ({
                         className="relative aspect-3/4 w-full shrink-0 overflow-hidden rounded-lg bg-[#1E242B] lg:rounded-xl"
                     >
                         <Image
-                            src={src}
+                            src={src || "/images/general/empty-img.jpg"}
                             alt={`Auth Collage ${i}`}
                             fill
                             className="object-cover transition-transform duration-700 hover:scale-105"

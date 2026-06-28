@@ -5,9 +5,9 @@ import { antonSc, poppins } from "@/public/fonts/font";
 
 interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     isLoading?: boolean;
+    children: React.ReactNode;
     size?: "sm" | "md" | "lg" | "xl" | "custom";
     font?: "poppins" | "antonSc";
-    children: React.ReactNode;
 }
 export default function Button({
     children,
@@ -17,23 +17,23 @@ export default function Button({
     font = "poppins",
     ...rest
 }: Button) {
-    const small = size === "sm" || size === "md";
+    const small = size == "sm" || size == "md";
     const sizes = {
         "h-[36px] lg:h-[42px] xl:h-[48px] w-25 lg:w-30 xl:w-35 rounded-lg rounded-md":
-            size === "sm",
+            size == "sm",
         "h-[40px] lg:h-[46px] xl:h-[52px] w-35 lg:w-40 xl:w-45 xl:rounded-xl rounded-lg":
-            size === "md",
+            size == "md",
         "h-[42px] lg:h-[56px] xl:h-[64px] w-37.5 lg:w-45 xl:w-50 md:rounded-xl rounded-lg":
-            size === "lg",
+            size == "lg",
         "h-[48px] lg:h-[64px] xl:h-[72px] w-47 lg:w-55 xl:w-60 rounded-lg md:rounded-xl":
-            size === "xl",
-        "h-[40px] lg:h-[50px]": size === "custom",
+            size == "xl",
+        "h-[35px] lg:h-[45px]": size == "custom",
     };
     return (
         <button
             {...rest}
             className={clsx(
-                "relative z-0 flex cursor-pointer items-center justify-center overflow-hidden shadow-inner",
+                "relative z-0 flex cursor-pointer items-center justify-center overflow-hidden shadow-inner transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
                 sizes,
                 font === "poppins" ? poppins.className : antonSc.className,
                 className,

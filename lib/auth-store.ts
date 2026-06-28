@@ -1,19 +1,13 @@
 import { create } from "zustand";
+import { User } from "./interface";
 import { persist } from "zustand/middleware";
-
-export interface AuthUser {
-    id: string;
-    email: string;
-    name: string; // backend returns single `name` field (not firstName/lastName)
-    role: string; // UserRole enum string, e.g. "ADMIN" | "USER"
-    avatar: string | null;
-}
+import type { AdminSessionData } from "@/lib/validations/auth-admin";
 
 export interface AuthState {
-    user: AuthUser | null;
-    token: string | null;
-    setAuth: (user: AuthUser, token: string) => void;
+    user: AdminSessionData | User | null;
     logout: () => void;
+    token: string | null;
+    setAuth: (user: AdminSessionData | User, token: string) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -23,16 +17,16 @@ export const useAuthStore = create<AuthState>()(
             token: null,
             setAuth: (user, token) => {
                 // Persist token to cookie so Next.js middleware can read it server-side
-                document.cookie = `app-token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+                document.cookie = `playwork-token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
                 set({ user, token });
             },
             logout: () => {
-                document.cookie = "app-token=; path=/; max-age=0";
+                document.cookie = "playwork-token=; path=/; max-age=0";
                 set({ user: null, token: null });
             },
         }),
         {
-            name: "app-auth",
+            name: "playwork-auth",
         },
     ),
 );

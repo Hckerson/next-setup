@@ -35,7 +35,7 @@
     ".next/types/**/*.ts",
     "run.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "lib/utils"  ],
   "exclude": [
     "node_modules"
   ]

@@ -1,5 +1,9 @@
-// String enums mirror backend values exactly. Add per-project enums here.
-export enum UserRole {
-    ADMIN = "ADMIN",
-    USER = "USER",
+
+
+export enum SchoolStatus {
+    ACTIVE = "ACTIVE",
+    PENDING = "PENDING",
+    INACTIVE = "INACTIVE",
+    PLAYWORK_CERTIFIED = "PLAYWORK_CERTIFIED",
+    PENDING_CERTIFICATION = "PENDING_CERTIFICATION",
 }

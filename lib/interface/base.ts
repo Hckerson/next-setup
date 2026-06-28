@@ -1,8 +1,16 @@
-export interface BaseUser {
+import { TransactionStatus } from "../enums/enums";
+import { Trend } from "../types/types";
+
+export interface BaseChartData {
+    trend: Trend;
+    change: number;
+    currentFigure: number;
+}
+
+export interface BaseFinance {
     id: string;
-    email: string;
-    avatar?: string;
-    fullName: string;
+    amount: number;
+    status: TransactionStatus;
 }
 
 export interface BaseImage {
@@ -13,3 +21,14 @@ export interface BaseLocation {
     state: string;
     country: string;
 }
+
+export interface BaseUser {
+    id: string;
+    email: string;
+    avatar?: string;
+    fullName: string;
+}
+
+export type MetricSkeleton<T extends string | number | symbol> = {
+    [K in T]: BaseChartData;
+};

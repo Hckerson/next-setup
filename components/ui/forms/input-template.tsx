@@ -1,11 +1,10 @@
 import clsx from "clsx";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Calendar } from "../../general/calendar";
 import BinIcon from "@/components/icons/bin";
 import { poppins } from "@/public/fonts/font";
 import UploadIcon from "@/components/icons/upload";
-
+import { Calendar } from "../../general/calendar";
 import React, { useEffect, useRef, useState } from "react";
 
 interface TemplateProps {
@@ -351,6 +350,51 @@ const FileInput = ({
     );
 };
 
+const ToggleInput = ({
+    label,
+    value,
+    handleChange,
+}: {
+    label?: string;
+    value?: boolean;
+    handleChange?: (checked: boolean) => void;
+} = {}) => {
+    const [isChecked, setIsChecked] = useState(value ?? false);
+
+    const handleToggle = () => {
+        const newValue = !isChecked;
+        setIsChecked(newValue);
+        handleChange?.(newValue);
+    };
+
+    return (
+        <label className="flex cursor-pointer items-center gap-x-3 select-none">
+            <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleToggle}
+                className="sr-only"
+            />
+            <span
+                className={clsx(
+                    "relative inline-flex h-6 w-11 shrink-0 rounded-full border transition-all duration-200",
+                    isChecked
+                        ? "border-[#00cbe2] bg-[#00cbe2]/30"
+                        : "border-white/20 bg-white/5",
+                )}
+            >
+                <span
+                    className={clsx(
+                        "absolute top-1 left-1 h-4 w-4 -translate-y-px rounded-full bg-white transition-transform duration-200",
+                        isChecked && "translate-x-4.5",
+                    )}
+                />
+            </span>
+            {label && <span className="text-sm text-white/80">{label}</span>}
+        </label>
+    );
+};
+
 export {
     SelectInput,
     TextInput,
@@ -359,4 +403,5 @@ export {
     TextAreaInput,
     CheckBoxInput,
     PickInput,
+    ToggleInput,
 };
