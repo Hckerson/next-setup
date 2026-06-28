@@ -1,9 +1,6 @@
-
-
-export enum SchoolStatus {
+// Example: Enum constants for status values (replace with your domain)
+export enum Status {
     ACTIVE = "ACTIVE",
-    PENDING = "PENDING",
     INACTIVE = "INACTIVE",
-    PLAYWORK_CERTIFIED = "PLAYWORK_CERTIFIED",
-    PENDING_CERTIFICATION = "PENDING_CERTIFICATION",
+    PENDING = "PENDING",
 }
