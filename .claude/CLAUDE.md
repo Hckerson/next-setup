@@ -6,11 +6,13 @@ Type-safe, layered frontend architecture for scalability and maintainability. Fo
 
 ## Core Principles (Apply Everywhere)
 
-**1. Single Source of Truth + Type Inference**
-- **Config:** Endpoints in `api-routes.ts`, not hardcoded in components/hooks. Enum values in `enums/`, not as string literals. Theme timings in `mapped-data.ts`, not `delay: 300`.
-- **Validation:** Zod schemas define both validation *and* types. DTOs are the type source at request/response boundaries. Never duplicate types.
-- **Type Inference:** Let type-generating tools (Zod, React Query, external packages' TypeScript definitions) infer types. Use `z.infer<typeof schema>`, React Query's auto-typed results, and third-party type exports. Never cast to `any` or hand-roll `{ field?: type }`.
-- **Apply this principle everywhere:** If a library generates types/schemas/shapes (Zod, React Query, external packages, API response types), use its output directly; never invent your own.
+**1. Derive, Never Reconstruct.**
+- **Derived artifacts rule:** If a library or framework generates a type, schema, validation result, or query shape, use that derived output directly. Examples include Zod `infer`, React Query results, API response types, class-validator DTO output, and third-party package typings.
+- **No manual reconstruction:** Never replace a derived artifact with `any`, `Record<>`, `as { field?: type }`, or a hand-written parallel type just to satisfy the compiler.
+- **Narrow by derivation:** If you need a smaller shape, derive it from the source artifact with the framework's own helpers or standard TypeScript utilities like `Pick` and `Omit`, not ad hoc object literals.
+- **Single source of truth:** Config values (endpoints, enums, timings) live once in designated files (`api-routes.ts`, `enums/`, `mapped-data.ts`). Reference them everywhere, never duplicate.
+- **Validate at the boundary:** Schemas validate input once at the edge. Never re-validate or duplicate validation logic across layers.
+- **Generalize the rule:** Whenever a new tool emits a type, shape, or validation outcome, prefer its generated output over inventing a parallel abstraction.
 
 **2. Design Tokens (All Layers)**
 - Spacing, typography, colors, animations, shadows, borders—all defined once in tokens (CSS variables + scale classes), referenced everywhere.
@@ -68,17 +70,15 @@ project-root/
 
 **Principles 1–2 in action:**
 
-| Layer | Pattern | ✅ Do | ❌ Don't |
-|-------|---------|-------|----------|
-| **Config (SSOT)** | API endpoints, enums, timings | `const url = config.api.users.all` | Hardcode `/api/users` in hook |
-| | Theme values | Import `mapped-data.ts` delays | `delay: "300ms"` inline |
-| **Validation** | Schema + type source | `export type User = z.infer<typeof userSchema>` | Duplicate type + schema |
-| | Component input | Validate with `schema.safeParse()`, use DTO type | Re-validate in hook |
-| **Type Inference** | Zod, React Query, external libs | Use `z.infer<>`, React Query's auto-typed results | Cast to `any` or `Record<>` |
-| **Styling** | Spacing, typography, colors, animations, shadows, borders | Use `.pad`, `.gap-*`, `.xlarge-text`, `.scale-*` token classes | `px-4 py-6 md:px-6`, `delay-300` |
-| | Layout only | Inline `flex`, `grid`, `justify-*` | Inline value-based classes |
+| Derived artifact | Source → Use | ✅ Do | ❌ Don't |
+|------|---|---|---|
+| **Zod schema** | `schema` → validated input + inferred type | Use `z.infer<typeof schema>` | Duplicate the type by hand |
+| **React Query result** | Query/mutation hook → auto-typed data + error | Use the hook's result type directly | Cast to `any` or `Record<>` |
+| **API response type** | Axios/fetch response → typed payload | Use TypeScript's type inference or schema validation result | Re-type the response manually |
+| **Config/enum values** | Single source (`api-routes.ts`, `enums/`, `mapped-data.ts`) | Import and reference the SSOT | Hardcode or duplicate the value |
+| **Design tokens** | CSS variables + scale classes (`.pad`, `.gap-*`, `.xlarge-text`) | Use token classes | Inline value-based Tailwind |
 
-**When you use a new library/framework:** Check if it generates types (Zod, React Query, class-validator, API client types, third-party TS definitions). If yes, use its output directly; never cast or reinvent.
+**When you use a new library/framework:** First check whether it produces a derived type, schema, result shape, or validation outcome. If it does, use that output directly and avoid manual reconstruction with `any`, `Record<>`, `as` assertions, or parallel hand-written types.
 
 ---
 
