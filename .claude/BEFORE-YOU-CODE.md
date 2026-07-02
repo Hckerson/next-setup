@@ -1,6 +1,6 @@
-# Before You Code — Anchor Prompt
+# Before You Code — Anchor Prompts
 
-**Paste this into your request to ensure I follow your architecture.**
+Paste one of these at the start of your request to ensure architecture compliance.
 
 ---
 
@@ -42,12 +42,10 @@ STOP if you're about to:
 
 ---
 
-## Minimal Anchoring Prompt (Copy-Paste for Quick Tasks)
+## Minimal Anchoring Prompt
 
 ```
 You are in next-setup. Follow QUICK-REF.md and GOTCHAS.md.
-This prompt must work for Claude or Copilot without relying on hidden defaults.
-Use instructions.md as the primary bootstrap and BEFORE-YOU-CODE.md as the manual fallback.
 
 Task: [YOUR TASK]
 
@@ -61,109 +59,6 @@ Remember:
 
 ---
 
-## How to Use These Files
-
-### Before Each Request
-
-1. **Copy the minimal anchoring prompt** above and paste it at the start of your request.
-2. **Specify what you want to build** (e.g., "Create a user search page with debounce and validation").
-3. **I will reference QUICK-REF.md and GOTCHAS.md** while writing code.
-
-### If Something Looks Wrong
-
-**You can flag me mid-generation:**
-> "You put business logic in the hook. That violates Gotcha #4. Move it to lib/utils."
-
-I'll correct myself immediately.
-
-### To Verify I'm Following the Rules
-
-**You can ask me to audit before committing:**
-> "Before you finish, verify this code against all 10 gotchas in GOTCHAS.md."
-
-I'll run through the checklist.
-
----
-
-## Example Request (Full)
-
-```
-You are in next-setup. Follow QUICK-REF.md and GOTCHAS.md.
-
-Task: Create a user search page with:
-- Text input that debounces search queries
-- Display results in a table
-- Show loading skeleton while fetching
-- Handle errors gracefully
-- Filter results by role (admin/user)
-
-Remember:
-- Business logic (filter, sort) goes in lib/utils/
-- Hook only fetches, doesn't filter
-- Component renders, doesn't fetch or transform
-- Use API_ROUTES for endpoint
-- Use timings from lib/data/mapped-data.ts for debounce
-- Validate response with Zod schema, infer type from it
-
-Before finishing, verify:
-1. No fetch() calls in component?
-2. No filter/map logic in hook?
-3. Using z.infer<> for types?
-4. Using API_ROUTES for endpoints?
-```
-
----
-
-## Example Request (Minimal)
-
-```
-You are in next-setup. Follow QUICK-REF.md and GOTCHAS.md.
-
-Create a user list page with search, pagination, and role filtering. 
-Keep layers clean: component renders, hook fetches, lib/ handles logic.
-```
-
----
-
-## Signs I Need More Anchoring
-
-If I:
-- Generate `fetch()` or API calls in a component or lib file
-- Put `.filter()`, `.map()`, or transformations in a hook
-- Hand-write types instead of deriving from Zod or React Query
-- Hardcode endpoints or config delays
-- Use inline Tailwind values instead of token classes
-- Re-validate data in components
-
-**You should ask:** 
-> "What does GOTCHA #{number} say? Apply it."
-
-Or copy-paste the relevant section from GOTCHAS.md to remind me.
-
----
-
-## Making This Automatic
-
-If you want me to **always** check these files at the start of a request, add this to your workspace settings or as a comment in your `.claude` folder:
-
-```
-Every request in next-setup must:
-1. Read QUICK-REF.md (decision trees)
-2. Read GOTCHAS.md (concrete failures)
-3. Apply all 10 gotchas as a pre-flight check
-4. Return to user if any rule is violated
-```
-
-For now, **copy the minimal anchoring prompt** before each task.
-
----
-
 ## TL;DR
 
-- **QUICK-REF.md** = How to think (decision trees).
-- **GOTCHAS.md** = Concrete pitfalls to avoid (10 real examples).
-- **Paste the minimal anchoring prompt** before each task.
-- **Flag me mid-generation** if I slip.
-- **Ask me to verify** before you commit.
-
-This ensures I stay locked to your architecture.
+Use README.md to navigate which file to read when. Flag me if I violate any 10 gotchas in GOTCHAS.md. Ask me to verify code against QUICK-REF.md before committing.
