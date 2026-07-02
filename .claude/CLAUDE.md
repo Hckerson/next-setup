@@ -1,229 +1,146 @@
 # Next.js Architecture
 
-Opinionated, layered architecture for scalability and maintainability. Folder structure is **non-negotiable**.
+Type-safe, layered frontend architecture for scalability and maintainability. Folder structure and layer boundaries are **non-negotiable**.
 
 ---
 
-## Folder Structure (IMMUTABLE)
+## Core Principles (Apply Everywhere)
+
+**1. Single Source of Truth + Type Inference**
+- **Config:** Endpoints in `api-routes.ts`, not hardcoded in components/hooks. Enum values in `enums/`, not as string literals. Theme timings in `mapped-data.ts`, not `delay: 300`.
+- **Validation:** Zod schemas define both validation *and* types. DTOs are the type source at request/response boundaries. Never duplicate types.
+- **Type Inference:** Let type-generating tools (Zod, React Query, external packages' TypeScript definitions) infer types. Use `z.infer<typeof schema>`, React Query's auto-typed results, and third-party type exports. Never cast to `any` or hand-roll `{ field?: type }`.
+- **Apply this principle everywhere:** If a library generates types/schemas/shapes (Zod, React Query, external packages, API response types), use its output directly; never invent your own.
+
+**2. Design Tokens (All Layers)**
+- Spacing, typography, colors, animations, shadows, borders—all defined once in tokens (CSS variables + scale classes), referenced everywhere.
+- No inline Tailwind for values; use `.pad`, `.gap`, `.scale-*` token classes. Layout-only inline (flex, grid, justify-*).
+
+**3. Strict Layer Separation**
+- `lib/` = business logic only (no React). `hooks/` = data fetching only (React Query), no UI. `components/` = UI only, no API calls.
+- One-way imports: components → hooks → lib. Never upwards.
+
+**4. Strict Types, Always**
+- No `any`. No manual type casts. DTOs + schema inference are the type source. Validate at boundaries, trust internal code.
+
+**5. No Dead Code, No Stubs, No Placeholders**
+- Delete unused code. Comments explain *why*, not *what*.
+
+---
+
+## Folder Structure (Immutable)
 
 ```
 project-root/
-├── lib/                             BUSINESS LOGIC LAYER (no React)
-│   ├── api-routes.ts               SINGLE SOURCE OF TRUTH for all endpoints
-│   │   └── config.api.* (nested)   Organized by domain
-│   ├── api-client.ts               HTTP client setup (Axios)
-│   ├── validations/                Zod schemas (validation + type source)
-│   ├── interface/                  TypeScript interfaces & types
-│   ├── enums/                      Enum constants (status, roles, types)
-│   ├── data/                       Static data, timings, mappings
-│   │   ├── mapped-data.ts          Animation timings (fast, slow)
-│   │   ├── maps.ts                 Static mappings (statusMap, etc.)
-│   │   └── placeholder-data.ts     Mock data
-│   ├── utils/                      Pure utilities (one per function)
-│   ├── types/                      Custom type definitions
-│   └── hooks/                      Custom hooks (non-data-fetching)
-│
-├── hooks/                           DATA FETCHING LAYER (React Query ONLY)
-│   └── use-[domain].ts             Queries + mutations per domain
-│
-├── components/                      UI LAYER (React only)
-│   ├── common/                     Shared primitives (button, logo, etc.)
-│   ├── general/                    Form inputs, layout blocks
-│   ├── wrappers/                   Layout composition + animations
-│   ├── ui/                         Feature-organized
-│   │   ├── forms/                  Form components
-│   │   ├── cards/                  Data display cards
-│   │   └── (other domains)
-│   ├── routes/                     Page-level components
-│   └── icons/                      Custom SVG icons
-│
-├── styles/                          STYLING LAYER (Tokens only)
-│   ├── globals.css                 CSS variables, .scale classes, @keyframes
-│   └── styles.ts                   Color configuration (bgMap)
-│
-├── app/                             Next.js App Router
-│
-└── public/                          Static assets
-    ├── fonts/                       Font imports
-    └── images/                      Logos, favicons
-```
-
----
-
-## Layer Boundaries (Strictly Enforced)
-
-```
-lib/ (config, validation, types, utils)
-  ↓
-hooks/ (React Query: useQuery, useMutation)
-  ↓
-components/ (UI: forms, cards, pages)
+├── lib/                          Business logic (no React)
+│   ├── api-routes.ts            SSOT for endpoints + api shape
+│   ├── api-client.ts            Axios client setup
+│   ├── validations/             Zod schemas (type source)
+│   ├── data/                    Static mappings, timings, enums
+│   ├── enums/                   Constant enums
+│   ├── interface/               TypeScript interfaces
+│   ├── types/                   Custom types
+│   ├── utils/                   Pure utilities (one per function)
+│   └── hooks/                   Non-data-fetching hooks
+├── hooks/                        Data fetching (React Query only)
+│   └── use-[domain].ts          Queries + mutations
+├── components/                   UI (React only)
+│   ├── common/                  Shared primitives
+│   ├── ui/                      Feature-organized components
+│   ├── wrappers/                Layout + animations
+│   ├── routes/                  Page-level components
+│   └── icons/                   SVG icons
+├── styles/                       Tokens (CSS vars + scales)
+│   ├── globals.css             Design tokens, @keyframes
+│   └── styles.ts               Color config
+└── app/                         Next.js App Router
 ```
 
 **Import Rules:**
-- ✅ components/ imports: hooks/, lib/, styles/
-- ✅ hooks/ imports: lib/, styles/
-- ✅ lib/ imports: lib/ only
+- ✅ components/ → hooks/, lib/, styles/, external packages
+- ✅ hooks/ → lib/, styles/, external packages
+- ✅ lib/ → lib/ only, external packages
 - ❌ Never: components calling API, hooks with JSX, lib/ with React
 
 ---
 
-## Critical Code Patterns
+## Applying Principles: Framework Examples
 
-### Pattern 1: Centralized API Routes (Never Hardcode URLs)
+**Principles 1–2 in action:**
 
-```typescript
-// lib/api-routes.ts
-export const config = {
-  api: {
-    users: {
-      all: '/api/users',
-      byId: (id) => `/api/users/${id}`,
-    },
-    auth: {
-      login: '/api/auth/login',
-    },
-  },
-};
+| Layer | Pattern | ✅ Do | ❌ Don't |
+|-------|---------|-------|----------|
+| **Config (SSOT)** | API endpoints, enums, timings | `const url = config.api.users.all` | Hardcode `/api/users` in hook |
+| | Theme values | Import `mapped-data.ts` delays | `delay: "300ms"` inline |
+| **Validation** | Schema + type source | `export type User = z.infer<typeof userSchema>` | Duplicate type + schema |
+| | Component input | Validate with `schema.safeParse()`, use DTO type | Re-validate in hook |
+| **Type Inference** | Zod, React Query, external libs | Use `z.infer<>`, React Query's auto-typed results | Cast to `any` or `Record<>` |
+| **Styling** | Spacing, typography, colors, animations, shadows, borders | Use `.pad`, `.gap-*`, `.xlarge-text`, `.scale-*` token classes | `px-4 py-6 md:px-6`, `delay-300` |
+| | Layout only | Inline `flex`, `grid`, `justify-*` | Inline value-based classes |
 
-// ❌ WRONG in component or hook
-// const url = '/api/users';
-
-// ✅ RIGHT in hook
-const url = config.api.users.all;
-```
-
-**Why:** Single source of truth. One URL change updates everywhere.
-
----
-
-### Pattern 2: Zod Schema as Validator AND Type Source
-
-```typescript
-// lib/validations/auth.ts
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-});
-
-export type LoginInput = z.infer<typeof loginSchema>;
-
-// Form component
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  const result = loginSchema.safeParse(formData);
-  
-  if (!result.success) {
-    // Per-field errors from Zod
-    const errors: { [key: string]: string } = {};
-    result.error.issues.forEach((err) => {
-      errors[err.path[0] as string] = err.message;
-    });
-    setFormErrors(errors);
-    return;
-  }
-  
-  mutate(result.data); // Type-safe data
-};
-```
-
-**Why:** Eliminate type duplication. Zod validates AND generates types.
-
----
-
-### Pattern 3: React Query Mutation with Cache Invalidation
-
-```typescript
-// hooks/use-users.ts
-export function useCreateUser() {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: async (payload: CreateUserPayload) => {
-      const { data } = await query.post(config.api.users.all, payload);
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-  });
-}
-
-// Component
-const { mutate, isPending } = useCreateUser();
-const handleSubmit = (data) => mutate(data);
-```
-
-**Why:** Automatic cache invalidation prevents stale UI.
-
----
-
-### Pattern 4: Hook Pattern (React Query Only, No UI)
-
-```typescript
-// hooks/use-users.ts
-export function useFetchUsers(params?: { role?: string }) {
-  return useQuery({
-    queryKey: ["users", "list", params],
-    queryFn: async () => {
-      const searchParams = new URLSearchParams();
-      if (params?.role) searchParams.set("role", params.role);
-      const url = `${config.api.users.all}?${searchParams}`;
-      const { data } = await query.get<User[]>(url);
-      return data;
-    },
-  });
-}
-```
-
-**Why:** Separate data fetching from UI. Hooks = logic only, components = UI only.
-
----
-
-### Pattern 5: Token-First Styling (Never Inline Spacing)
-
-```typescript
-// ❌ WRONG: Inline spacing
-<div className="px-4 py-6 md:px-6 lg:px-8 gap-4 md:gap-6 text-lg">
-
-// ✅ RIGHT: Scale tokens from globals.css
-<div className="pad gap-y-4 xlarge-text">
-```
-
-**Tokens in globals.css:**
-- Padding: `.pad`, `.pad-x`, `.pad-y` (responsive scales)
-- Gap: `.gap`, `.gap-x`, `.gap-y` (responsive scales)
-- Font: `.xxlarge-text`, `.xlarge-text`, ..., `.xs-text` (fluid type)
-- Animation: `.smooth` (duration-300 ease-in-out)
-
-**Inline Tailwind only for:**
-- Layout: `flex`, `grid`, `justify-center`, `items-center`
-- Breakpoints: `md:`, `lg:`, `xl:`
+**When you use a new library/framework:** Check if it generates types (Zod, React Query, class-validator, API client types, third-party TS definitions). If yes, use its output directly; never cast or reinvent.
 
 ---
 
 ## Workflow: Adding a Feature
 
-1. **Write Zod schema** → `lib/validations/[domain].ts`
-2. **Add endpoint** → `config.api` in `lib/api-routes.ts`
-3. **Create hook** → `hooks/use-[domain].ts` with React Query
-4. **Build component** → `components/ui/[type]/[name].tsx` (manual state + Zod validation)
-5. **Connect** → Inject hook, handle loading/error/data states
+1. Write schema → `lib/validations/[domain].ts`, export types via `z.infer<>`
+2. Add endpoints → `lib/api-routes.ts` (SSOT)
+3. Create hook → `hooks/use-[domain].ts` (React Query only)
+4. Build component → `components/ui/[type]/[name].tsx`
+5. Connect → Inject hook, handle loading/error/data states
+
+---
+
+## Cross-Package References
+
+**Internal:** Use `@/*` for project paths (e.g., `@/lib/api-routes`, `@/components/common/button`).
+
+**External packages:**
+- Import types from `zod`, `react-query`, `axios`, etc. Let them infer shapes.
+- Example: `import type { AxiosResponse } from 'axios'` for API response types, or use `z.infer<typeof schema>` for validation types.
+- **Never duplicate external types** — use package exports and TypeScript's `typeof`, `z.infer<>`, library type helpers.
+
+**Shared utilities (if in monorepo):**
+- Use path aliases (e.g., `@shared/*` for workspace packages).
+- Import types, schemas, enums, and configs from shared layers.
+- Avoid circular imports: `shared/lib` → shared components only if necessary.
+
+**Extending shared components:**
+- Import from `@/*` or shared package, compose, add app-specific logic in local components.
+- Don't modify shared components directly—wrap or extend.
+
+**Type safety across packages:**
+- When importing from external packages, prefer TypeScript definitions over manual typing.
+- Use strict mode; let the compiler catch missing types.
 
 ---
 
 ## Code Review Checklist
 
-- Is an endpoint hardcoded in a component? → Move to `config.api`
-- Is validation outside Zod? → Move to `lib/validations/`
-- Is business logic in a component? → Move to lib/ or utils/
-- Is a hook doing UI logic? → Move to component
-- Is padding/gap inline? → Use `.pad`, `.gap` tokens
-- Is animation timing hardcoded? → Add to `mapped-data.ts`
-- Is a color not in globals.css? → Add as CSS variable
+**Principles:**
+- ✅ Is this value/config/enum a candidate for SSOT (lib/)? If yes, move it.
+- ✅ Is this a value that could change? If yes, should it be a token or config?
+- ✅ Is a type duplicated instead of inferred? Use `z.infer<>`, package types, or computed types.
+- ✅ Is a library generating shapes/types/validation that's being overridden? Use the library output directly.
+
+**Layer violations:**
+- ❌ Component calling API directly → move to hook
+- ❌ Hook with JSX → move to component
+- ❌ lib/ importing from React → move to hooks/
+- ❌ Config/endpoint hardcoded in component → move to lib/api-routes.ts
+
+**Styling:**
+- ❌ Spacing/typography inline → use token classes (`.pad`, `.gap-*`, `.xlarge-text`)
+- ❌ Animation timing hardcoded → add to `lib/data/mapped-data.ts`
+- ❌ Color inline → use CSS variable or add to `globals.css`
 
 ---
 
 ## Tech Stack
 
 Next.js 16 (App Router) · TypeScript (strict) · Zod · TanStack React Query v5 · Zustand · Axios · Tailwind CSS v4 · Framer Motion · date-fns · Lucide React
+
+---
+
+**This is the only architecture.** Follow it precisely. If you're unsure where something goes, the design is broken—re-read this instead of inventing new locations.
