@@ -3,7 +3,7 @@
 This repo is a reusable **Next.js App Router starter**. It ships the architecture,
 conventions, and one example per layer; domain content is intentionally stripped out.
 
-Before making changes:
+## The 8 Rules (read first, never break)
 
 1. Read STYLE.md first — it is the source of truth for coding style and architecture.
 2. Match the existing architecture; preserve existing abstractions.
@@ -25,16 +25,6 @@ Styling is **token-first**: use the named scale classes in `styles/globals.css`
 (`.base-text`, `.pad`, `.gap`, `.smooth`, …) instead of inline responsive utility chains,
 and add colors/animations as theme tokens rather than hardcoding them. See STYLE.md › Styling.
 
-Established helpers (use these, don't re-roll them):
-
-- `hooks/use-zod-form.ts` — controlled-form state + Zod validation.
-- `lib/utils/get-api-error-message.ts` — read API error messages.
-- `components/wrappers/motion-wrapper.tsx` + `lib/motion.ts` — entrance animation.
-- `lib/api-routes.ts` (`config.api.*`) — all endpoints. `lib/api-client.ts` — the axios instance.
-
-Scaffold-ahead (referenced but not yet built — see STYLE.md *Scaffold-ahead*):
-`@/hooks/use-auth`, `components/common/logo`, `components/ui/general/*`, `lib/data/*`.
-
 ## File rules
 
 - One component per file; kebab-case filenames matching the export (`motion-wrapper.tsx` → `MotionWrapper`).
@@ -51,5 +41,7 @@ Scaffold-ahead (referenced but not yet built — see STYLE.md *Scaffold-ahead*):
 5. No value inlined that a token, enum, `config.api.*`, or Zod schema already owns (Single source of truth).
 6. Reused established helpers and primitives instead of re-rolling them.
 7. Matched existing architecture and style; any STYLE.md deviation is explained.
+
+**This is the only architecture.** Follow it precisely. If you're unsure where something goes, the design is broken—re-read this instead of inventing new locations.
 
 Workflow: Analyze → Plan → Implement
