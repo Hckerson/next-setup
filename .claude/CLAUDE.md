@@ -1,59 +1,54 @@
 # Project Instructions
 
-This repo is a reusable **Next.js App Router starter**. It ships the architecture,
-conventions, and one example per layer; domain content is intentionally stripped out.
+This is a reusable **Next.js App Router starter**. It ships architecture, conventions, and one example per layer as a foundation for new projects.
 
-## The 8 Rules (read first, never break)
+## Non-negotiable rules
 
-1. Read STYLE.md first — it is the source of truth for coding style and architecture.
-2. Match the existing architecture; preserve existing abstractions.
-3. Prefer Next.js native features and the libs already in use (Query / Zustand / Zod / motion)
-   before adding dependencies.
-4. **Leverage every framework/library efficiently.** Reach for the capability the tool already
-   provides instead of hand-rolling what it does natively (e.g. CSS `clamp()` for fluid type
-   instead of a manual breakpoint ladder; a Query/Zustand/Zod built-in over a bespoke helper).
-   Fewer moving parts, less to maintain, closer to the platform.
-5. **Single source of truth.** Name every recurring decision once as a semantic token and
-   reference it by name everywhere — never inline the raw value. This is not styling-only:
-   it's `config.api.*` for endpoints, `lib/motion.ts` for durations, enums for constants,
-   Zod schemas for shape, theme tokens for design. Define once, change in one place.
-6. Minimize LOC; prefer the shorter solution when equally maintainable.
-7. Avoid introducing new patterns. If deviating from STYLE.md, explain why.
-8. **No `any`.** Prefer `unknown` + narrowing or precise types; use `z.infer` for Zod-derived shapes.
+1. **No comments in code.** Ever. Code must read clearly on its own — if it doesn't, the abstraction is wrong.
+2. **No hardcoding.** API routes, durations, enums, copy that appears twice — all live in `lib/constants.ts` or feature-scoped `lib/<feature>/constants.ts`. Use `config.api.*` for endpoints, `lib/motion.ts` for timing, Zod schemas for shapes.
+3. **No `any` in TypeScript.** Use `unknown` + narrowing or precise types. Derive types from Zod with `z.infer`.
+4. **Match the existing architecture.** Do not invent new patterns. Preserve abstractions. Before deviating from STYLE.md, explain why.
+5. **Use the framework natively.** Reach for Next.js features and libs already in use (Query / Zustand / Zod / motion / CSS `clamp()`) before adding dependencies. Build what the tool already does.
+6. **Single source of truth.** Name recurring decisions once as a semantic token and reference it everywhere. Define once, change in one place.
+7. **Minimize LOC.** Prefer the shorter solution when equally maintainable.
 
-Styling is **token-first**: use the named scale classes in `styles/globals.css`
-(`.base-text`, `.pad`, `.gap`, `.smooth`, …) instead of inline responsive utility chains,
-and add colors/animations as theme tokens rather than hardcoding them. See STYLE.md › Styling.
+## Required patterns
 
-## File rules
-
-- One component per file; kebab-case filenames matching the export (`motion-wrapper.tsx` → `MotionWrapper`).
-- Absolute imports via `@/` — never deep-relative (`../../../lib/...`).
-- A file over ~150 lines of logic is doing too much — split it; co-locate feature parts under `components/<feature>/`.
-- Add packages with `pnpm add` — never hand-edit `package.json`.
+| Need | Use |
+|------|-----|
+| Styling | Token-first: named scale classes in `styles/globals.css` (`.base-text`, `.pad`, `.gap`, `.smooth`). Never inline responsive utility chains. Add colors/animations as theme tokens. See STYLE.md › Styling. |
+| Component patterns | Reuse `components/ui/` (primitives) and `components/<feature>/` (feature parts) before writing JSX from scratch. New patterns must promote to a primitive once used twice. |
+| State management | TanStack Query for server state. `useState` / `useReducer` / URL params for local state. `useSyncExternalStore` + `localStorage` for persistence. Avoid global stores unless complexity demands it. |
+| Validation | Zod schemas. Derive types with `z.infer`. Never use loose types for API responses. |
+| IDs | `nanoid`. Never `uuid` or `Date.now()`. |
+| Async flows | Keep API functions in `lib/api/<resource>.ts`, wrap in hooks in `hooks/api/use-<resource>.ts`. Components consume hooks — never call API functions directly. |
 
 ## Folder Structure
 
-| Route | Immediate Subfolders |
-|-------|----------------------|
-| `/app` | *(flat files: layout.tsx, page.tsx)* |
-| `/components` | `common` • `general` • `icons` • `providers` • `routes` • `ui` • `wrappers` |
-| `/components/ui` | `auth` • `cards` • `charts` • `forms` • `skeletons` |
-| `/hooks` | *(empty — use `/lib/hooks` instead)* |
-| `/lib` | `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` |
-| `/public` | `fonts` |
-| `/styles` | *(flat files: globals.css, styles.ts)* |
+| Route | Immediate Subfolders | Purpose |
+|-------|----------------------|---------|
+| `/app` | *(flat)* | Next.js App Router pages and layout. |
+| `/components` | `common` • `general` • `icons` • `providers` • `routes` • `ui` • `wrappers` | Component hierarchy: primitives in `ui/`, feature components co-located, wrappers for patterns. |
+| `/components/ui` | `auth` • `cards` • `charts` • `forms` • `skeletons` | Reusable UI primitives and patterns. |
+| `/hooks` | *(empty — use `/lib/hooks`)* | Root-level hooks reserved for global patterns only. Feature hooks live in `/lib/hooks/`. |
+| `/lib` | `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer: types, utilities, API setup, validation schemas. |
+| `/public` | `fonts` | Static assets. |
+| `/styles` | *(flat)* | Global styles and token exports. |
+
+## File rules
+
+- **One component per file.** Kebab-case filenames matching the export (`motion-wrapper.tsx` → `MotionWrapper`).
+- **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
+- **Files over ~150 lines → split.** Co-locate feature components under `components/<feature>/`.
+- **Add packages with `pnpm add`.** Never hand-edit `package.json`.
 
 ## Pre-merge checklist
 
 1. `pnpm type-check` clean (`tsc --noEmit`).
 2. `pnpm lint` clean.
-3. `pnpm build` succeeds.
-4. No `any`, no `console.log`, no dead code.
-5. No value inlined that a token, enum, `config.api.*`, or Zod schema already owns (Single source of truth).
-6. Reused established helpers and primitives instead of re-rolling them.
-7. Matched existing architecture and style; any STYLE.md deviation is explained.
+3. No `any`, no `console.log`, no dead code, no comments.
+4. No hardcoded values (URLs, copy, magic numbers, query keys). All constants in `lib/constants.ts` or feature scope.
+5. Reused existing primitives, utilities, and patterns. Nothing reinvented.
+6. Architecture and file structure match this layout exactly.
 
 **This is the only architecture.** Follow it precisely. If you're unsure where something goes, the design is broken—re-read this instead of inventing new locations.
-
-Workflow: Analyze → Plan → Implement
