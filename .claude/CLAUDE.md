@@ -34,7 +34,7 @@ and add colors/animations as theme tokens rather than hardcoding them. See STYLE
 
 ## Pre-merge checklist
 
-1. `pnpm error` clean (`tsc --noEmit`).
+1. `pnpm type-check` clean (`tsc --noEmit`).
 2. `pnpm lint` clean.
 3. `pnpm build` succeeds.
 4. No `any`, no `console.log`, no dead code.
