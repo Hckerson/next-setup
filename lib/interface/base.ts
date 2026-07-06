@@ -29,6 +29,10 @@ export interface BaseUser {
     fullName: string;
 }
 
+export interface User extends BaseUser {
+    role?: string;
+}
+
 export type MetricSkeleton<T extends string | number | symbol> = {
     [K in T]: BaseChartData;
 };

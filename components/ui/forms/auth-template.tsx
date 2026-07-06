@@ -1,4 +1,4 @@
-import AuthCollage from "../auth/AuthCollage";
+import AuthCollage from "./auth-collage";
 
 export default function AuthTemplate({
     children,

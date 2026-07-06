@@ -312,8 +312,8 @@ const CalendarInput = ({
         <Calendar
             mode="single"
             selected={value}
-            onSelect={(newDate) => {
-                if (newDate) {
+            onSelect={(newDate: Date | undefined) => {
+                if (newDate instanceof Date) {
                     handleChange(format(newDate, "yyyy-MM-dd"), name);
                 } else {
                     handleChange("Set Date", name);
@@ -324,13 +324,7 @@ const CalendarInput = ({
     );
 };
 
-const FileInput = ({
-    value,
-    handleChange,
-}: {
-    value: File | null;
-    handleChange: (newValue: File, field: string) => void;
-}) => {
+const FileInput = () => {
     return (
         <div className="flex w-full items-center justify-between gap-x-4">
             <span className="relative flex h-12 w-full rounded-lg border border-dashed border-blue-600 bg-white/5 px-3 hover:bg-white/10 focus:outline-none md:rounded-xl">
