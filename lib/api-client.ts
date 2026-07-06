@@ -103,7 +103,7 @@ apiClient.interceptors.response.use(
                 typeof window !== "undefined" &&
                 !window.location.pathname.startsWith("/auth")
             ) {
-                window.location.href = "/auth/admin/login";
+                window.location.href = "/auth/login";
             }
         }
         return Promise.reject(error);
