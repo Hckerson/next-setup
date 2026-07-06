@@ -32,6 +32,18 @@ and add colors/animations as theme tokens rather than hardcoding them. See STYLE
 - A file over ~150 lines of logic is doing too much — split it; co-locate feature parts under `components/<feature>/`.
 - Add packages with `pnpm add` — never hand-edit `package.json`.
 
+## Folder Structure
+
+| Route | Immediate Subfolders |
+|-------|----------------------|
+| `/app` | *(flat files: layout.tsx, page.tsx)* |
+| `/components` | `common` • `general` • `icons` • `providers` • `routes` • `ui` • `wrappers` |
+| `/components/ui` | `auth` • `cards` • `charts` • `forms` • `skeletons` |
+| `/hooks` | *(empty — use `/lib/hooks` instead)* |
+| `/lib` | `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` |
+| `/public` | `fonts` |
+| `/styles` | *(flat files: globals.css, styles.ts)* |
+
 ## Pre-merge checklist
 
 1. `pnpm type-check` clean (`tsc --noEmit`).
