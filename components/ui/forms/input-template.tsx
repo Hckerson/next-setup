@@ -1,10 +1,6 @@
 import clsx from "clsx";
 import Image from "next/image";
-import { format } from "date-fns";
-import BinIcon from "@/components/icons/bin";
 import { poppins } from "@/public/fonts/font";
-import UploadIcon from "@/components/icons/upload";
-import { Calendar } from "../../general/calendar";
 import React, { useEffect, useRef, useState } from "react";
 
 interface TemplateProps {
@@ -309,18 +305,19 @@ const CalendarInput = ({
     handleChange: (newValue: string, field: string) => void;
 }) => {
     return (
-        <Calendar
-            mode="single"
-            selected={value}
-            onSelect={(newDate: Date | undefined) => {
-                if (newDate instanceof Date) {
-                    handleChange(format(newDate, "yyyy-MM-dd"), name);
-                } else {
-                    handleChange("Set Date", name);
-                }
-            }}
-            className="rounded-md border border-white/10"
-        />
+        // <Calendar
+        //     mode="single"
+        //     selected={value}
+        //     onSelect={(newDate: Date | undefined) => {
+        //         if (newDate instanceof Date) {
+        //             handleChange(format(newDate, "yyyy-MM-dd"), name);
+        //         } else {
+        //             handleChange("Set Date", name);
+        //         }
+        //     }}
+        //     className="rounded-md border border-white/10"
+        // />
+        <></>
     );
 };
 
@@ -333,13 +330,10 @@ const FileInput = () => {
                     className="absolute inset-0 z-10 opacity-0"
                 />
                 <div className="inset-0 my-auto flex w-full items-center justify-center space-x-2 text-blue-600">
-                    <UploadIcon size="25" />
                     <p>Click to upload</p>
                 </div>
             </span>
-            <div className="flex items-center justify-center rounded-lg p-2 hover:bg-stone-800">
-                <BinIcon size="20" stroke="none" fill="currentColor" />
-            </div>
+            <div className="flex items-center justify-center rounded-lg p-2 hover:bg-stone-800"></div>
         </div>
     );
 };
