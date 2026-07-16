@@ -1,14 +1,16 @@
 {
-    "permissions": {
-        "allow": [
-            "Bash(npm run)",
-            "Bash(git status|log|diff)",
-            "Bash(npx next)",
-            "Bash(npx ts-node)",
-            "Glob(**/*.ts|**/*.tsx)",
-            "Grep(.)",
-            "Read(app/|components/|lib/|hooks/)",
-            "Edit(app/|components/|lib/|hooks/)"
-        ]
-    }
+  "permissions": {
+    "allow": [
+      "Bash(npm run)",
+      "Bash(git status|log|diff)",
+      "Bash(npx next)",
+      "Bash(npx ts-node)",
+      "Glob(**/*.ts|**/*.tsx)",
+      "Grep(.)",
+      "Read(app/|components/|lib/|hooks/)",
+      "Edit(app/|components/|lib/|hooks/)",
+      "Bash(git -C \"c:\\\\Users\\\\emman\\\\Downloads\\\\Personal\\\\js\\\\setup\\\\next-setup\" diff HEAD)",
+      "Bash(git -C \"c:\\\\Users\\\\emman\\\\Downloads\\\\Personal\\\\js\\\\setup\\\\next-setup\" log --oneline -5)"
+    ]
+  }
 }
