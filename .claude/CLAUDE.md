@@ -42,13 +42,51 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 - **Files over ~150 lines → split.** Co-locate feature components under `components/<feature>/`.
 - **Add packages with `pnpm add`.** Never hand-edit `package.json`.
 
-## Pre-merge checklist
+## Development Workflow
 
-1. `pnpm type-check` clean (`tsc --noEmit`).
-2. `pnpm lint` clean.
-3. No `any`, no `console.log`, no dead code, no comments.
-4. No hardcoded values (URLs, copy, magic numbers, query keys). All constants in `lib/constants.ts` or feature scope.
-5. Reused existing primitives, utilities, and patterns. Nothing reinvented.
-6. Architecture and file structure match this layout exactly.
+### Claude's Development Responsibilities
+
+After writing or modifying code, I run these checks before committing:
+
+```bash
+pnpm type-check  # TypeScript strict mode — must pass
+pnpm lint        # ESLint with auto-fix
+```
+
+If either fails, I fix the issue in the working tree and re-run. No changes are staged until both pass.
+
+I also verify:
+- No `any` types — use `unknown` + type narrowing instead
+- No `console.log` statements
+- No dead code or commented-out lines
+- All constants (URLs, enum values, magic numbers) live in `lib/constants.ts` or scoped `lib/<feature>/constants.ts`
+
+This is the first gate—I catch errors before they reach version control.
+
+### Automated Commit Gates (Husky)
+
+**Pre-commit hook:** Runs `pnpm type-check` and `pnpm lint` on staged files.
+- Blocks commits with type errors or lint violations
+- Fix locally and retry `git commit`
+
+**Pre-push hook:** Runs full type check and lint on the branch.
+- Blocks pushes that fail
+- Fix and retry `git push`
+
+### Pre-Merge Checklist
+
+Before merging your PR to `main`, verify:
+
+**Automated checks already passed:**
+- ✓ Type check clean
+- ✓ Lint clean
+
+**Manual verification:**
+- [ ] No hardcoded values — all in `lib/constants.ts` or feature scope
+- [ ] Reused existing components and utilities (check `components/ui/` and `lib/`)
+- [ ] File structure matches this layout exactly
+- [ ] No new architectural patterns invented
+
+**Do not merge until all checks pass.**
 
 **This is the only architecture.** Follow it precisely. If you're unsure where something goes, the design is broken—re-read this instead of inventing new locations.
