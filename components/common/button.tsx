@@ -6,7 +6,6 @@ interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     isLoading?: boolean;
     children: React.ReactNode;
     size?: "sm" | "md" | "lg" | "xl" | "custom";
-    font?: "poppins" | "antonSc";
 }
 export default function Button({
     children,
