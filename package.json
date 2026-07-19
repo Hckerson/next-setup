@@ -1,6 +1,7 @@
 {
-    "name": "setup",
+    "name": "next-app-starter",
     "version": "0.1.0",
+    "description": "Domain-neutral Next.js App Router starter with token-driven design system.",
     "private": true,
     "scripts": {
         "dev": "next dev",

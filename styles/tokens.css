@@ -1,22 +1,22 @@
-/* Design Tokens — Luxury Real Estate Platform (Light Theme) */
-/* CSS Custom Properties — Single source of truth */
+/* Design Tokens — Default Theme (Light) */
+/* CSS Custom Properties — single source of truth. Swap these values to reskin the starter. */
 
 :root {
     /* ============================================
      COLORS — Light theme palette
      ============================================ */
 
-    /* Primary (Warm Ivory Neutral) */
+    /* Primary (neutral surface tint) */
     --colors-primary: #faf8f4;
     --colors-primary-dark: #efeae2;
     --colors-primary-light: #ffffff;
 
-    /* Accent (Pine — brand/CTA) */
+    /* Accent — primary brand / CTA */
     --colors-accent: #1f4e3d;
     --colors-accent-dark: #163a2d;
     --colors-accent-light: #e9f0ec;
 
-    /* Highlight (Brass — featured/pop moments) */
+    /* Highlight — secondary/featured accent, pop moments */
     --colors-highlight: #b08d57;
     --colors-highlight-dark: #93733f;
     --colors-highlight-light: #f4ecdd;
@@ -50,7 +50,7 @@
     /* Overlays */
     --colors-overlay: rgba(28, 26, 23, 0.45);
 
-    /* Sidebar Colors (Deep Pine) */
+    /* Sidebar Colors (dark nav ramp) */
     --colors-sidebar: #16241d;
     --colors-sidebar-border: rgba(255, 255, 255, 0.08);
     --colors-sidebar-hover: rgba(255, 255, 255, 0.06);
