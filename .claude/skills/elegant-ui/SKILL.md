@@ -76,8 +76,8 @@ The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text
 
 - **Editorial register** — landing / marketing / hero / section headers / big empty states. The statement: `text-h1…text-h3 font-display font-light`, generous spacing, `text-lg` lede.
 - **Application register — the DEFAULT for dashboards, cards, panels, tables, sidebars, forms, menus.** Step the scale DOWN and tighten:
-    - Page/section titles `text-h5` / `text-h4` (never `text-h3`); focal numbers/prices `text-h6` / `text-lg`.
-    - Body & rows `text-sm`; secondary/meta `text-xs`; micro-labels `text-caption uppercase tracking-wide`.
+    - Page/section titles `text-h5` / `text-h4` (never `text-h3`); the ONE focal value per card `text-lg` / `text-h6`.
+    - **Compact field, one riser:** the field (body, rows, cell values, names, labels, ledes, control text — the vast majority) sits at **`text-xs` (12px)**; secondary/meta stays `text-xs` and drops by _color_ (`text-text-secondary`/`text-muted`); micro-labels `text-caption uppercase tracking-wide`. Above the field, only titles and **exactly one focal value per card** rise. Differentiate names/labels by **weight** (`font-semibold`), **color** (`text-text` vs `text-text-secondary`), and **case** (mono-uppercase eyebrow) — **never by size**; `text-sm` is banned for non-focal text, and a lede/subtitle stays `text-xs` and must never outrank the content it introduces.
     - Icons `size-4` (16px); rows ≈ `h-9`; compact padding. Do NOT use `text-h1…h3` or `text-lg` body leading in this register.
 
 - **The refined signal is weight, not size:** `font-display font-light` on whatever heading the register calls for — a `text-h5` in the light display face still reads as elegant. Body/labels `font-body`; keyboard hints `font-mono`.
@@ -95,11 +95,12 @@ The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text
 1. Restate what's being built + where it lands (`components/ui/*` for primitives, `components/sections/*` / `components/patterns/*` / route `page.tsx` for composed UI).
 2. Sketch the decomposition (shell + named parts) and the typed data shape.
 3. Build it in house tokens per the rules above. Reuse existing primitives; build missing ones to the house standard.
-4. Self-check against **Anti-patterns**, then run `pnpm type-check` / lint if available.
+4. **Compact-field pass (route-wide, up front):** grep the route for `text-sm|text-base|text-lg` and demote every non-focal, non-title hit to `text-xs`, leaving exactly one focal value per card. Do this comprehensively in one sweep — never element-by-element.
+5. Self-check against **Anti-patterns**, then run `pnpm type-check` / lint if available.
 
 ## Upgrade workflow
 
-1. Read the existing component; re-elevate it against every rule above (decompose, tokenize, add motion/a11y, tighten type & spacing).
+1. Read the existing component; re-elevate it against every rule above (decompose, tokenize, add motion/a11y, tighten type & spacing) — including the **compact-field pass**: grep the component/route for `text-sm|text-base|text-lg` and demote all non-focal, non-title text to `text-xs`, one focal per card, in a single comprehensive sweep.
 2. Produce a `demo.tsx` exercising it with realistic data.
 3. Emit the **integration-prompt scaffold** from `references/integration-prompt.md`, filling: component file + code, `demo.tsx`, any dependency primitive files, and the exact npm deps. Keep the guideline/steps boilerplate verbatim.
 
@@ -109,5 +110,7 @@ The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text
 - A monolithic component that should be decomposed; JSX with content hardcoded inline instead of mapped from typed data.
 - Relying on `clsx`/`className` to override a base utility (no tailwind-merge here).
 - Thick default icon strokes; missing hover/focus states; saturated fills where a text-ramp/surface shift would do.
+- **Non-focal text at `text-sm`+** — names, cell values, ledes, control labels leaking above the 12px field. The field is `text-xs`; only titles and the one focal value rise, and non-focal text differentiates by weight/color/case, never size.
+- **Two risers in one card** — a raised name AND a raised price (or any second emphasized size). Keep exactly one focal per card; the rest sits at `text-xs`.
 - `data-slot` shadcn-style primitives instead of the house `forwardRef` + `displayName` + `cva` pattern.
 - Deep-relative imports (`../../../`) instead of `@/`.
