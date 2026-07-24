@@ -101,34 +101,39 @@ Styling
 
 **Enforcement:** See Phase 6 (Component Library) and Phase 8 (Frontend Architecture) for how this applies during design and implementation.
 
+## Library Selection Policy
+
+Do not assume or hardcode a specific third-party library for the needs below. For each one:
+
+1. **Reuse first.** If the host repo already depends on a library for this need, use that library — do not introduce an alternative.
+2. **Otherwise recommend.** Choose the option that is currently the most widely recommended for this need on a Next.js App Router + React + TypeScript stack, and briefly say why.
+3. **Confirm before installing.** Never add a dependency unilaterally and never hand-edit `package.json`. Propose the package and the reason, then wait for the maintainer's approval before running `pnpm add`.
+
 State
 
-- TanStack Query (server state)
-- useState / useReducer / URL params (local state)
-- Zustand only when complexity genuinely demands a global store
+- Server state; local state (useState / useReducer / URL params); a global store only when complexity genuinely demands one.
 
 Forms
 
-- Zod schemas (validation; derive types with `z.infer`)
-- Native / uncontrolled forms — no mandated form library (add React Hook Form only if complexity demands)
+- Schema-based validation (derive types from the schema) and form handling.
 
 Animations
 
-- motion (import from `motion/react`)
+- Declarative UI animation.
 
-{{DOMAIN_SPECIFIC_LIBS}} (include only if the domain needs them, e.g. Maps: Google Maps / Mapbox for geospatial domains)
+{{DOMAIN_SPECIFIC_LIBS}} (include only if the domain needs them, and only after confirmation — e.g. a geospatial library for map-heavy domains)
 
 Charts
 
-- Recharts
+- Data visualization.
 
 Icons
 
-- Lucide
+- A single, consistent icon set.
 
 Images
 
-- Next Image
+- The Next.js Image component (framework-native).
 
 Accessibility
 
@@ -136,8 +141,7 @@ Accessibility
 
 Testing
 
-- Playwright
-- Vitest
+- Unit / component tests and end-to-end tests.
 
 ---
 
@@ -851,9 +855,9 @@ This phase produces 6 navigation, reference, and setup documents.
     - Set up CSS variables (Phase 7)
     - Configure dark mode
 - Component library bootstrap
-    - Install dependencies (Lucide, motion, etc.)
+    - Install the agreed dependencies (per the Library Selection Policy — confirm before installing)
     - Create base component directory
-- Testing setup (Vitest, Playwright)
+- Testing setup (unit / component + end-to-end, per the Library Selection Policy)
 - Developer workflow setup (git hooks, linting, formatting)
 - Verification checklist (everything installed and ready)
 
