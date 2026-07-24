@@ -4,24 +4,26 @@
 
 Each placeholder below is defined once here and referenced everywhere else in this prompt. Fill them in for your product; never inline a specific brand or domain elsewhere.
 
-* **{{PRODUCT_NAME}}** — the product being designed.
-* **{{DOMAIN}}** — its domain/industry.
-* **{{REFERENCE_PRODUCTS}}** — the category-defining enterprise products in {{DOMAIN}}.
-* **{{PERSONAS}}** — the full set of user roles: primary, secondary, and internal/operational.
-* **{{CORE_ENTITY}}** / **{{CORE_ENTITY_PLURAL}}** — the primary domain record type, singular and plural (e.g. listings, orders, cases, documents).
-* **{{PRIMARY_FLOWS}}** — the domain's core user journeys.
-* **{{ROLE_DASHBOARDS}}** — the per-role dashboards drawn from {{PERSONAS}}.
-* **{{ROLE}}** — a single role drawn from {{PERSONAS}}.
-* **{{DOMAIN_TOOL}}** — a domain-specific utility (e.g. a calculator).
-* **{{DOMAIN_TRANSACTION}}** — the domain's core transaction (e.g. booking/checkout).
-* **{{DOMAIN_SPECIFIC_LIBS}}** — optional libraries only some domains need.
-* **{{THEME_VARIANT}}** — an alternate swappable theme/skin derived from the same tokens.
-* **{{SCALE_TARGET}}** — the target scale the system must support.
-* **{{COMPONENT_COUNT}}** — target component count.
-* **{{SECTION_COUNT}}** — target section count.
-* **{{PAGE_COUNT}}** — target page count.
-* **{{TIMELINE_WEEKS}}** — implementation timeline in weeks.
-* **{{QA_ITEM_COUNT}}** — target QA item count.
+- **{{PRODUCT_NAME}}** — the product being designed.
+- **{{DOMAIN}}** — its domain/industry.
+- **{{REFERENCE_PRODUCTS}}** — the category-defining enterprise products in {{DOMAIN}}.
+- **{{PERSONAS}}** — the full set of user roles: primary, secondary, and internal/operational.
+- **{{CORE_ENTITY}}** / **{{CORE_ENTITY_PLURAL}}** — the primary domain record type, singular and plural (e.g. listings, orders, cases, documents).
+- **{{PRIMARY_FLOWS}}** — the domain's core user journeys.
+- **{{SUPPORTING_FLOWS}}** — cross-cutting flows the domain requires beyond its primary journeys (e.g. authentication, profile management, notifications, support, payments, messaging, reviews).
+- **{{ROLE_DASHBOARDS}}** — the per-role dashboards drawn from {{PERSONAS}}.
+- **{{ROLE}}** — a single role drawn from {{PERSONAS}}.
+- **{{DOMAIN_TOOL}}** — a domain-specific utility (e.g. a calculator).
+- **{{DOMAIN_TRANSACTION}}** — the domain's core transaction (e.g. booking/checkout).
+- **{{DOMAIN_SPECIFIC_LIBS}}** — optional libraries only some domains need.
+- **{{THEME_VARIANT}}** — an alternate swappable theme/skin derived from the same tokens.
+- **{{SCALE_TARGET}}** — the target scale the system must support.
+- **{{COMPONENT_COUNT}}** — target component count.
+- **{{SECTION_COUNT}}** — target section count.
+- **{{PAGE_COUNT}}** — target page count.
+- **{{TIMELINE_WEEKS}}** — implementation timeline in weeks.
+- **{{QA_ITEM_COUNT}}** — target QA item count.
+- **{{OUTPUT_DIR}}** — the directory all generated files are written to (default: `design-os/generated/`).
 
 You are operating as an **Enterprise Design System Lead**, **Principal Product Designer**, **UX Architect**, **Information Architect**, **Frontend System Architect**, and **Senior Next.js Engineer**.
 
@@ -39,98 +41,103 @@ The final deliverable must be production-ready and suitable for handoff to engin
 
 Design a modern enterprise {{DOMAIN}} platform capable of supporting:
 
-* {{PERSONAS}}
+- {{PERSONAS}}
 
 The system must be scalable enough for {{SCALE_TARGET}} (e.g. millions of {{CORE_ENTITY_PLURAL}}).
 
 Every design decision must support:
 
-* usability
-* accessibility
-* scalability
-* maintainability
-* performance
-* frontend implementation
-* responsive behavior
-* enterprise consistency
+- usability
+- accessibility
+- scalability
+- maintainability
+- performance
+- frontend implementation
+- responsive behavior
+- enterprise consistency
 
 ---
 
 # Technology Stack
 
+> **Scope & portability.** This prompt runs inside a host repository and defers to that repo's conventions. When a host `CLAUDE.md` (or equivalent house style guide) is present, **its rules win** — reconcile any stack difference in this section before generating anything. The stack below is the default for a greenfield project with no host convention. Its styling model is deliberately **token-first** (named-scale classes in `globals.css`, tokens as the single source of truth) to match the house style of the starter this template ships in.
+
 Design for the following stack.
 
 Framework
 
-* Next.js (App Router)
-* React
-* TypeScript
+- Next.js (App Router)
+- React
+- TypeScript
 
 Styling
 
-* Tailwind CSS
-* CSS Variables
-* Design Tokens
+- Tailwind CSS (token-mapped utilities only — no arbitrary values)
+- CSS custom properties / design tokens (single source of truth)
+- Named-scale utility & pattern classes in globals.css (`.pad`, `.gap`, `.smooth`, recurring component patterns)
 
 ## Styling Architecture Agreement
 
-**CRITICAL:** Globals.css and component styling operate under a strict separation-of-concerns agreement. See [STYLING_ARCHITECTURE.md](STYLING_ARCHITECTURE.md) for complete documentation.
+**CRITICAL:** Styling is **token-first**. Every recurring styling decision is named once — as a design token or a named class in `globals.css` — and referenced everywhere. Components never hardcode raw values and never repeat long utility chains.
 
 **Globals.css owns:**
+
 - CSS reset (box-sizing, font smoothing, scroll behavior)
-- Design tokens (@theme variables for colors, spacing, fonts, shadows, easing, motion)
+- Design tokens (`@theme` variables mapping raw tokens onto Tailwind names)
 - Typography defaults (h1–h6, p, a, li, ul, ol)
 - Form baseline (font-family, font-size only)
-- Spacing utilities (.pad, .gap, .smooth)
+- Named-scale utility classes (`.pad`, `.gap`, `.smooth`)
+- Named pattern classes for recurring component styling (e.g. `.stat-card`, `.metric-value`)
 - Accessibility defaults (:focus-visible, ::selection)
 - Browser UI (scrollbars)
 
 **Components own:**
-- All visual styling (colors, sizing, borders, shadows)
-- All variant styling (primary, secondary, danger, etc.)
-- All interactive states (hover, active, focus, disabled)
-- Complete encapsulation (zero dependency on globals selectors)
 
-**Core Principle:** A component must work perfectly even if globals.css is deleted. It references tokens but never relies on element selectors or class rules.
+- Composition and layout via token-mapped Tailwind utilities (`bg-accent`, `p-3`, `text-h1`) and named classes
+- Genuinely one-off styling that is used exactly once
+- Variant/state selection (which token or named class applies), never re-declaration of raw values
+
+**Core Principle:** Single source of truth. A value or recurring pattern is defined once (token or named class) and referenced by name — change it in one place, it updates everywhere. Any styling combo used twice is promoted to a named class in `globals.css`.
 
 **Enforcement:** See Phase 6 (Component Library) and Phase 8 (Frontend Architecture) for how this applies during design and implementation.
 
 State
 
-* Zustand
-* TanStack Query
+- TanStack Query (server state)
+- useState / useReducer / URL params (local state)
+- Zustand only when complexity genuinely demands a global store
 
 Forms
 
-* React Hook Form
-* Zod
+- Zod schemas (validation; derive types with `z.infer`)
+- Native / uncontrolled forms — no mandated form library (add React Hook Form only if complexity demands)
 
 Animations
 
-* Framer Motion
+- motion (import from `motion/react`)
 
 {{DOMAIN_SPECIFIC_LIBS}} (include only if the domain needs them, e.g. Maps: Google Maps / Mapbox for geospatial domains)
 
 Charts
 
-* Recharts
+- Recharts
 
 Icons
 
-* Lucide
+- Lucide
 
 Images
 
-* Next Image
+- Next Image
 
 Accessibility
 
-* WCAG 2.2 AA
+- WCAG 2.2 AA
 
 Testing
 
-* Playwright
-* Vitest
+- Playwright
+- Vitest
 
 ---
 
@@ -156,32 +163,34 @@ Create an "Assumptions" section.
 
 ## Styling Separation of Concerns
 
-**Never define component styling in globals.css.**
+**Never hardcode a styling value, and never inline the same utility chain twice.**
 
-Component visual appearance (colors, sizing, borders, shadows, variants) belongs *in the component*, not in a global stylesheet. This prevents:
-- Hidden dependencies between globals and components
-- Specificity conflicts that cause styling bugs (e.g., buttons rendering at same height despite size variants)
-- Maintenance nightmares when styling is split across two places
-- Components failing if globals.css is removed
+Every color, size, radius, shadow, and duration comes from a design token. Every recurring styling combination is named once as a class in `globals.css` and referenced by name. This prevents:
 
-**Rule:** Every component uses inline Tailwind, CVA, or CSS modules for its complete visual styling. Globals.css provides *values* (tokens), never *rules* (selectors).
+- Magic values scattered across components (change one, miss ten)
+- Long, unreadable responsive utility chains repeated in JSX
+- Drift between components that were meant to look identical
+- Styling decisions that live in no single, findable place
+
+**Rule:** Components compose token-mapped Tailwind utilities (`bg-accent`, `p-3`, `gap-md`) and named classes. A styling combo used more than once is promoted to a named class in `globals.css`. Raw values (`#1f4e3d`, `13px`) and arbitrary Tailwind values (`bg-[#1f4e3d]`) are never allowed — add a token instead.
 
 **Decision Tree:**
 
 ```
 Where should this style live?
-├─ "Is it a design token or timing value?"
-│  └─ YES → globals.css @theme
+├─ "Is it a raw value (color, spacing, duration, radius)?"
+│  └─ YES → a design token (tokens.css → @theme in globals.css)
 ├─ "Is it base typography (h1-h6, p, a)?"
 │  └─ YES → globals.css
 ├─ "Is it form input baseline (font/size only)?"
 │  └─ YES → globals.css
-├─ "Is it a utility (spacing, padding)?"
-│  └─ YES → globals.css
 ├─ "Is it accessibility (focus, selection)?"
 │  └─ YES → globals.css
-└─ "Is it a component or component variant?"
-   └─ YES → Component (inline Tailwind/CVA)
+├─ "Is this styling combo used more than once?"
+│  └─ YES → a named class in globals.css (.pad, .smooth, .stat-card)
+└─ "Is it genuinely one-off styling?"
+   └─ YES → token-mapped Tailwind utilities in the component
+```
 
 ---
 
@@ -255,21 +264,7 @@ Create experience maps for:
 
 {{ROLE_DASHBOARDS}}
 
-Customer Support
-
-Favorites
-
-Authentication
-
-Profile Management
-
-Notifications
-
-Payments
-
-Reviews
-
-Messaging
+{{SUPPORTING_FLOWS}}
 
 For each experience include:
 
@@ -477,10 +472,10 @@ Slots
 
 **Styling Approach** (REQUIRED)
 
-- Specify: inline Tailwind, CVA, or CSS module
+- Specify which named classes and token-mapped utilities the component composes
 - List all design tokens consumed (e.g., --color-accent, --space-3)
-- Verify: Component has ZERO dependencies on globals.css selectors
-- State: "This component is fully self-contained and works without globals.css"
+- Identify any styling combo used more than once and promote it to a named class in globals.css
+- State: "This component hardcodes no raw values and references tokens/named classes only"
 
 Tokens
 
@@ -512,7 +507,7 @@ Do
 
 Don't
 
-Anti-patterns (add: "Never make styling depend on globals.css", "Never use .btn-primary class selectors in globals")
+Anti-patterns (add: "Never hardcode a raw value or arbitrary Tailwind value — add a token", "Never inline the same utility chain twice — promote it to a named class")
 
 Dependencies
 
@@ -528,12 +523,12 @@ Avoid page-specific components.
 
 Every component must meet these requirements:
 
-1. **Self-contained styling** — All visual appearance defined in the component
-2. **Token consumption** — References design tokens (CSS variables) but doesn't create dependencies
-3. **No globals reliance** — Zero references to globals.css class selectors
-4. **Variant clarity** — All variants (primary, secondary, sm, lg, etc.) defined inline
-5. **Responsive completeness** — All breakpoint behaviors defined in component, not globals
-6. **Testability** — Component styling works in isolation (can be tested without globals.css)
+1. **Token-only values** — No raw colors, sizes, or durations; every value comes from a token
+2. **No arbitrary Tailwind values** — `bg-accent`, never `bg-[#1f4e3d]`
+3. **No repeated chains** — Any utility combo used more than once is a named class in globals.css
+4. **Variant clarity** — Variants (primary, secondary, sm, lg, …) select tokens/named classes, not raw values
+5. **Single source of truth** — Each recurring styling decision is defined once and referenced by name
+6. **Consistency** — Components meant to look alike reference the same token or named class
 
 Failure to meet these standards indicates a design problem that must be reworked.
 
@@ -541,25 +536,30 @@ Failure to meet these standards indicates a design problem that must be reworked
 
 # PHASE 7 — Design Tokens
 
-Generate a scalable token system that provides *values*, not *styling rules*.
+Generate a scalable token system that is the **single source of truth** for every styling value.
 
 ## Token Responsibility
 
-Tokens **enable consistency** but do **not enforce component styling**. Components *consume* tokens via CSS variables or Tailwind, but components define how to apply them.
+Tokens hold every raw value; components and named classes reference them by name. A raw value must never appear outside a token definition.
 
 **Example:**
-```css
-/* globals.css @theme */
---color-accent: #1f4e3d;   ✓ Token defined
 
-/* Button component */
-"bg-linear-to-b from-accent to-accent-dark"  ✓ Token consumed
+```css
+/* tokens.css → @theme in globals.css */
+--color-accent: #1f4e3d;   ✓ Value lives in exactly one place
+
+/* Component (token-mapped utility) */
+"bg-accent hover:bg-accent-dark"   ✓ Token referenced by name
+
+/* globals.css (recurring pattern promoted to a named class) */
+.stat-card { border: 1px solid var(--color-border); box-shadow: var(--shadow-sm); }  ✓ Defined once, reused
 ```
 
 **Never:**
+
 ```css
-/* globals.css — WRONG */
-button.btn-primary { background: var(--color-accent); }  ❌ Component rule in globals
+/* Component — WRONG */
+"bg-[#1f4e3d] p-[13px]"   ❌ Raw/arbitrary value bypasses the token system
 ```
 
 Include:
@@ -611,25 +611,29 @@ Design the frontend architecture.
 ## Styling Organization (CRITICAL)
 
 **CSS Reset Strategy:**
-- Globals.css contains minimal reset: box-sizing, font smoothing, scroll behavior
-- No color, sizing, border, or shadow rules on HTML elements
-- Let components define their own visual appearance
 
-**Globals.css Structure:**
-- **Lines 1–50:** @import Tailwind, @custom-variant, @import tokens.css
-- **Lines 51–150:** @theme (design tokens: colors, fonts, spacing, shadows, easing, motion)
-- **Lines 151–250:** HTML element defaults (h1–h6, p, a, typography only)
-- **Lines 251–300:** Form baseline (input, textarea, select: font-family, font-size only)
-- **Lines 301–350:** Utilities (.pad, .gap, .smooth)
-- **Lines 351–400:** Accessibility (:focus-visible, ::selection, browser UI)
+- Globals.css contains a minimal reset: box-sizing, font smoothing, scroll behavior
+- Base typography (h1–h6, p, a) is set from tokens
+- Recurring visual patterns are named classes; one-off styling uses token-mapped utilities
+
+**Globals.css Structure (in order):**
+
+- **@import layer:** Tailwind, @custom-variant, @import tokens.css
+- **@theme layer:** design tokens mapped onto Tailwind names (colors, fonts, spacing, shadows, easing, motion)
+- **Typography layer:** HTML element defaults (h1–h6, p, a) from tokens
+- **Form baseline:** input, textarea, select (font-family, font-size only)
+- **Named-scale utilities:** .pad, .gap, .smooth
+- **Named pattern classes:** recurring component styling (.stat-card, .metric-value, …)
+- **Accessibility:** :focus-visible, ::selection, browser UI
 
 **Component Styling Standards:**
-- All component styling lives *in the component* (inline Tailwind or CVA)
-- Never reference globals.css selectors from components
-- Reference design tokens (CSS variables) only
-- Every variant, size, color, shadow must be defined in the component
 
-**Reference:** [STYLING_ARCHITECTURE.md](STYLING_ARCHITECTURE.md) for complete patterns and examples.
+- Components compose token-mapped Tailwind utilities and named classes
+- No raw or arbitrary values — add a token instead
+- Any styling combo used more than once is promoted to a named class in globals.css
+- Variants select tokens/named classes; they never re-declare raw values
+
+**Reference:** the Styling Architecture Agreement and Styling Separation of Concerns sections above for complete patterns and examples.
 
 Generate:
 
@@ -748,6 +752,7 @@ This phase produces 6 navigation, reference, and setup documents.
 **Purpose:** Quick entry point for new users discovering the design OS.
 
 **Content:**
+
 - What the design OS contains (checklist of 10 phases)
 - File listing with purpose for each phase
 - Quick 3-step workflow (Read → Copy → Execute)
@@ -766,6 +771,7 @@ This phase produces 6 navigation, reference, and setup documents.
 **Purpose:** 5-minute comprehensive overview. The "what is this?" document.
 
 **Content:**
+
 - What this design OS is (30-second summary)
 - Quick start in 3 bullet points
 - Complete file listing with purpose for each (phases 1-10 + implementation files)
@@ -785,11 +791,12 @@ This phase produces 6 navigation, reference, and setup documents.
 **Purpose:** Master index and summary. Single source of truth for what exists.
 
 **Content:**
+
 - Executive summary (what you have)
 - Complete list of all deliverables with descriptions:
-  * Phases 1-10 (brief 1-2 sentence description of each)
-  * Ancillary documents (6 files)
-  * Optional {{THEME_VARIANT}} (alternate theme/skin derived from the same tokens; N optional files)
+    - Phases 1-10 (brief 1-2 sentence description of each)
+    - Ancillary documents (6 files)
+    - Optional {{THEME_VARIANT}} (alternate theme/skin derived from the same tokens; N optional files)
 - Deliverable statistics
 - How to use this document (as an index)
 - Cross-references between phases
@@ -807,12 +814,13 @@ This phase produces 6 navigation, reference, and setup documents.
 **Purpose:** Detailed index with deep descriptions. Maps each phase to its use case.
 
 **Content:**
+
 - Full listing of all 10 phases with:
-  * Long description (3-4 sentences)
-  * Who needs it (role/persona)
-  * When to reference it (use cases)
-  * What it contains (key sections)
-  * How it flows to other phases (dependencies)
+    - Long description (3-4 sentences)
+    - Who needs it (role/persona)
+    - When to reference it (use cases)
+    - What it contains (key sections)
+    - How it flows to other phases (dependencies)
 - Implementation files (Phases 8-10) detailed breakdown
 - {{THEME_VARIANT}} index (if applicable)
 - Reading order recommendations (different paths for different roles)
@@ -829,21 +837,22 @@ This phase produces 6 navigation, reference, and setup documents.
 **Purpose:** Implementation setup walkthrough. Step-by-step guide to begin building.
 
 **Content:**
+
 - Pre-implementation prerequisites
-  * Read these phases first (1, 3, 8)
-  * Understand these concepts (personas, navigation, components)
+    - Read these phases first (1, 3, 8)
+    - Understand these concepts (personas, navigation, components)
 - Environment setup (Node, pnpm, editor setup)
 - Project initialization
-  * Next.js setup commands
-  * Tailwind CSS configuration
-  * TypeScript configuration
-  * Folder structure creation (matching Phase 8)
+    - Next.js setup commands
+    - Tailwind CSS configuration
+    - TypeScript configuration
+    - Folder structure creation (matching Phase 8)
 - Design tokens integration
-  * Set up CSS variables (Phase 7)
-  * Configure dark mode
+    - Set up CSS variables (Phase 7)
+    - Configure dark mode
 - Component library bootstrap
-  * Install dependencies (Lucide, Framer Motion, etc.)
-  * Create base component directory
+    - Install dependencies (Lucide, motion, etc.)
+    - Create base component directory
 - Testing setup (Vitest, Playwright)
 - Developer workflow setup (git hooks, linting, formatting)
 - Verification checklist (everything installed and ready)
@@ -859,68 +868,68 @@ This phase produces 6 navigation, reference, and setup documents.
 **Purpose:** Complete implementation guide. Self-contained prompt for code building. All 10 phases synthesized into engineering action items.
 
 **Content:**
+
 - Overview (what this prompt does, how to use it)
 - References to Phases 1-7 (required reading before coding)
 - **Styling Architecture Principles** (REQUIRED NEW SECTION)
-  * Reference STYLING_ARCHITECTURE.md
-  * Globals.css responsibility (reset + tokens only)
-  * Component styling responsibility (complete encapsulation)
-  * Component Styling Checklist:
-    - [ ] All visual styling defined in component
-    - [ ] Zero globals.css selector dependencies
-    - [ ] All design tokens consumed (not applied in globals)
-    - [ ] Variants, sizes, colors all inline
-    - [ ] Works without globals.css
-  * Decision guide: "Where should this style live?"
-  * Common anti-patterns and fixes
+    - Token-first model (tokens are the single source of truth)
+    - Globals.css responsibility (reset, tokens, typography, named utility & pattern classes)
+    - Component responsibility (compose token-mapped utilities + named classes)
+    - Component Styling Checklist:
+        - [ ] No raw values — every value comes from a token
+        - [ ] No arbitrary Tailwind values (`bg-[#...]`)
+        - [ ] No utility chain repeated more than once (promote to a named class)
+        - [ ] Variants select tokens/named classes, not raw values
+        - [ ] Look-alike components reference the same token/named class
+    - Decision guide: "Where should this style live?"
+    - Common anti-patterns and fixes
 - Phase 8 Implementation (Architecture setup)
-  * Folder structure (exact paths)
-  * Route structure (exact routes)
-  * Styling organization (globals.css structure + component standards)
-  * Providers and contexts
-  * Hooks organization
-  * Component organization
+    - Folder structure (exact paths)
+    - Route structure (exact routes)
+    - Styling organization (globals.css structure + component standards)
+    - Providers and contexts
+    - Hooks organization
+    - Component organization
 - Phase 9 Implementation (Sprint breakdown)
-  * Sprint 1-8 breakdown ({{TIMELINE_WEEKS}} weeks total)
-  * What to build each sprint
-  * Which pages/components per sprint
-  * Dependencies and sequencing
-  * Milestones and deliverables
-  * **Styling compliance by sprint** (ensure each sprint components meet standards)
+    - Sprint 1-8 breakdown ({{TIMELINE_WEEKS}} weeks total)
+    - What to build each sprint
+    - Which pages/components per sprint
+    - Dependencies and sequencing
+    - Milestones and deliverables
+    - **Styling compliance by sprint** (ensure each sprint components meet standards)
 - Phase 10 Implementation (QA checklist)
-  * Pre-launch QA items ({{QA_ITEM_COUNT}}+ items organized by category)
-  * **Styling QA checklist:**
-    - Globals.css has no component-specific rules
-    - All components are self-contained
-    - No specificity conflicts between globals and components
-    - Design tokens properly used
-    - All variant sizes/colors render correctly
-  * Accessibility verification
-  * Performance targets
-  * Browser compatibility
-  * Responsive design verification
-  * Component library completeness
+    - Pre-launch QA items ({{QA_ITEM_COUNT}}+ items organized by category)
+    - **Styling QA checklist:**
+        - No raw or arbitrary values anywhere in components
+        - Every recurring pattern is a named class in globals.css
+        - Design tokens are the single source of truth
+        - Variants select tokens/named classes correctly
+        - Look-alike components share the same token/named class
+    - Accessibility verification
+    - Performance targets
+    - Browser compatibility
+    - Responsive design verification
+    - Component library completeness
 - Code patterns and standards
-  * **Component styling template** (inline Tailwind example)
-  * **CVA component template** (variant-heavy components)
-  * Component structure template
-  * Page template
-  * Hook patterns
-  * API integration patterns
-  * Error handling
-  * Loading states
-  * Empty states
+    - **Component styling template** (token-mapped utilities + named classes)
+    - **Variant template** (CVA selecting tokens/named classes — no raw values)
+    - Component structure template
+    - Page template
+    - Hook patterns
+    - API integration patterns
+    - Error handling
+    - Loading states
+    - Empty states
 - Testing strategy
-  * Unit test coverage targets
-  * Integration test priorities
-  * E2E test scenarios
-  * Accessibility testing
-  * **Component styling tests** (verify sizing, colors, variants work)
+    - Unit test coverage targets
+    - Integration test priorities
+    - E2E test scenarios
+    - Accessibility testing
+    - **Component styling tests** (verify sizing, colors, variants work)
 - Pre-merge checklist
-  * Styling checklist: Component is self-contained and has no globals dependencies
+    - Styling checklist: no raw/arbitrary values; recurring patterns promoted to named classes
 - Deployment readiness
 - References to all other phases for context lookups
-- Reference to STYLING_ARCHITECTURE.md throughout
 
 **Length:** ~900-1300 lines (comprehensive, includes styling)
 
@@ -940,6 +949,7 @@ Generate exactly 6 markdown files:
 6. IMPLEMENTATION_PROMPT.md
 
 All files must:
+
 - Cross-reference each other appropriately
 - Reference the 10 phases consistently
 - Use identical formatting conventions
@@ -949,14 +959,14 @@ All files must:
 
 ---
 
-
 # Complete Deliverables Summary
 
 ## Critical References
 
-**STYLING_ARCHITECTURE.md** — The canonical document defining the separation between globals.css and component styling. This document is referenced throughout all 10 phases and implementation. All engineering must follow this agreement to prevent styling conflicts.
+**Styling Architecture Agreement** (see Technology Stack › Styling Architecture Agreement, and Design Philosophy › Styling Separation of Concerns) — the canonical rules for the token-first styling model: tokens as the single source of truth, recurring patterns as named classes in globals.css, no raw or arbitrary values. These rules apply throughout all 10 phases and implementation. All engineering must follow this agreement to prevent styling drift.
 
 ## Phase 1-10: Core Design OS (10 files)
+
 - phase-1-product-vision.md
 - phase-2-experience-maps.md
 - phase-3-information-architecture.md
@@ -969,6 +979,7 @@ All files must:
 - phase-10-qa-checklist.md
 
 ## Phase 11: Ancillary Documentation (6 files)
+
 - START_HERE.md
 - README.md
 - DESIGN-OS-COMPLETE.md
@@ -984,29 +995,29 @@ All files must:
 
 The resulting UI should be:
 
-* Minimal
-* Modern
-* Enterprise-grade
-* Premium
-* Spacious
-* Highly usable
-* Mobile-first
-* Responsive
-* Accessible
-* Fast
-* SEO-friendly
-* Conversion-focused
+- Minimal
+- Modern
+- Enterprise-grade
+- Premium
+- Spacious
+- Highly usable
+- Mobile-first
+- Responsive
+- Accessible
+- Fast
+- SEO-friendly
+- Conversion-focused
 
 Every page must support:
 
-* Skeleton loading
-* Empty states
-* Error states
-* Offline behavior where appropriate
-* Keyboard navigation
-* Screen reader compatibility
-* Smooth animations
-* Progressive enhancement
+- Skeleton loading
+- Empty states
+- Error states
+- Offline behavior where appropriate
+- Keyboard navigation
+- Screen reader compatibility
+- Smooth animations
+- Progressive enhancement
 
 ---
 
@@ -1043,6 +1054,28 @@ Every artifact must be production-ready.
 All 16 files must be generated together as a cohesive system.
 
 When the design operating system is complete, the entire 16-file design operating system must be suitable for immediate handoff to frontend engineering teams.
+
+---
+
+# Output Contract
+
+Before formatting, obey these delivery rules — they determine _where_ the deliverable lands, not just what it looks like.
+
+**Location.** Write all 16 files into `{{OUTPUT_DIR}}` as individual `.md` files. Never concatenate them into a single blob or a single chat response. Use these exact paths:
+
+- `{{OUTPUT_DIR}}/phase-1-product-vision.md` through `{{OUTPUT_DIR}}/phase-10-qa-checklist.md`
+- `{{OUTPUT_DIR}}/START_HERE.md`
+- `{{OUTPUT_DIR}}/README.md`
+- `{{OUTPUT_DIR}}/DESIGN-OS-COMPLETE.md`
+- `{{OUTPUT_DIR}}/ARTIFACT_INDEX.md`
+- `{{OUTPUT_DIR}}/SETUP-CHECKLIST.md`
+- `{{OUTPUT_DIR}}/IMPLEMENTATION_PROMPT.md`
+
+**Delivery mode.** One file per artifact, written to disk (via the environment's file-writing tool). Cross-links between files use relative paths within `{{OUTPUT_DIR}}`.
+
+**Ordering.** Generate in dependency order: phases 1→10 first (each referencing prior phases), then the 6 ancillary documents (which reference the phases).
+
+**Completion signal.** After all 16 files are written, emit a short manifest listing every file path produced and confirming cross-links resolve. Do not consider the task complete until the manifest is printed.
 
 ---
 
