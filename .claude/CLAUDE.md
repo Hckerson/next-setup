@@ -28,19 +28,32 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 
 ## Folder Structure
 
-| Route                   | Immediate Subfolders                                                | Purpose                                                                         |
-| ----------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `/app`                  | _(flat)_                                                            | App Router routes. Pages compose — they do not define data or components.       |
-| `/components/ui`        | `forms`                                                             | Generic, domain-free primitives. Reusable in any app.                           |
-| `/components/common`    | _(flat)_                                                            | Shared compositions over primitives.                                            |
-| `/components/wrappers`  | _(flat)_                                                            | Behavioural wrappers (motion, boundaries).                                      |
-| `/components/providers` | _(flat)_                                                            | React context providers.                                                        |
-| `/lib`                  | `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer. No JSX. Transport lives in `api-client.ts` + `api-routes.ts`. |
-| `/design-os`            | _(flat)_                                                            | Design-system seed prompt. Not application code.                                |
-| `/public`               | `fonts`                                                             | Static assets.                                                                  |
-| `/styles`               | _(flat)_                                                            | Global styles and token exports.                                                |
+| Route                   | Immediate Subfolders                                                                      | Purpose                                                                         |
+| ----------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `/app`                  | _(flat)_                                                                                  | App Router routes. Pages compose — they do not define data or components.       |
+| `/components/ui`        | `forms`                                                                                   | Generic, domain-free primitives. Reusable in any app.                           |
+| `/components/common`    | _(flat)_                                                                                  | Shared compositions over primitives.                                            |
+| `/components/wrappers`  | _(flat)_                                                                                  | Behavioural wrappers (motion, boundaries).                                      |
+| `/components/providers` | _(flat)_                                                                                  | React context providers.                                                        |
+| `/lib`                  | `contract` • `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer. No JSX. Transport lives in `api-client.ts` + `api-routes.ts`. |
+| `/design-os`            | _(flat)_                                                                                  | Design-system seed prompt. Not application code.                                |
+| `/public`               | `fonts`                                                                                   | Static assets.                                                                  |
+| `/styles`               | _(flat)_                                                                                  | Global styles and token exports.                                                |
+| `/tools/eslint`         | `rules`                                                                                   | Custom ESLint rules that enforce the conventions in this file. Not app code.    |
+| `/tools/codemods`       | _(flat)_                                                                                  | ts-morph codemods that rewrite violations the rules report. Not app code.       |
+| `/tools/contract`       | _(flat)_                                                                                  | Generator that turns the backend's OpenAPI document into `lib/contract/`.       |
 
 Add `lib/data/` (seed data) and `lib/constants.ts` on first use — the rules above assume those homes.
+
+Conventions in this file that can be checked mechanically belong in `tools/eslint/rules/` as a rule with a colocated `.test.ts`, registered by the `starter` plugin in `eslint.config.ts`. Where flat config already expresses the constraint (`no-restricted-imports` and friends), use config — a custom rule must earn itself by needing scope or path analysis config cannot reach.
+
+A rule that reports a violation ESLint cannot autofix — because the fix spans files — gets a matching codemod in `tools/codemods/`, also with a colocated `.test.ts` driven by an in-memory ts-morph project. Codemods are dry-run by default and only write under `--write`. When a transform would have to guess intent, it skips the call and reports the reason instead.
+
+## The contract layer
+
+`lib/contract/` is **generated — never edit it**. The backend's class-validator DTOs are the origin; `pnpm openapi` in `nest-setup` emits `openapi.json`, and `pnpm contract` here turns that into Zod schemas, `z.infer` types, and typed route builders. Change a field on a DTO, regenerate, and `pnpm type-check` fails here at every consumer — that break is the point of the layer.
+
+Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api-routes.ts` remains for endpoints the backend does not publish. Hand-written Zod in `lib/validations/` composes over the generated schemas (`.extend`, `.pick`) rather than restating them.
 
 ## File rules
 
@@ -51,11 +64,12 @@ Add `lib/data/` (seed data) and `lib/constants.ts` on first use — the rules ab
 
 ## Before you commit or push
 
-These three commands run at the commit or push boundary only — not after every edit.
+These commands run at the commit or push boundary only — not after every edit.
 
 1. `pnpm format` — Prettier owns formatting. Never override it by hand.
 2. `pnpm lint` — zero warnings. Fix every violation; never suppress one.
 3. `pnpm type-check` — strict, zero errors. No `as` assertions, no `// @ts-ignore`.
+4. `pnpm test` — the custom ESLint rules in `tools/eslint/` must stay green.
 
 Husky enforces the same checks and blocks on failure: **pre-commit** runs `pnpm lint-staged` (eslint --fix + prettier on staged files) then `pnpm type-check`; **pre-push** runs `pnpm type-check` and `pnpm lint` across the branch. The hooks are a backstop. Satisfy the three commands before you reach them.
 

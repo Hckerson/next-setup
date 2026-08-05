@@ -6,9 +6,9 @@ shape is what makes the output paste-and-run in a shadcn project.
 
 - `«component-file»` — kebab-case name, e.g. `stat-card.tsx` (or any kebab-case name matching the component).
 - Component + `demo.tsx` go in one ```tsx fence. `demo.tsx`must exercise the
-component with realistic sample data and import via`@/components/ui/«name»`.
+  component with realistic sample data and import via`@/components/ui/«name»`.
 - Add one extra ```tsx fence per **dependency primitive** the component needs that
-isn't already in `components/`(label it`shadcn/button`, etc.).
+  isn't already in `components/`(label it`shadcn/button`, etc.).
 - `«npm-deps»` — comma-separated external packages only (e.g. `lucide-react,
 class-variance-authority`). Omit anything already in `package.json`.
 - All component code must already satisfy the house-token + structure rules in
