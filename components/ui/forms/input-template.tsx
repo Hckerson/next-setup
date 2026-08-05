@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import Image from "next/image";
+import { format, isValid } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
+import { DATE_VALUE_FORMAT } from "@/lib/constants";
 
 interface TemplateProps {
     label: string;
@@ -47,9 +49,7 @@ export default function InputTemplate({
                         </div>
                     </div>
                 </div>
-                <div
-                    className={clsx("pad font-body flex-1 p-4 pt-0!")}
-                >
+                <div className={clsx("pad font-body flex-1 p-4 pt-0!")}>
                     {children}
                 </div>
             </div>
@@ -266,7 +266,7 @@ const SelectInput = ({
                 </div>
             </button>
             {selectionStatus && (
-                <ul className="absolute top-[105%] left-0 z-50 max-h-60 w-full overflow-auto rounded-md border border-white/10 bg-[#051B3A] shadow-lg [scrollbar-color:#051b3a_#051428] [scrollbar-width:thin]">
+                <ul className="absolute top-[105%] left-0 z-50 max-h-60 w-full [scrollbar-width:thin] [scrollbar-color:#051b3a_#051428] overflow-auto rounded-md border border-white/10 bg-[#051B3A] shadow-lg">
                     <li
                         onClick={() => {
                             handleChange(undefined, label);
@@ -300,23 +300,20 @@ const CalendarInput = ({
     name = "date",
 }: {
     value: Date;
-    name: string;
+    name?: string;
     handleChange: (newValue: string, field: string) => void;
 }) => {
+    const selected = isValid(value) ? format(value, DATE_VALUE_FORMAT) : "";
+
     return (
-        // <Calendar
-        //     mode="single"
-        //     selected={value}
-        //     onSelect={(newDate: Date | undefined) => {
-        //         if (newDate instanceof Date) {
-        //             handleChange(format(newDate, "yyyy-MM-dd"), name);
-        //         } else {
-        //             handleChange("Set Date", name);
-        //         }
-        //     }}
-        //     className="rounded-md border border-white/10"
-        // />
-        <></>
+        <input
+            type="date"
+            id={name}
+            name={name}
+            value={selected}
+            className="w-full rounded-lg bg-white/5 p-3 focus:outline-none md:rounded-xl"
+            onChange={(event) => handleChange(event.target.value, name)}
+        />
     );
 };
 
