@@ -4,46 +4,12 @@ import {
     ESLintUtils,
     TSESTree,
 } from "@typescript-eslint/utils";
+import { functionName, isFunctionNode } from "../ast";
 
 type Options = [{ clientModules: string[]; hooksDir: string }];
 type MessageIds = "outsideHooksDir" | "outsideHookFunction";
 
-type FunctionNode =
-    | TSESTree.FunctionDeclaration
-    | TSESTree.FunctionExpression
-    | TSESTree.ArrowFunctionExpression;
-
 const HOOK_NAME = /^use[A-Z0-9]/;
-
-const isFunctionNode = (node: TSESTree.Node): node is FunctionNode =>
-    node.type === AST_NODE_TYPES.FunctionDeclaration ||
-    node.type === AST_NODE_TYPES.FunctionExpression ||
-    node.type === AST_NODE_TYPES.ArrowFunctionExpression;
-
-const functionName = (node: FunctionNode): string | null => {
-    if (node.type !== AST_NODE_TYPES.ArrowFunctionExpression && node.id) {
-        return node.id.name;
-    }
-
-    const parent = node.parent;
-
-    if (
-        parent.type === AST_NODE_TYPES.VariableDeclarator &&
-        parent.id.type === AST_NODE_TYPES.Identifier
-    ) {
-        return parent.id.name;
-    }
-
-    if (
-        (parent.type === AST_NODE_TYPES.Property ||
-            parent.type === AST_NODE_TYPES.MethodDefinition) &&
-        parent.key.type === AST_NODE_TYPES.Identifier
-    ) {
-        return parent.key.name;
-    }
-
-    return null;
-};
 
 const rootIdentifier = (node: TSESTree.Node): TSESTree.Identifier | null => {
     let current = node;
