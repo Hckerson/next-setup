@@ -40,11 +40,7 @@ const request = async <T>(config: AxiosRequestConfig): Promise<Response<T>> => {
             ...config,
         });
         return response.data as Response<T>;
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            // Silently catch HTTP errors - component handles via isError/isLoading
-            // Uncomment to debug: console.error(error.message);
-        }
+    } catch {
         return defaultResponse;
     }
 };
@@ -81,22 +77,17 @@ export const query = {
 };
 
 apiClient.interceptors.request.use((config) => {
-    // Extract token from Zustand store directly
-    const token = `${0}`
+    const token = `${0}`;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 });
 
-// Handle 401 Unauthorized responses
 apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
-            // Clear auth state on unauthorized
-
-            // Redirect to login if not already there
             if (
                 typeof window !== "undefined" &&
                 !window.location.pathname.startsWith("/auth")

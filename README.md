@@ -21,7 +21,7 @@ The binding conventions live in `.claude/CLAUDE.md` (no hardcoding, single sourc
 
 Brand identity is the swappable default. To rebrand, edit only these three sources of truth:
 
-1. **Color + scale tokens** — `styles/tokens.css`. Change the CSS custom property *values* (colors, type scale, spacing). Every component derives from these; do not hardcode values elsewhere.
+1. **Color + scale tokens** — `styles/tokens.css`. Change the CSS custom property _values_ (colors, type scale, spacing). Every component derives from these; do not hardcode values elsewhere.
 2. **Fonts** — `public/fonts/font.ts`. Swap the `next/font` families; the `--nf-display` / `--nf-body` / `--nf-mono` CSS variables stay the same, so nothing downstream changes.
 3. **Page metadata** — the `metadata` export in `app/layout.tsx` (title, description).
 
