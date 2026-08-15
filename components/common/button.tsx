@@ -1,69 +1,66 @@
 "use client";
 import clsx from "clsx";
+import { forwardRef } from "react";
 import { Loader2 } from "lucide-react";
+import type { ButtonHTMLAttributes } from "react";
 
-interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonSize = "sm" | "md" | "lg" | "xl";
+type ButtonTone = "accent" | "quiet" | "ghost";
+
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
     isLoading?: boolean;
-    children: React.ReactNode;
-    size?: "sm" | "md" | "lg" | "xl" | "custom";
+    size?: ButtonSize;
+    tone?: ButtonTone;
 }
-export default function Button({
-    children,
-    isLoading,
-    className,
-    size = "custom",
-    ...rest
-}: Button) {
-    const small = size == "sm" || size == "md";
-    const sizes = {
-        "h-[36px] lg:h-[42px] xl:h-[48px] w-25 lg:w-30 xl:w-35 rounded-lg rounded-md":
-            size == "sm",
-        "h-[40px] lg:h-[46px] xl:h-[52px] w-35 lg:w-40 xl:w-45 xl:rounded-xl rounded-lg":
-            size == "md",
-        "h-[42px] lg:h-[56px] xl:h-[64px] w-37.5 lg:w-45 xl:w-50 md:rounded-xl rounded-lg":
-            size == "lg",
-        "h-[48px] lg:h-[64px] xl:h-[72px] w-47 lg:w-55 xl:w-60 rounded-lg md:rounded-xl":
-            size == "xl",
-        "h-[35px] lg:h-[45px]": size == "custom",
-    };
+
+const sizes: Record<ButtonSize, string> = {
+    sm: "h-8 gap-1.5 rounded-md px-3 text-xs",
+    md: "h-9 gap-2 rounded-md px-4 text-xs",
+    lg: "h-10 gap-2 rounded-lg px-5 text-sm",
+    xl: "h-11 gap-2 rounded-lg px-6 text-sm",
+};
+
+const tones: Record<ButtonTone, string> = {
+    accent: "border-accent bg-accent text-text-inverse hover:bg-accent-dark",
+    quiet: "border-border bg-background-muted text-text hover:border-border-dark",
+    ghost: "border-transparent text-text-secondary hover:bg-background-muted hover:text-text",
+};
+
+const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+    {
+        children,
+        isLoading = false,
+        size = "md",
+        tone = "accent",
+        className,
+        disabled,
+        type = "button",
+        ...rest
+    },
+    ref,
+) {
     return (
         <button
             {...rest}
+            ref={ref}
+            type={type}
+            disabled={disabled ?? isLoading}
+            aria-busy={isLoading}
             className={clsx(
-                "relative z-0 flex cursor-pointer items-center justify-center overflow-hidden shadow-inner transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
-                sizes,
+                "smooth font-body inline-flex cursor-pointer items-center justify-center border font-medium select-none",
+                "focus-visible:ring-accent focus-visible:ring-2 focus-visible:outline-none",
+                "disabled:cursor-not-allowed disabled:opacity-50",
+                sizes[size],
+                tones[tone],
                 className,
             )}
         >
-            {small ? (
-                isLoading ? (
-                    <Loader2 className="size-6 animate-spin" />
-                ) : (
-                    <span
-                        className={clsx(
-                            "absolute inset-0 flex items-center justify-center transition-colors duration-150 ease-in",
-                        )}
-                    >
-                        {children}
-                    </span>
-                )
-            ) : (
-                <div
-                    className={clsx(
-                        "absolute inset-0 flex h-full items-center justify-center border-none! transition-colors duration-150 ease-in hover:bg-none",
-                        className,
-                    )}
-                >
-                    {isLoading && (
-                        <span className="pl-2">
-                            <Loader2 className="relative flex size-6 animate-spin items-center justify-center" />
-                        </span>
-                    )}
-                    <span className="flex h-full w-full items-center justify-center">
-                        {children}
-                    </span>
-                </div>
+            {isLoading && (
+                <Loader2 className="size-3 animate-spin" strokeWidth={1.5} />
             )}
+            {children}
         </button>
     );
-}
+});
+
+export default Button;
