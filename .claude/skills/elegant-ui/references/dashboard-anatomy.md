@@ -2,7 +2,7 @@
 
 Read before building any dashboard, admin route, analytics view, or panel-composed screen. These are the shapes first-class admin UI actually uses; picking the wrong one is why a dense route still scrolls. Geometry comes from `density.md`.
 
-Paths are relative to `components/`; this project has no `src/`. Classes compose with **`clsx` only — there is no `cn` helper and no tailwind-merge**, so a `className` never overrides a base utility of the same property, it just appends both. Every archetype below is **prescriptive**: this starter ships no Card, Table, Panel, chart or meter, so each one is a build, and `density.md` §5 has the order.
+Paths are relative to `components/`; this project has no `src/`. Classes compose with **`clsx` only — there is no `cn` helper and no tailwind-merge**, so a `className` never overrides a base utility of the same property, it just appends both. Every archetype below is **prescriptive**: this starter ships no Card, Table, Panel, meter or chart, so each one is a build, and `density.md` §5 has the order and the honest cost. It _does_ ship `Button` (`sm` = `h-8`, `md` = `h-9`) and the `components/ui/forms/*` set — check §5 before declaring anything missing.
 
 ## The failure this prevents
 
@@ -28,7 +28,7 @@ A bordered band is a card for the depth floor's purposes, and it is not chrome �
                 strokeWidth={1.5}
                 aria-hidden
             />
-            <span className="text-text-muted min-w-0 truncate font-mono text-[10px] tracking-wide uppercase">
+            <span className="micro-label text-text-muted min-w-0 truncate">
                 {stat.label}
             </span>
             <span
@@ -54,19 +54,21 @@ Not label → value → delta stacked down the card. Value left, trend right **o
 
 **The shipped `.stat-card` family is the stacked shape, not the band.** `styles/globals.css` gives `.stat-card` `display:flex; flex-direction:column; height:100%` with `.metric-icon` (margin-bottom), `.metric-label`, `.metric-value` (`text-h5`, `font-light`, display face) and `.metric-meta` stacked beneath — four bands and no height cap. Its `--metric-color` hook and the `.stat-card--pipeline/--success/--activity/--warning` modifiers are genuinely useful; the **stacking** is what to replace. Rebuild as one `h-20` band that reuses those tone modifiers.
 
-**Read the cost before the code.** A trailing sparkline means the metric type carries a series **and** a charting dependency exists — neither is true yet. Before shipping a KPI card:
+**Read the cost before the code.** A trailing sparkline means the metric type carries a series. No charting dependency ships and none is coming — the house trend artifacts are the pure-CSS **meter** and a hand-rolled inline `<svg>` polyline (`density.md` §4). Before shipping a KPI card:
 
 - A card whose only artifact is a **delta chip** renders **zero** artifacts when the delta is null. That is a texture-floor breach, not a judgement call.
 - If the type carries neither a series nor a ratio, don't ship the card: fold the metric into the stat band, or declare `VETO: TEXTURE — <metric> has no series or ratio — …`.
 - A pure-CSS **meter** is the artifact that needs no dependency. Prefer it over promising a chart.
 
-The label is a `font-mono text-[10px] uppercase tracking-wide` eyebrow **inside** the band, above or left of the value — a separate header band would blow the `h-20` cap on its own.
+The label is a `.micro-label` eyebrow **inside** the band, above or left of the value — a separate header band would blow the `h-20` cap on its own.
+
+**The height budget, stated — this is why the focal caps at `text-h6`.** `h-20` (80px) minus `p-3` (24px) leaves a **56px** content box. The eyebrow (`.micro-label`, 10px × 1.4) costs 14px and the focal (`text-h6`, 20px × 1.5) costs 30px: 44px, plus a `gap-1`, leaves 8px spare. So a KPI card holds **two bands, not three** — the delta chip rides right-aligned on the focal's row, which is what "value left, trend right" already says. A `text-h4` focal (30px × 1.3 = 39px) does not fit: eyebrow plus focal alone is 53px. `text-h6` still clears the ≥3-step label→value ratio by five steps.
 
 ## 3. Chart card — the headline number lives INSIDE the chart header
 
 A chart card carries its own focal readout and its range control in the header, then the plot, then the accessible table view.
 
-Do not put a chart in a bare card with a title and nothing else — the plot has no readout to anchor it. No charting library is installed; pick one deliberately, and note that every responsive chart mounts its own resize observer per instance (see `density.md` §4).
+Do not put a chart in a bare card with a title and nothing else — the plot has no readout to anchor it. **The house chart is a hand-rolled inline `<svg>`** — polyline, area, or bar — sized by its container with no resize observer and no dependency (`density.md` §4). Axes, tooltips and brushing are out of scope for the starter: a route that genuinely needs them makes its own `pnpm add` call and states it.
 
 Pair the plot with a `<details>`-based table view so the data is reachable without the canvas.
 
@@ -81,7 +83,7 @@ footer     h-9   pagination left · "Showing 1–8 of 50" right
 
 - **Never `flex-wrap` the toolbar** — wrapping is exactly what lets a bar exceed its stated band.
 - Row height goes on the row (`h-9`), not in the cell padding. Naming `h-9` in your DENSITY line requires `h-9` in the JSX.
-- Filter controls are `Select` **wrapped in a sized box** (`<div className="w-44">`) — with `clsx` and no merge, a `w-full` base cannot be narrowed through `className`.
+- Filter controls are `SelectInput` from `@/components/ui/forms` **wrapped in a sized box** (`<div className="w-44">`) — its base is `h-9 w-full`, and with `clsx` and no merge a `w-full` base cannot be narrowed through `className`.
 - The row count line is not optional. A table without "showing X of Y" hides its own scale.
 - Sorting: build `aria-sort` + a caret on the header, or don't imply a sortable column. There is no sortable-header primitive here.
 
@@ -106,28 +108,28 @@ Pull the ranked item out: a hero tile carrying the rank (larger span, an added d
 ```
 ┌────────┬───────────────────────────────┬──────────────┐
 │  rail  │  main column                  │ context rail │
-│  w-60  │  flex-1 min-w-0               │  w-72/w-80   │
+│  w-60  │  flex-1 min-w-0               │ .context-rail│
 │  w-14  │  stat band                    │  activity    │
 │ collapsed  chart + table               │  queues      │
 └────────┴───────────────────────────────┴──────────────┘
 ```
 
-The context rail is a **peer of the main column for the whole route**, not an `xl:col-span-1` inside one section. Stacking full-width sections and splitting 2/3–1/3 inside only one of them wastes the right third of every other section.
+The context rail is a **peer of the main column for the whole route**, not an `xl:col-span-1` inside one section. Stacking full-width sections and splitting 2/3–1/3 inside only one of them wastes the right third of every other section. **Responsive collapse is a named class, not a variant chain** — `token-first-classnames` rejects every `lg:`/`max-md:` prefix in a `className`, so the rail is `.context-rail` (`styles/globals.css`: 18rem, hidden below 1280px) and any other breakpoint behaviour earns its own named class beside it.
 
 Rail geometry is in `page-chrome.md` (`bg-sidebar border-r border-sidebar-border`, `w-60` expanded / `w-14` icon-only). **Never dark rail + dark bar.** Chrome is exempt from both floors.
 
-Nav grouping, above ~7 items: section labels (`font-mono text-[10px] uppercase tracking-wide`), children indented under an L-connector (`border-l border-border` on the child list) rather than by padding alone.
+Nav grouping, above ~7 items: section labels (`.micro-label`), children indented under an L-connector (`border-l border-border` on the child list) rather than by padding alone.
 
 ---
 
 ## Choosing
 
-| The data is                                | Build                                                                                               |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| peer stats of one subject                  | stat band (1)                                                                                       |
-| metrics with independent series            | KPI cards with trailing sparklines (2) — check the type has one, and that a chart dependency exists |
-| one series over time                       | chart card with embedded readout (3)                                                                |
-| an equal-rank set, type declares ≥4 fields | table card (4)                                                                                      |
-| an equal-rank set, type declares <4 fields | list card (5)                                                                                       |
-| a set whose type declares rank             | hero tile + condensed rail (6)                                                                      |
-| a route with ambient/streaming context     | three-zone shell (7)                                                                                |
+| The data is                                | Build                                                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| peer stats of one subject                  | stat band (1)                                                                               |
+| metrics with independent series            | KPI cards with a trailing inline `<svg>` sparkline (2) — check the type declares the series |
+| one series over time                       | chart card with embedded readout (3)                                                        |
+| an equal-rank set, type declares ≥4 fields | table card (4)                                                                              |
+| an equal-rank set, type declares <4 fields | list card (5)                                                                               |
+| a set whose type declares rank             | hero tile + condensed rail (6)                                                              |
+| a route with ambient/streaming context     | three-zone shell (7)                                                                        |
