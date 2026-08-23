@@ -132,6 +132,14 @@
     --line-heights-caption: 1.4;
     --font-weights-caption: 500;
 
+    --font-sizes-micro: 0.625rem;
+    --line-heights-micro: 1.4;
+    --font-weights-micro: 500;
+    --letter-spacings-micro: 0.025em;
+
+    /* Measure */
+    --measures-prose: 54ch;
+
     /* Line Heights */
     --line-heights-tight: 1.1;
     --line-heights-normal: 1.5;
