@@ -71,6 +71,7 @@ const starterConfig: ConfigArray = [
     {
         files: VIEWS,
         rules: {
+            "starter/application-register-density": "error",
             "starter/domain-types-in-lib": "error",
             "starter/token-first-classnames": "error",
             "no-restricted-imports": restrictedImports({

@@ -1,7 +1,7 @@
 "use client";
 import clsx from "clsx";
 import { forwardRef } from "react";
-import { Loader2 } from "lucide-react";
+import { CircleDash } from "@carbon/icons-react";
 import type { ButtonHTMLAttributes } from "react";
 
 type ButtonSize = "sm" | "md" | "lg" | "xl";
@@ -55,9 +55,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(function Button(
                 className,
             )}
         >
-            {isLoading && (
-                <Loader2 className="size-3 animate-spin" strokeWidth={1.5} />
-            )}
+            {isLoading && <CircleDash className="size-3 animate-spin" />}
             {children}
         </button>
     );

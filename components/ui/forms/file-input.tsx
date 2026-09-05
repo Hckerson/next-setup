@@ -1,5 +1,5 @@
 "use client";
-import { Upload } from "lucide-react";
+import { Upload } from "@carbon/icons-react";
 
 interface Props {
     name?: string;
@@ -21,7 +21,7 @@ export default function FileInput({
                 type="file"
                 className="absolute inset-0 cursor-pointer opacity-0"
             />
-            <Upload className="size-3 shrink-0" strokeWidth={1.5} />
+            <Upload className="size-3 shrink-0" />
             <span className="truncate text-xs">{label}</span>
         </label>
     );
