@@ -1,6 +1,6 @@
 "use client";
 import clsx from "clsx";
-import { Check } from "lucide-react";
+import { Checkmark } from "@carbon/icons-react";
 
 interface Props<T extends string> {
     label: string;
@@ -34,12 +34,11 @@ export default function CheckBoxInput<T extends string>({
                         : "border-border bg-background group-hover:border-border-dark",
                 )}
             >
-                <Check
+                <Checkmark
                     className={clsx(
                         "size-3 transition-opacity duration-200",
                         isChecked ? "opacity-100" : "opacity-0",
                     )}
-                    strokeWidth={1.5}
                 />
             </span>
             <span

@@ -1,6 +1,6 @@
 "use client";
 import clsx from "clsx";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "@carbon/icons-react";
 import { useEffect, useRef, useState } from "react";
 
 interface Option {
@@ -69,7 +69,6 @@ export default function SelectInput({
                         "text-text-muted size-3 shrink-0 transition-transform duration-200",
                         isOpen && "rotate-180",
                     )}
-                    strokeWidth={1.5}
                 />
             </button>
             {isOpen && (

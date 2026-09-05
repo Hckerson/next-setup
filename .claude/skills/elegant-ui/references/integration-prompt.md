@@ -9,7 +9,7 @@ shape is what makes the output paste-and-run in a shadcn project.
   component with realistic sample data and import via`@/components/ui/«name»`.
 - Add one extra ```tsx fence per **dependency primitive** the component needs that
   isn't already in `components/`(label it`shadcn/button`, etc.).
-- `«npm-deps»` — comma-separated external packages only (e.g. `lucide-react,
+- `«npm-deps»` — comma-separated external packages only (e.g. `@carbon/icons-react,
 class-variance-authority`). Omit anything already in `package.json`.
 - All component code must already satisfy the house-token + structure rules in
   `SKILL.md` before it goes in here — this scaffold only packages it.
@@ -68,4 +68,4 @@ Steps to integrate 0. Copy paste all the code above in the correct directories
 
 1.  Install external dependencies
 2.  Fill image assets with stock images from an allowlisted host you know exist
-3.  Use lucide-react icons for svgs or logos if component requires them
+3.  Use @carbon/icons-react icons for svgs or logos if component requires them
