@@ -3,7 +3,7 @@ name: elegant-ui
 description: >-
     Craft or upgrade React/Next UI in this starter's house design language —
     decomposed structure, data-driven rendering, the design tokens defined in
-    styles/tokens.css (@theme) and public/fonts/font.ts, thin lucide icons,
+    styles/tokens.css (@theme) and public/fonts/font.ts, Carbon icons,
     restrained color, smooth micro-motion, dense application-register geometry,
     data-bearing row texture, and a11y by default. Also use for any dashboard /
     admin / analytics screen, or when UI reads flat, airy, roomy or under-dense.
@@ -62,7 +62,7 @@ Tailwind v4, tokens defined in `styles/tokens.css` + `@theme` in `styles/globals
 3. **Build primitives to the house standard**, not shadcn's `data-slot` style: `forwardRef` + explicit `HTMLAttributes<…>` props + `displayName`; `cva` for variants. This starter ships a **minimal** primitive set — `components/common/button.tsx` and the nine `components/ui/forms/*` behind `components/ui/forms/index.ts` — and no top-level `components/ui/index.ts` barrel yet. Reuse those where they fit; when you need Card / Modal / Badge / Avatar / Table / etc., **build them** to this standard rather than pulling in shadcn defaults (and add the top-level barrel as they accrue). House gotchas: **the existing `Button` has no `asChild`/Slot** — for a link, wrap `<Link>` around `<Button>` — its sizes are fixed-height and on the scale (`sm` `h-8` · `md` `h-9` · `lg` `h-10` · `xl` `h-11`), so **`sm` is the row-scale size** and `lg`/`xl` are the editorial CTAs; and every forms primitive is `h-9 w-full` with no size axis, so narrow it with a sized wrapper rather than a `className`.
 4. **Controlled + uncontrolled duality** where a parent may or may not own state: `const current = value ?? internal`.
 5. **`clsx` only (no tailwind-merge).** The codebase composes classes with `clsx` (`import clsx from "clsx"`), matching `components/common/button.tsx`, and there is no `cn` helper. `className` will NOT override a base utility of the same CSS property — it just appends. Compose additively; put variability in `cva` variants (or `clsx` conditional maps), not in override-by-merge. **Consequence for width/height overrides:** a primitive whose base is `w-full` cannot be narrowed through `className` — wrap it in a sized box.
-6. **Icons from `lucide-react`, absolute `@/` paths only** (`@/*` → project root). 4-space indent.
+6. **Icons from `@carbon/icons-react`, absolute `@/` paths only** (`@/*` → project root). 4-space indent.
 
 ## Layout & spacing
 
@@ -134,7 +134,7 @@ The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text
 ## Motion, icons, a11y (defaults, not extras)
 
 - Everything interactive transitions (`transition-colors`/`transition-all duration-200 ease-smooth`). **Entrances are scoped: overlays** (modal, popover, menu, toast) use `animate-in fade-in zoom-in-95` — the scale reads as emerging from its trigger. **Content** (cards, rows, sections) uses `fade-in` alone, or nothing. **Never stagger- or blur-reveal a grid on scroll.** Don't add reduced-motion guards — `styles/globals.css` and `styles/tokens.css` already do it globally.
-- **lucide icons at `strokeWidth={1.5}`** (thin stroke is a core elegance tell); **application register: `size-3` (12px) inline, `size-4` for identity/hero only**; `size-5` editorial only; colored via the text ramp.
+- **Carbon icons sized by Tailwind class, never the `size` prop** (`size-3`/`size-4` set CSS width/height and override the SVG attributes; the glyphs are fill-based, so `strokeWidth` does nothing) — **application register: `size-3` (12px) inline, `size-4` for identity/hero only**; `size-5` editorial only; colored via the text ramp.
 - a11y: `aria-label` on icon-only buttons, `sr-only` labels, `select-none` on chrome, real `focus-visible:ring-2 focus-visible:ring-accent`, `type="button"` on non-submit buttons, keyboard handlers for overlays (Esc to close). A sortable table header needs `aria-sort` — there is no sortable-header primitive here, so build it or don't imply sorting.
 - **Imagery:** distinct real photos, one per item — NEVER a single repeated local placeholder like `/images/hero.jpg`. **Centralize a curated pool** in `lib/config/sample-images.ts` (create it) and pull from it (don't scatter hardcoded URLs across pages). Good free sources: **Unsplash** (`images.unsplash.com/photo-…?w=800&q=80`) and **Pexels** (`images.pexels.com/photos/…`) — large, high-quality free photo libraries — and **loremflickr** (`loremflickr.com/800/600/{keyword}` — dynamic, keyword-based, no IDs; swap `{keyword}` for the domain's subject). This starter has **no `images.remotePatterns` in `next.config.ts` yet** — add the host there before using any remote image, or `next/image` will reject it.
 
