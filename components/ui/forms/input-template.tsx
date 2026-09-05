@@ -1,10 +1,10 @@
 import clsx from "clsx";
-import type { LucideIcon } from "lucide-react";
+import type { CarbonIconType } from "@carbon/icons-react";
 import type { ReactNode } from "react";
 
 interface Props {
     label: string;
-    icon?: LucideIcon;
+    icon?: CarbonIconType;
     className?: string;
     children: ReactNode;
     rightSection?: ReactNode;
@@ -27,10 +27,7 @@ export default function InputTemplate({
             <header className="border-border-light flex h-9 items-center justify-between gap-2 border-b px-3">
                 <div className="flex items-center gap-2 truncate">
                     {Icon && (
-                        <Icon
-                            className="text-text-muted size-3 shrink-0"
-                            strokeWidth={1.5}
-                        />
+                        <Icon className="text-text-muted size-3 shrink-0" />
                     )}
                     <span className="text-text truncate text-xs font-semibold">
                         {label}
