@@ -4,15 +4,21 @@ import type { ChangeEvent } from "react";
 interface Props {
     label: string;
     value: string;
+    type?: "text" | "email" | "password";
     handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function TextInput({ label, value, handleChange }: Props) {
+export default function TextInput({
+    label,
+    value,
+    type = "text",
+    handleChange,
+}: Props) {
     return (
         <input
             id={label}
             name={label}
-            type="text"
+            type={type}
             value={value}
             placeholder={`Enter ${label}`}
             onChange={handleChange}
