@@ -47,10 +47,28 @@ const objectExpression = (schema: JsonSchema): string => {
     return `z.object({${entries.join("")}})`;
 };
 
+const PRIMITIVE_TYPES: Record<string, string> = {
+    string: "string",
+    number: "number",
+    integer: "number",
+    boolean: "boolean",
+};
+
+export const typeExpression = (schema: JsonSchema): string => {
+    if (schema.$ref) return refName(schema.$ref);
+
+    if (schema.type === "array") {
+        return schema.items ? `${typeExpression(schema.items)}[]` : "unknown[]";
+    }
+
+    return PRIMITIVE_TYPES[schema.type ?? ""] ?? "unknown";
+};
+
 export const referencedSchemas = (schema: JsonSchema): string[] => {
     const found = schema.$ref ? [refName(schema.$ref)] : [];
     const children = [
         ...(schema.items ? [schema.items] : []),
+        ...(schema.allOf ?? []),
         ...Object.values(schema.properties ?? {}),
     ];
 
