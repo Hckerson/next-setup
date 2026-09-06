@@ -53,6 +53,10 @@ A rule that reports a violation ESLint cannot autofix — because the fix spans 
 
 `lib/contract/` is **generated — never edit it**. The backend's class-validator DTOs are the origin; `pnpm openapi` in `nest-setup` emits `openapi.json`, and `pnpm contract` here turns that into Zod schemas, `z.infer` types, and typed route builders. Change a field on a DTO, regenerate, and `pnpm type-check` fails here at every consumer — that break is the point of the layer.
 
+Regeneration is not left to memory: `pnpm contract:check` regenerates in place, diffs against `lib/contract/`, and fails the pre-push hook when the two disagree.
+
+Every route builder returns an `Endpoint<TResponse>` — a branded string carrying the response type the backend documents for that operation. `query.get(routes.usersFindOne(id))` therefore resolves to `ApiResponse<UserResponseDto>` with no type argument at the call site. A response type reaches the contract only when its controller method is annotated with `@ApiEnvelope(Dto)` in `nest-setup`; without that annotation the endpoint degrades to `Endpoint<unknown>`.
+
 Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api-routes.ts` remains for endpoints the backend does not publish. Hand-written Zod in `lib/validations/` composes over the generated schemas (`.extend`, `.pick`) rather than restating them.
 
 ## Sessions
@@ -65,9 +69,11 @@ The file is `proxy.ts`, not `middleware.ts` — Next 16 renamed the convention a
 
 An unverified token is not a session. Nothing may trust a claim that has not been through `verifySessionToken`, decoding the payload included.
 
-`app/api/session/route.ts` is the only place the token is handled: `POST` forwards credentials to the backend and puts the returned token straight into an `httpOnly` cookie, so it never reaches client JavaScript; `DELETE` clears it. The browser therefore has no token to attach — **do not add an `Authorization` header on the client, and never store a token in `localStorage` or a readable cookie.** Components reach these through `useLogin` / `useLogout`, which post same-origin via `local` in `lib/api-client.ts` — `query` targets the backend and swallows errors, so it cannot carry a sign-in.
+`app/api/session/route.ts` is the only place the token is handled: `POST` forwards credentials to the backend and puts the returned token straight into an `httpOnly` cookie, so it never reaches client JavaScript; `DELETE` clears it. The browser therefore has no token to attach — **do not add an `Authorization` header on the client, and never store a token in `localStorage` or a readable cookie.** Components reach these through `useLogin` / `useLogout`, which post same-origin via `local` in `lib/api-client.ts` — `query` targets the backend origin, so its response cannot set this origin's session cookie.
 
 A redirect target taken from the URL passes through `internalPath()` first. `?next=` is attacker-controllable, and an absolute or protocol-relative value would walk the user off the site.
+
+`query` surfaces failures rather than hiding them: a non-2xx response rejects, so TanStack Query reaches its error state and retries as configured. Nothing in the transport fabricates a successful empty payload.
 
 **Authenticated backend calls go through the server, never the browser.** The cookie belongs to this origin, so it is never sent to the backend on another port — the browser cannot authenticate a direct call, and lowering `SameSite` to let it is not the fix. Server components and route handlers call `backendFetch()` in `lib/api-server.ts`, which attaches the token as a Bearer header. `lib/api-client.ts` stays for unauthenticated, browser-initiated calls only; it imports `next/headers` nowhere, which is why the two files are separate.
 
