@@ -28,20 +28,20 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 
 ## Folder Structure
 
-| Route                   | Immediate Subfolders                                                                      | Purpose                                                                         |
-| ----------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `/app`                  | _(flat)_                                                                                  | App Router routes. Pages compose — they do not define data or components.       |
-| `/components/ui`        | `forms`                                                                                   | Generic, domain-free primitives. Reusable in any app.                           |
-| `/components/common`    | _(flat)_                                                                                  | Shared compositions over primitives.                                            |
-| `/components/wrappers`  | _(flat)_                                                                                  | Behavioural wrappers (motion, boundaries).                                      |
-| `/components/providers` | _(flat)_                                                                                  | React context providers.                                                        |
-| `/lib`                  | `contract` • `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer. No JSX. Transport lives in `api-client.ts` + `api-routes.ts`. |
-| `/design-os`            | _(flat)_                                                                                  | Design-system seed prompt. Not application code.                                |
-| `/public`               | `fonts`                                                                                   | Static assets.                                                                  |
-| `/styles`               | _(flat)_                                                                                  | Global styles and token exports.                                                |
-| `/tools/eslint`         | `rules`                                                                                   | Custom ESLint rules that enforce the conventions in this file. Not app code.    |
-| `/tools/codemods`       | _(flat)_                                                                                  | ts-morph codemods that rewrite violations the rules report. Not app code.       |
-| `/tools/contract`       | _(flat)_                                                                                  | Generator that turns the backend's OpenAPI document into `lib/contract/`.       |
+| Route                   | Immediate Subfolders                                                                      | Purpose                                                                                                                                                                  |
+| ----------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/app`                  | `api/session` • `auth/login`                                                              | App Router routes. Pages compose — they do not define data or components. Nesting here is the URL, not a choice: a route handler or page must sit at the path it serves. |
+| `/components/ui`        | `forms`                                                                                   | Generic, domain-free primitives. Reusable in any app.                                                                                                                    |
+| `/components/common`    | _(flat)_                                                                                  | Shared compositions over primitives.                                                                                                                                     |
+| `/components/wrappers`  | _(flat)_                                                                                  | Behavioural wrappers (motion, boundaries).                                                                                                                               |
+| `/components/providers` | _(flat)_                                                                                  | React context providers.                                                                                                                                                 |
+| `/lib`                  | `contract` • `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer. No JSX. Transport lives in `api-client.ts` + `api-routes.ts`.                                                                                          |
+| `/design-os`            | _(flat)_                                                                                  | Design-system seed prompt. Not application code.                                                                                                                         |
+| `/public`               | `fonts`                                                                                   | Static assets.                                                                                                                                                           |
+| `/styles`               | _(flat)_                                                                                  | Global styles and token exports.                                                                                                                                         |
+| `/tools/eslint`         | `rules`                                                                                   | Custom ESLint rules that enforce the conventions in this file. Not app code.                                                                                             |
+| `/tools/codemods`       | _(flat)_                                                                                  | ts-morph codemods that rewrite violations the rules report. Not app code.                                                                                                |
+| `/tools/contract`       | _(flat)_                                                                                  | Generator that turns the backend's OpenAPI document into `lib/contract/`.                                                                                                |
 
 Add `lib/data/` (seed data) and `lib/constants.ts` on first use — the rules above assume those homes.
 
@@ -54,6 +54,22 @@ A rule that reports a violation ESLint cannot autofix — because the fix spans 
 `lib/contract/` is **generated — never edit it**. The backend's class-validator DTOs are the origin; `pnpm openapi` in `nest-setup` emits `openapi.json`, and `pnpm contract` here turns that into Zod schemas, `z.infer` types, and typed route builders. Change a field on a DTO, regenerate, and `pnpm type-check` fails here at every consumer — that break is the point of the layer.
 
 Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api-routes.ts` remains for endpoints the backend does not publish. Hand-written Zod in `lib/validations/` composes over the generated schemas (`.extend`, `.pick`) rather than restating them.
+
+## Sessions
+
+The backend signs RS256 and holds `JWT_PRIVATE_KEY`. This tier gets `JWT_PUBLIC_KEY` only, so it can verify a session but never mint one — copy the public half from `pnpm keys:generate` in `nest-setup` into `.env`.
+
+`proxy.ts` reads the `SESSION_COOKIE`, verifies the signature with `lib/utils/verify-session-token.ts`, and gates `PROTECTED_ROUTE_PREFIXES`; a rejected cookie is cleared on the way to `LOGIN_ROUTE`. Server components read the same session through `getSession()` in `lib/utils/session.ts`. Both names live in `lib/constants.ts` — never restate a route or the cookie name.
+
+The file is `proxy.ts`, not `middleware.ts` — Next 16 renamed the convention and warns on the old name. It exports `proxy`; Next accepts that named export or a default, nothing else.
+
+An unverified token is not a session. Nothing may trust a claim that has not been through `verifySessionToken`, decoding the payload included.
+
+`app/api/session/route.ts` is the only place the token is handled: `POST` forwards credentials to the backend and puts the returned token straight into an `httpOnly` cookie, so it never reaches client JavaScript; `DELETE` clears it. The browser therefore has no token to attach — **do not add an `Authorization` header on the client, and never store a token in `localStorage` or a readable cookie.** Components reach these through `useLogin` / `useLogout`, which post same-origin via `local` in `lib/api-client.ts` — `query` targets the backend and swallows errors, so it cannot carry a sign-in.
+
+A redirect target taken from the URL passes through `internalPath()` first. `?next=` is attacker-controllable, and an absolute or protocol-relative value would walk the user off the site.
+
+**Authenticated backend calls go through the server, never the browser.** The cookie belongs to this origin, so it is never sent to the backend on another port — the browser cannot authenticate a direct call, and lowering `SameSite` to let it is not the fix. Server components and route handlers call `backendFetch()` in `lib/api-server.ts`, which attaches the token as a Bearer header. `lib/api-client.ts` stays for unauthenticated, browser-initiated calls only; it imports `next/headers` nowhere, which is why the two files are separate.
 
 ## File rules
 
