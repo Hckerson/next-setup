@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_BASE_URL, AUTH_ROUTE_PREFIX, LOGIN_ROUTE } from "@/lib/constants";
 import type {
     AxiosInstance,
     AxiosRequestConfig,
@@ -7,7 +8,7 @@ import type {
 } from "axios";
 
 const defaultConfig: AxiosRequestConfig = {
-    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api",
+    baseURL: API_BASE_URL,
     headers: {
         "Content-Type": "application/json",
     },
@@ -21,6 +22,17 @@ interface Response<T> {
 }
 
 export const apiClient: AxiosInstance = axios.create(defaultConfig);
+
+const sameOriginClient: AxiosInstance = axios.create({
+    headers: defaultConfig.headers,
+});
+
+export const local = {
+    post: async <T>(url: string, body: unknown) =>
+        (await sameOriginClient.post<T>(url, body)).data,
+    delete: async <T>(url: string) =>
+        (await sameOriginClient.delete<T>(url)).data,
+};
 
 const request = async <T>(config: AxiosRequestConfig): Promise<Response<T>> => {
     const defaultResponse: Response<T> = {
@@ -76,23 +88,15 @@ export const query = {
     },
 };
 
-apiClient.interceptors.request.use((config) => {
-    const token = `${0}`;
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
-
 apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
             if (
                 typeof window !== "undefined" &&
-                !window.location.pathname.startsWith("/auth")
+                !window.location.pathname.startsWith(AUTH_ROUTE_PREFIX)
             ) {
-                window.location.href = "/auth/login";
+                window.location.href = LOGIN_ROUTE;
             }
         }
         return Promise.reject(error);
