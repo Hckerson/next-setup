@@ -113,7 +113,7 @@ Design is not decoration applied at the end. It is the decision about structure 
 >
 > **Verdict — for a first project: primitives + your own tokens.** Accessible dropdowns and dialogs are genuinely hard to write correctly and teach you nothing about your product.
 
-**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` the primitives · `design-os/` the system's seed document.
+**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` the primitives · `docs/MASTER_PROMPT_COMPLETE.md` the system's seed document, which generates into `design-os/`.
 
 ---
 
