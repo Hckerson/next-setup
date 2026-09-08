@@ -1,88 +1,60 @@
 import axios from "axios";
-import type {
-    AxiosInstance,
-    AxiosRequestConfig,
-    AxiosResponse,
-    AxiosError,
-} from "axios";
+import { API_BASE_URL, AUTH_ROUTE_PREFIX, LOGIN_ROUTE } from "@/lib/constants";
+import type { ApiResponse, Endpoint } from "@/lib/types/api";
+import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
 
 const defaultConfig: AxiosRequestConfig = {
-    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api",
+    baseURL: API_BASE_URL,
     headers: {
         "Content-Type": "application/json",
     },
 };
 
-interface Response<T> {
-    data: T;
-    message: string;
-    timestamp: string;
-    statusCode: number;
-}
-
 export const apiClient: AxiosInstance = axios.create(defaultConfig);
 
-const request = async <T>(config: AxiosRequestConfig): Promise<Response<T>> => {
-    const defaultResponse: Response<T> = {
-        data: [] as unknown as T,
-        message: "",
-        timestamp: new Date().toLocaleDateString("en-Us", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        }),
-        statusCode: 200,
-    };
+const sameOriginClient: AxiosInstance = axios.create({
+    headers: defaultConfig.headers,
+});
 
-    try {
-        const response: AxiosResponse = await apiClient.request({
-            ...defaultConfig,
-            ...config,
-        });
-        return response.data as Response<T>;
-    } catch {
-        return defaultResponse;
-    }
+export const local = {
+    post: async <T>(url: string, body: unknown) =>
+        (await sameOriginClient.post<T>(url, body)).data,
+    delete: async <T>(url: string) =>
+        (await sameOriginClient.delete<T>(url)).data,
+};
+
+const request = async <T>(
+    config: AxiosRequestConfig,
+): Promise<ApiResponse<T>> => {
+    const response = await apiClient.request<ApiResponse<T>>({
+        ...defaultConfig,
+        ...config,
+    });
+
+    return response.data;
 };
 
 export const query = {
-    get: async <T>(url: string, config?: AxiosRequestConfig) => {
-        return await request<T>({ method: "GET", url, ...config });
-    },
-    post: async <T>(
-        url: string,
+    get: <T = unknown>(url: Endpoint<T>, config?: AxiosRequestConfig) =>
+        request<T>({ method: "GET", url, ...config }),
+    post: <T = unknown>(
+        url: Endpoint<T>,
         body: unknown,
         config?: AxiosRequestConfig,
-    ) => {
-        return await request<T>({ method: "POST", url, data: body, ...config });
-    },
-    patch: async <T>(
-        url: string,
+    ) => request<T>({ method: "POST", url, data: body, ...config }),
+    patch: <T = unknown>(
+        url: Endpoint<T>,
         body: unknown,
         config?: AxiosRequestConfig,
-    ) => {
-        return await request<T>({
-            method: "PATCH",
-            url,
-            data: body,
-            ...config,
-        });
-    },
-    put: async <T>(url: string, body: unknown, config?: AxiosRequestConfig) => {
-        return await request<T>({ method: "PUT", url, data: body, ...config });
-    },
-    delete: async <T>(url: string, config?: AxiosRequestConfig) => {
-        return await request<T>({ method: "DELETE", url, ...config });
-    },
+    ) => request<T>({ method: "PATCH", url, data: body, ...config }),
+    put: <T = unknown>(
+        url: Endpoint<T>,
+        body: unknown,
+        config?: AxiosRequestConfig,
+    ) => request<T>({ method: "PUT", url, data: body, ...config }),
+    delete: <T = unknown>(url: Endpoint<T>, config?: AxiosRequestConfig) =>
+        request<T>({ method: "DELETE", url, ...config }),
 };
-
-apiClient.interceptors.request.use((config) => {
-    const token = `${0}`;
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
 
 apiClient.interceptors.response.use(
     (response) => response,
@@ -90,9 +62,9 @@ apiClient.interceptors.response.use(
         if (error.response?.status === 401) {
             if (
                 typeof window !== "undefined" &&
-                !window.location.pathname.startsWith("/auth")
+                !window.location.pathname.startsWith(AUTH_ROUTE_PREFIX)
             ) {
-                window.location.href = "/auth/login";
+                window.location.href = LOGIN_ROUTE;
             }
         }
         return Promise.reject(error);

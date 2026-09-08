@@ -9,6 +9,7 @@ export interface JsonSchema {
     properties?: Record<string, JsonSchema>;
     required?: string[];
     nullable?: boolean;
+    allOf?: JsonSchema[];
 }
 
 const jsonSchema: z.ZodType<JsonSchema> = z.lazy(() =>
@@ -21,10 +22,22 @@ const jsonSchema: z.ZodType<JsonSchema> = z.lazy(() =>
         properties: z.record(z.string(), jsonSchema).optional(),
         required: z.array(z.string()).optional(),
         nullable: z.boolean().optional(),
+        allOf: z.array(jsonSchema).optional(),
     }),
 );
 
-const operation = z.object({ operationId: z.string().optional() });
+const mediaType = z.object({ schema: jsonSchema.optional() });
+
+const response = z.object({
+    content: z.record(z.string(), mediaType).optional(),
+});
+
+const operation = z.object({
+    operationId: z.string().optional(),
+    responses: z.record(z.string(), response).optional(),
+});
+
+export type Operation = z.infer<typeof operation>;
 
 export const openApiDocument = z.object({
     paths: z.record(z.string(), z.record(z.string(), operation)),
