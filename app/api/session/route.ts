@@ -6,7 +6,17 @@ import {
     SESSION_MAX_AGE,
 } from "@/lib/constants";
 import { routes } from "@/lib/contract/routes";
-import { authEnvelopeSchema, loginSchema } from "@/lib/validations/auth";
+import { authResponseDtoSchema, loginDtoSchema } from "@/lib/contract/schemas";
+import { z } from "zod";
+
+const loginSchema = loginDtoSchema.extend({
+    email: z.string().email(),
+    password: z.string().min(8),
+});
+
+const authEnvelopeSchema = z.object({
+    data: authResponseDtoSchema.extend({ accessToken: z.string().min(1) }),
+});
 
 const rejected = (status: number) =>
     NextResponse.json({ message: INVALID_CREDENTIALS }, { status });
