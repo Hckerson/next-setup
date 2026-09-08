@@ -1,12 +1,39 @@
 import { describe, expect, it } from "vitest";
-import { openApiDocument } from "./openapi-document";
+import { JsonSchema, openApiDocument } from "./openapi-document";
 import {
+    responseDataSchema,
     routeBuilder,
     routeKey,
     routesFile,
     schemasFile,
 } from "./generate-contract";
-import { orderByDependency, zodExpression } from "./schema-to-zod";
+import {
+    orderByDependency,
+    typeExpression,
+    zodExpression,
+} from "./schema-to-zod";
+
+const envelopeOperation = (operationId: string, data: JsonSchema) => ({
+    operationId,
+    responses: {
+        "200": {
+            content: {
+                "application/json": {
+                    schema: {
+                        allOf: [
+                            { $ref: "#/components/schemas/ApiEnvelopeDto" },
+                            {
+                                type: "object",
+                                properties: { data },
+                                required: ["data"],
+                            },
+                        ],
+                    },
+                },
+            },
+        },
+    },
+});
 
 describe("schema-to-zod", () => {
     it("marks properties outside required as optional", () => {
@@ -73,9 +100,17 @@ describe("routes", () => {
     });
 
     it("turns path templates into typed builders", () => {
-        expect(routeBuilder("/api/users")).toBe('() => "/api/users"');
+        expect(routeBuilder("/api/users")).toBe(
+            '() => "/api/users" as Endpoint<unknown>',
+        );
         expect(routeBuilder("/api/users/{id}")).toBe(
-            "(id: string) => `/api/users/${id}`",
+            "(id: string) => `/api/users/${id}` as Endpoint<unknown>",
+        );
+    });
+
+    it("brands a builder with the response type it was given", () => {
+        expect(routeBuilder("/api/users", "UserResponseDto[]")).toBe(
+            '() => "/api/users" as Endpoint<UserResponseDto[]>',
         );
     });
 
@@ -87,10 +122,99 @@ describe("routes", () => {
             },
         });
 
-        expect(file).toContain('usersCreate: () => "/api/users",');
         expect(file).toContain(
-            "usersFindOne: (id: string) => `/api/users/${id}`,",
+            'usersCreate: () => "/api/users" as Endpoint<unknown>,',
         );
+        expect(file).toContain(
+            "usersFindOne: (id: string) => `/api/users/${id}` as Endpoint<unknown>,",
+        );
+    });
+
+    it("brands each endpoint with its unwrapped response type", () => {
+        const file = routesFile({
+            "/api/users": {
+                get: envelopeOperation("UsersController_findAll", {
+                    type: "array",
+                    items: { $ref: "#/components/schemas/UserResponseDto" },
+                }),
+            },
+        });
+
+        expect(file).toContain(
+            'usersFindAll: () => "/api/users" as Endpoint<UserResponseDto[]>,',
+        );
+        expect(file).toContain(
+            'import type { UserResponseDto } from "./schemas";',
+        );
+    });
+
+    it("imports the Endpoint brand exactly once", () => {
+        const file = routesFile({
+            "/api/users": {
+                get: envelopeOperation("UsersController_findAll", {
+                    $ref: "#/components/schemas/UserResponseDto",
+                }),
+            },
+        });
+
+        expect(
+            file.split('import type { Endpoint } from "@/lib/types/api";')
+                .length - 1,
+        ).toBe(1);
+    });
+});
+
+describe("responseDataSchema", () => {
+    it("unwraps the envelope allOf to reach the data schema", () => {
+        expect(
+            responseDataSchema(
+                envelopeOperation("UsersController_findOne", {
+                    $ref: "#/components/schemas/UserResponseDto",
+                }),
+            ),
+        ).toEqual({ $ref: "#/components/schemas/UserResponseDto" });
+    });
+
+    it("returns undefined when the operation documents no success body", () => {
+        expect(
+            responseDataSchema({ operationId: "AppController_getHello" }),
+        ).toBeUndefined();
+    });
+
+    it("ignores error responses when looking for the success body", () => {
+        expect(
+            responseDataSchema({
+                operationId: "AuthController_login",
+                responses: {
+                    "401": {
+                        content: {
+                            "application/json": {
+                                schema: { type: "object" },
+                            },
+                        },
+                    },
+                },
+            }),
+        ).toBeUndefined();
+    });
+});
+
+describe("typeExpression", () => {
+    it("names a referenced schema", () => {
+        expect(
+            typeExpression({ $ref: "#/components/schemas/UserResponseDto" }),
+        ).toBe("UserResponseDto");
+    });
+
+    it("suffixes arrays and maps primitives", () => {
+        expect(
+            typeExpression({
+                type: "array",
+                items: { $ref: "#/components/schemas/UserResponseDto" },
+            }),
+        ).toBe("UserResponseDto[]");
+        expect(typeExpression({ type: "integer" })).toBe("number");
+        expect(typeExpression({ type: "object" })).toBe("unknown");
     });
 });
 
