@@ -23,7 +23,7 @@ Each placeholder below is defined once here and referenced everywhere else in th
 - **{{PAGE_COUNT}}** — target page count.
 - **{{TIMELINE_WEEKS}}** — implementation timeline in weeks.
 - **{{QA_ITEM_COUNT}}** — target QA item count.
-- **{{OUTPUT_DIR}}** — the directory all generated files are written to (default: `design-os/generated/`).
+- **{{OUTPUT_DIR}}** — the directory all generated files are written to (default: `design-os/generated/`). The seed prompt itself lives in `docs/`; `design-os/` holds generated output only.
 
 You are operating as an **Enterprise Design System Lead**, **Principal Product Designer**, **UX Architect**, **Information Architect**, **Frontend System Architect**, and **Senior Next.js Engineer**.
 
@@ -705,6 +705,21 @@ Testing strategy
 
 Deployment readiness
 
+Per-feature build status (see Build Status Vocabulary below)
+
+## Build Status Vocabulary
+
+Every page, section, component and flow specified in Phases 1–8 appears in the roadmap carrying exactly one status drawn from this fixed set:
+
+- **Specified** — defined in the blueprints, not yet scheduled.
+- **Scheduled** — assigned to a sprint or milestone.
+- **In progress** — implementation started.
+- **Built** — implemented and merged.
+- **Verified** — implemented and passing the Phase 10 checks.
+- **Deferred** — deliberately postponed. Carries a reason and a revisit trigger (a date, a milestone, or a dependency).
+
+Status lives here and nowhere else. It is recorded against a feature, never used to remove one — see Critical Rules › Scope Preservation. A feature with no implementation is **Specified**, not absent.
+
 ---
 
 # PHASE 10 — Quality Assurance
@@ -829,6 +844,7 @@ This phase produces 6 navigation, reference, and setup documents.
 - {{THEME_VARIANT}} index (if applicable)
 - Reading order recommendations (different paths for different roles)
 - Search keywords for each phase
+- Build status roll-up drawn from Phase 9 — a view over the phases, never a substitute for them (see Critical Rules › Scope Preservation)
 
 **Length:** ~300-350 lines
 
@@ -1059,6 +1075,16 @@ All 16 files must be generated together as a cohesive system.
 
 When the design operating system is complete, the entire 16-file design operating system must be suitable for immediate handoff to frontend engineering teams.
 
+## Scope Preservation
+
+A specified feature is never removed because it has not been built.
+
+"Not built", "not started", "deferred" and "out of scope for this sprint" are **statuses**, recorded in Phase 9's Build Status Vocabulary. They are never resolved by deletion. Implementation state never edits Phases 1–8 — the blueprints record intent, the roadmap records progress, and the two are not the same document.
+
+Absence from the codebase is evidence about the codebase, not about the spec.
+
+Removal requires an explicit instruction from the maintainer naming the feature. A feature may be renamed, resharded, or moved between phases only with a note recording what it was and why it changed.
+
 ---
 
 # Output Contract
@@ -1077,9 +1103,11 @@ Before formatting, obey these delivery rules — they determine _where_ the deli
 
 **Delivery mode.** One file per artifact, written to disk (via the environment's file-writing tool). Cross-links between files use relative paths within `{{OUTPUT_DIR}}`.
 
+**Regeneration.** A run over a non-empty `{{OUTPUT_DIR}}` is a **merge, not an overwrite**. Before writing anything, read the existing artifact set and inventory every page, section, component, flow, token, persona, role and state it defines. Every entry in that inventory must survive into the new set, carrying its Phase 9 status. See Critical Rules › Scope Preservation.
+
 **Ordering.** Generate in dependency order: phases 1→10 first (each referencing prior phases), then the 6 ancillary documents (which reference the phases).
 
-**Completion signal.** After all 16 files are written, emit a short manifest listing every file path produced and confirming cross-links resolve. Do not consider the task complete until the manifest is printed.
+**Completion signal.** After all 16 files are written, emit a manifest in four sections — **Retained**, **Added**, **Changed**, **Removed** — listing every file path produced and confirming cross-links resolve. **Removed** must be empty unless the maintainer named those entries for removal; a feature that disappeared without instruction is a failed generation, not a completed one. Do not consider the task complete until the manifest is printed and **Removed** is accounted for.
 
 ---
 

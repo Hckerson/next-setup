@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import Button from "@/components/common/button";
-import { TextInput } from "@/components/ui/forms";
 import { INVALID_CREDENTIALS } from "@/lib/constants";
 import { useLogin } from "@/lib/hooks/use-login";
 
@@ -54,11 +53,14 @@ export default function LoginForm({ next }: Props) {
                     >
                         {field.label}
                     </label>
-                    <TextInput
-                        label={field.label}
+                    <input
+                        id={field.label}
+                        name={field.label}
                         type={field.type}
                         value={credentials[field.name]}
-                        handleChange={update(field.name)}
+                        placeholder={`Enter ${field.label}`}
+                        onChange={update(field.name)}
+                        className="smooth border-border bg-background text-text placeholder:text-text-muted focus-visible:border-accent focus-visible:ring-accent h-9 w-full rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
                     />
                 </div>
             ))}
