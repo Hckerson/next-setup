@@ -1,7 +1,7 @@
 import { generateKeyPairSync } from "node:crypto";
 import { SignJWT, importPKCS8 } from "jose";
 import { beforeAll, describe, expect, it } from "vitest";
-import type { SessionPayload } from "@/lib/validations/session";
+import type { SessionPayload } from "./verify-session-token";
 
 const pair = () =>
     generateKeyPairSync("rsa", {

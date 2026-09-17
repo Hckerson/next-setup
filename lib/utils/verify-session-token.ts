@@ -1,11 +1,19 @@
 import { importSPKI, jwtVerify } from "jose";
-import {
-    sessionPayloadSchema,
-    type SessionPayload,
-} from "@/lib/validations/session";
+import { z } from "zod";
+import { createUserDtoSchema } from "@/lib/contract/schemas";
 
 const ALGORITHM = "RS256";
 const PEM_MARKER = "-----BEGIN";
+
+const sessionPayloadSchema = z.object({
+    sub: z.string().min(1),
+    email: z.string().email(),
+    role: createUserDtoSchema.shape.role.unwrap(),
+    iat: z.number(),
+    exp: z.number(),
+});
+
+export type SessionPayload = z.infer<typeof sessionPayloadSchema>;
 
 const decodePem = (value: string) =>
     value.includes(PEM_MARKER) ? value : atob(value);
