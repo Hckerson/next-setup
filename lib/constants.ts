@@ -18,8 +18,10 @@ export const SESSION_MAX_AGE = 60 * 60 * 24 * 7;
 export const INVALID_CREDENTIALS = "Email or password is incorrect";
 
 export const MOTION_DURATION = {
-    fast: 0.1,
-    slow: 0.2,
+    fast: 0.2,
+    normal: 0.35,
+    slow: 0.6,
+    slower: 0.8,
 } as const;
 
 export const MOTION_SPRING = {
