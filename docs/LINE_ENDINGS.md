@@ -2,7 +2,7 @@
 
 `pnpm format` used to detonate the working tree. A single run left 649 files reported as modified when only 9 had actually changed. Committing the noise cleared it for a day, then the next checkout brought it all back.
 
-The cause was two settings pulling in opposite directions, with Git's index stat cache caught between them. This document records the diagnosis, the fix that was applied here, and the procedure for applying it to another repository.
+That happened in the application this starter was extracted from. The cause was two settings pulling in opposite directions, with Git's index stat cache caught between them. This document records the diagnosis, the fix, and the procedure for applying it to any repository — the addendum covers applying it to `next-setup` and `nest-setup` themselves.
 
 ## Symptoms
 
@@ -29,7 +29,7 @@ Two layers disagreed about what a line ending is:
 
 Neither is wrong on its own. Together they produce a file that is rewritten on every format run, and a Git index that never catches up.
 
-Tracing one file, `app/(public)/layout.tsx`:
+Tracing one file, a route `layout.tsx`:
 
 1. The committed blob is **509 bytes, LF**. Every blob in this repository always was — there has never been a CRLF byte in the history.
 2. `core.autocrlf = true` told Git to check the file out converted to CRLF, so Git wrote a 529-byte file and recorded `size: 529` in the index stat cache.
@@ -120,7 +120,7 @@ git ls-files --debug -- path/to/a/file | grep size
 wc -c < path/to/a/file
 ```
 
-The cached size must equal the real size. For `app/(public)/layout.tsx` this went from `529` against a 509-byte file to `509` against a 509-byte file.
+The cached size must equal the real size. For the traced `layout.tsx` this went from `529` against a 509-byte file to `509` against a 509-byte file.
 
 ```sh
 rm path/to/an/unmodified/file && git checkout -- path/to/an/unmodified/file
@@ -158,7 +158,7 @@ Three things to watch when you do this elsewhere:
 
 **Add the binary declarations before adding binary assets, not after.** `text=auto` detects binary content reliably, but an explicit declaration costs one line and removes the question.
 
-**Each repository needs its own.** `.gitattributes` and `core.autocrlf` are per-repository. A monorepo needs one at the root; sibling repositories — such as `../backend` — each need their own.
+**Each repository needs its own.** `.gitattributes` and `core.autocrlf` are per-repository. A monorepo needs one at the root; sibling repositories — such as `../nest-setup` — each need their own.
 
 ## Addendum: applying it a second time
 
