@@ -32,8 +32,18 @@ const response = z.object({
     content: z.record(z.string(), mediaType).optional(),
 });
 
+const parameter = z.object({
+    name: z.string(),
+    in: z.string(),
+    required: z.boolean().optional(),
+    schema: jsonSchema.optional(),
+});
+
+export type Parameter = z.infer<typeof parameter>;
+
 const operation = z.object({
     operationId: z.string().optional(),
+    parameters: z.array(parameter).optional(),
     responses: z.record(z.string(), response).optional(),
 });
 
