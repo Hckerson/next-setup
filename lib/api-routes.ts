@@ -1,4 +1,4 @@
 export const apiRoutes = {
     session: () => "/api/session",
-    users: () => "/api/users",
+    register: () => "/api/register",
 } as const;
