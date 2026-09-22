@@ -58,11 +58,11 @@
     --colors-sidebar-text: rgba(255, 255, 255, 0.6);
     --colors-sidebar-text-active: #ffffff;
 
-    /* Metric Type Colors */
-    --colors-metric-pipeline: #1f4e3d;
-    --colors-metric-success: #2f855a;
-    --colors-metric-activity: #3e5c76;
-    --colors-metric-warning: #b7791f;
+    /* Metric Type Colors — aliases of the palette above */
+    --colors-metric-pipeline: var(--colors-accent);
+    --colors-metric-success: var(--colors-success);
+    --colors-metric-activity: var(--colors-info);
+    --colors-metric-warning: var(--colors-warning);
 
     /* ============================================
      TYPOGRAPHY — Font families & scales
@@ -72,14 +72,6 @@
     --fonts-body:
         var(--nf-body), system-ui, -apple-system, "Segoe UI", sans-serif;
     --fonts-mono: var(--nf-mono), ui-monospace, "JetBrains Mono", monospace;
-
-    /* Font Weights */
-    --font-weights-thin: 100;
-    --font-weights-light: 300;
-    --font-weights-normal: 400;
-    --font-weights-medium: 500;
-    --font-weights-semibold: 600;
-    --font-weights-bold: 700;
 
     /* Type Scale (Headings) */
     --font-sizes-h1: 4.5rem;
@@ -139,12 +131,6 @@
 
     /* Measure */
     --measures-prose: 54ch;
-
-    /* Line Heights */
-    --line-heights-tight: 1.1;
-    --line-heights-normal: 1.5;
-    --line-heights-relaxed: 1.75;
-    --line-heights-spacious: 2;
 
     /* ============================================
      SPACING (8px base unit)
@@ -211,10 +197,6 @@
     --shadows-xl: 0 20px 32px rgba(28, 24, 17, 0.1);
     --shadows-2xl: 0 30px 60px rgba(28, 24, 17, 0.12);
 
-    --shadows-elevation-1: 0 1px 3px rgba(28, 24, 17, 0.08);
-    --shadows-elevation-2: 0 4px 8px rgba(28, 24, 17, 0.1);
-    --shadows-elevation-3: 0 12px 16px rgba(28, 24, 17, 0.08);
-
     /* ============================================
      BORDER RADIUS (Minimal, architectural)
      ============================================ */
@@ -228,15 +210,7 @@
     --radii-full: 9999px;
 
     /* ============================================
-     BORDERS
-     ============================================ */
-
-    --border-widths-thin: 1px;
-    --border-widths-normal: 1px;
-    --border-widths-thick: 2px;
-
-    /* ============================================
-     Z-INDEX SCALE
+     Z-INDEX SCALE — use as z-(--z-indices-modal)
      ============================================ */
 
     --z-indices-base: 0;
@@ -249,53 +223,17 @@
     --z-indices-tooltip: 70;
 
     /* ============================================
-     OPACITY SCALE
-     ============================================ */
-
-    --opacities-0: 0;
-    --opacities-10: 0.1;
-    --opacities-20: 0.2;
-    --opacities-30: 0.3;
-    --opacities-40: 0.4;
-    --opacities-50: 0.5;
-    --opacities-60: 0.6;
-    --opacities-70: 0.7;
-    --opacities-80: 0.8;
-    --opacities-90: 0.9;
-    --opacities-100: 1;
-
-    /* ============================================
      STAT CARD & METRIC TOKENS
      ============================================ */
 
-    /* Stat Card Base */
-    --stat-card-bg: #ffffff;
-    --stat-card-border: #f1ece4;
-    --stat-card-border-hover: #e7e1d7;
-    --stat-card-padding: 2.5rem;
-    --stat-card-radius: 8px;
-    --stat-card-shadow: 0 1px 3px rgba(28, 24, 17, 0.08);
-    --stat-card-shadow-hover: 0 4px 8px rgba(28, 24, 17, 0.1);
+    --stat-card-bg: var(--colors-background);
+    --stat-card-border: var(--colors-border-light);
+    --stat-card-border-hover: var(--colors-border);
+    --stat-card-padding: var(--paddings-md);
+    --stat-card-radius: var(--radii-lg);
+    --stat-card-shadow: var(--shadows-sm);
+    --stat-card-shadow-hover: var(--shadows-md);
 
-    /* Icon Sizing */
-    --icon-sizes-sm: 20px;
     --icon-sizes-md: 24px;
-    --icon-sizes-lg: 32px;
-
-    /* Metric Icon Background Opacity */
-    --icon-bg-opacity: 0.12;
-}
-
-/* ============================================
-   REDUCED MOTION (Accessibility)
-   ============================================ */
-
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 1ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 1ms !important;
-    }
+    --icon-bg-mix: 12%;
 }

@@ -26,7 +26,6 @@ export const registerDtoSchema = z.object({
     fullName: z.string(),
     email: z.string(),
     password: z.string(),
-    role: z.enum(["ADMIN", "USER"]).optional(),
     phoneNumber: z.string().optional(),
 });
 export type RegisterDto = z.infer<typeof registerDtoSchema>;
@@ -36,24 +35,6 @@ export const loginDtoSchema = z.object({
     password: z.string(),
 });
 export type LoginDto = z.infer<typeof loginDtoSchema>;
-
-export const messageResponseDtoSchema = z.object({ message: z.string() });
-export type MessageResponseDto = z.infer<typeof messageResponseDtoSchema>;
-
-export const forgotPasswordDtoSchema = z.object({ email: z.string() });
-export type ForgotPasswordDto = z.infer<typeof forgotPasswordDtoSchema>;
-
-export const resetPasswordDtoSchema = z.object({
-    password: z.string(),
-    token: z.string(),
-});
-export type ResetPasswordDto = z.infer<typeof resetPasswordDtoSchema>;
-
-export const onboardingDtoSchema = z.object({
-    phoneNumber: z.string().optional(),
-    bio: z.string().optional(),
-});
-export type OnboardingDto = z.infer<typeof onboardingDtoSchema>;
 
 export const userResponseDtoSchema = z.object({
     id: z.string(),
@@ -90,3 +71,32 @@ export const updateUserDtoSchema = z.object({
     status: z.enum(["ACTIVE", "PENDING", "SUSPENDED"]).optional(),
 });
 export type UpdateUserDto = z.infer<typeof updateUserDtoSchema>;
+
+export const healthResponseDtoSchema = z.object({ status: z.enum(["ok"]) });
+export type HealthResponseDto = z.infer<typeof healthResponseDtoSchema>;
+
+export const periodTotalResponseDtoSchema = z.object({
+    period: z.enum(["day", "month", "year"]),
+    start: z.string(),
+    end: z.string(),
+    total: z.number(),
+});
+export type PeriodTotalResponseDto = z.infer<
+    typeof periodTotalResponseDtoSchema
+>;
+
+export const seriesPointDtoSchema = z.object({
+    key: z.string(),
+    value: z.number(),
+});
+export type SeriesPointDto = z.infer<typeof seriesPointDtoSchema>;
+
+export const periodSeriesResponseDtoSchema = z.object({
+    period: z.enum(["day", "month", "year"]),
+    start: z.string(),
+    end: z.string(),
+    points: z.array(seriesPointDtoSchema),
+});
+export type PeriodSeriesResponseDto = z.infer<
+    typeof periodSeriesResponseDtoSchema
+>;

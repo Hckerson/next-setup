@@ -932,7 +932,7 @@ This phase produces 6 navigation, reference, and setup documents.
     - Component library completeness
 - Code patterns and standards
     - **Component styling template** (token-mapped utilities + named classes)
-    - **Variant template** (CVA selecting tokens/named classes — no raw values)
+    - **Variant template** (a variant map selecting tokens/named classes — no raw values; any variant library follows the Library Selection Policy)
     - Component structure template
     - Page template
     - Hook patterns
