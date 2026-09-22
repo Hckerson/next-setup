@@ -22,14 +22,14 @@ is the bundle-size upgrade once a project animates enough to justify it — see 
 
 ## 2. What the starter ships
 
-| Piece                                          | Holds                                                                                    |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `components/wrappers/motion-wrapper.tsx`       | `MotionWrapper` — a `whileInView` fade/offset reveal that plays once                     |
-| `lib/constants.ts`                             | `MOTION_DURATION` and `MOTION_SPRING` — the JS-side values; never inline them            |
-| `styles/tokens.css`                            | `--durations-*` and `--timing-functions-*` — the CSS-side values                         |
-| `styles/globals.css`                           | `@theme` maps them to `--motion-*` / `--ease-*`; `.smooth` is the named transition class |
-| `styles/tokens.css` › `prefers-reduced-motion` | Collapses CSS animations and transitions to 1ms                                          |
-| `components/providers/provider.tsx`            | `MotionConfig reducedMotion="user"` — the same preference, applied to Motion             |
+| Piece                                          | Holds                                                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `components/wrappers/motion-wrapper.tsx`       | `MotionWrapper` — a `whileInView` fade/offset reveal that plays once                       |
+| `lib/constants.ts`                             | `MOTION_DURATION` and `MOTION_SPRING` — the JS-side values; never inline them              |
+| `styles/tokens.css`                            | `--durations-*` and `--timing-functions-*` — the CSS-side values                           |
+| `styles/globals.css`                           | `@theme` maps the easings to `--ease-*`; durations stay raw variables that `.smooth` reads |
+| `styles/tokens.css` › `prefers-reduced-motion` | Collapses CSS animations and transitions to 1ms                                            |
+| `components/providers/provider.tsx`            | `MotionConfig reducedMotion="user"` — the same preference, applied to Motion               |
 
 Motion needs numeric seconds and CSS needs its own tokens, so the durations are written once on
 each side. `lib/constants.test.ts` fails the moment `MOTION_DURATION` and the `--durations-*`
