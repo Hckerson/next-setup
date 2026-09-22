@@ -2,20 +2,15 @@
 import type { Endpoint } from "@/lib/types/api";
 import type {
     AuthResponseDto,
-    MessageResponseDto,
+    HealthResponseDto,
+    PeriodSeriesResponseDto,
+    PeriodTotalResponseDto,
     UserResponseDto,
 } from "./schemas";
 
 export const routes = {
-    appGetHello: () => "/api" as Endpoint<unknown>,
     authRegister: () => "/api/auth/register" as Endpoint<AuthResponseDto>,
     authLogin: () => "/api/auth/login" as Endpoint<AuthResponseDto>,
-    authForgotPassword: () =>
-        "/api/auth/forgot-password" as Endpoint<MessageResponseDto>,
-    authResetPassword: () =>
-        "/api/auth/reset-password" as Endpoint<MessageResponseDto>,
-    authOnboarding: () =>
-        "/api/auth/onboarding" as Endpoint<MessageResponseDto>,
     usersCreate: () => "/api/users" as Endpoint<UserResponseDto>,
     usersFindAll: () => "/api/users" as Endpoint<UserResponseDto[]>,
     usersGetMe: () => "/api/users/me" as Endpoint<UserResponseDto>,
@@ -25,4 +20,9 @@ export const routes = {
         `/api/users/${id}` as Endpoint<UserResponseDto>,
     usersRemove: (id: string) =>
         `/api/users/${id}` as Endpoint<UserResponseDto>,
+    healthCheck: () => "/api/health" as Endpoint<HealthResponseDto>,
+    statsUsersTotal: () =>
+        "/api/stats/users/total" as Endpoint<PeriodTotalResponseDto>,
+    statsUsersSeries: () =>
+        "/api/stats/users/series" as Endpoint<PeriodSeriesResponseDto>,
 } as const;
