@@ -17,6 +17,8 @@ export const SESSION_MAX_AGE = 60 * 60 * 24 * 7;
 
 export const INVALID_CREDENTIALS = "Email or password is incorrect";
 
+export const INVALID_REQUEST = "The request body is invalid";
+
 export const MOTION_DURATION = {
     fast: 0.2,
     normal: 0.35,
