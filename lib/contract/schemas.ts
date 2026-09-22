@@ -26,7 +26,6 @@ export const registerDtoSchema = z.object({
     fullName: z.string(),
     email: z.string(),
     password: z.string(),
-    role: z.enum(["ADMIN", "USER"]).optional(),
     phoneNumber: z.string().optional(),
 });
 export type RegisterDto = z.infer<typeof registerDtoSchema>;

@@ -19,6 +19,12 @@ export const INVALID_CREDENTIALS = "Email or password is incorrect";
 
 export const INVALID_REQUEST = "The request body is invalid";
 
+export const REQUEST_FAILED = "The request could not be completed";
+
+export const SESSION_UNAVAILABLE = "The account was created but sign-in failed";
+
+export const PASSWORD_MIN_LENGTH = 8;
+
 export const MOTION_DURATION = {
     fast: 0.2,
     normal: 0.35,
