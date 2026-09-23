@@ -114,6 +114,54 @@ describe("routes", () => {
         );
     });
 
+    it("takes query parameters as one typed argument after path params", () => {
+        expect(
+            routeBuilder("/api/stats/{scope}", "unknown", [
+                {
+                    name: "period",
+                    in: "query",
+                    required: true,
+                    schema: { type: "string", enum: ["day", "month"] },
+                },
+                { name: "date", in: "query", schema: { type: "string" } },
+            ]),
+        ).toBe(
+            '(scope: string, query: { "period": "day" | "month"; "date"?: string }) => `/api/stats/${scope}${queryString(query)}` as Endpoint<unknown>',
+        );
+    });
+
+    it("makes the query argument optional when every parameter is", () => {
+        expect(
+            routeBuilder("/api/users", "unknown", [
+                { name: "search", in: "query", schema: { type: "string" } },
+            ]),
+        ).toBe(
+            '(query?: { "search"?: string }) => `/api/users${queryString(query)}` as Endpoint<unknown>',
+        );
+    });
+
+    it("imports the query helper only when a route needs it", () => {
+        const withQuery = routesFile({
+            "/api/stats": {
+                get: {
+                    operationId: "StatsController_series",
+                    parameters: [{ name: "period", in: "query" }],
+                },
+            },
+        });
+        const withoutQuery = routesFile({
+            "/api/users/{id}": {
+                get: {
+                    operationId: "UsersController_findOne",
+                    parameters: [{ name: "id", in: "path", required: true }],
+                },
+            },
+        });
+
+        expect(withQuery).toContain("import { queryString }");
+        expect(withoutQuery).not.toContain("queryString");
+    });
+
     it("emits one builder per operation", () => {
         const file = routesFile({
             "/api/users": { post: { operationId: "UsersController_create" } },
@@ -215,6 +263,12 @@ describe("typeExpression", () => {
         ).toBe("UserResponseDto[]");
         expect(typeExpression({ type: "integer" })).toBe("number");
         expect(typeExpression({ type: "object" })).toBe("unknown");
+    });
+
+    it("spells an enum as a union of its literals", () => {
+        expect(
+            typeExpression({ type: "string", enum: ["day", "month", "year"] }),
+        ).toBe('"day" | "month" | "year"');
     });
 });
 

@@ -1,13 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { query } from "@/lib/api-client";
-import { routes } from "@/lib/contract/routes";
-import {
-    createUserDtoSchema,
-    type CreateUserDto,
-} from "@/lib/contract/schemas";
+import { createUser } from "@/lib/actions/create-user";
+import type { CreateUserDto } from "@/lib/contract/schemas";
 
 export const useCreateUser = () =>
     useMutation({
-        mutationFn: (input: CreateUserDto) =>
-            query.post(routes.usersCreate(), createUserDtoSchema.parse(input)),
+        mutationFn: async (input: CreateUserDto) => {
+            const result = await createUser(input);
+            if (!result.ok) throw new Error(result.message);
+            return result.data;
+        },
     });

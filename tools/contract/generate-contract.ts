@@ -1,4 +1,9 @@
-import { JsonSchema, OpenApiDocument, Operation } from "./openapi-document";
+import {
+    JsonSchema,
+    OpenApiDocument,
+    Operation,
+    Parameter,
+} from "./openapi-document";
 import {
     orderByDependency,
     referencedSchemas,
@@ -14,6 +19,10 @@ const JSON_MEDIA = "application/json";
 const SUCCESS_STATUS = /^2\d\d$/;
 const ENVELOPE_DATA = "data";
 const UNKNOWN = "unknown";
+const QUERY_LOCATION = "query";
+const QUERY_ARGUMENT = "query";
+const QUERY_HELPER = "queryString";
+const QUERY_HELPER_MODULE = "@/lib/utils/query-string";
 
 export const schemasFile = (schemas: Record<string, JsonSchema>): string => {
     const declarations = orderByDependency(schemas).flatMap((name) => [
@@ -49,11 +58,34 @@ export const responseDataSchema = (
         .find((data): data is JsonSchema => data !== undefined);
 };
 
-export const routeBuilder = (path: string, response = UNKNOWN): string => {
+const queryType = (query: Parameter[]): string =>
+    `{ ${query
+        .map(
+            ({ name, required, schema }) =>
+                `${JSON.stringify(name)}${required ? "" : "?"}: ${schema ? typeExpression(schema) : UNKNOWN}`,
+        )
+        .join("; ")} }`;
+
+const queryArgument = (query: Parameter[]): string[] =>
+    query.length === 0
+        ? []
+        : [
+              `${QUERY_ARGUMENT}${query.some(({ required }) => required) ? "" : "?"}: ${queryType(query)}`,
+          ];
+
+export const routeBuilder = (
+    path: string,
+    response = UNKNOWN,
+    query: Parameter[] = [],
+): string => {
     const params = [...path.matchAll(PATH_PARAM)].map((match) => match[1]);
     const brand = `as Endpoint<${response}>`;
+    const signature = [
+        ...params.map((name) => `${name}: string`),
+        ...queryArgument(query),
+    ].join(", ");
 
-    if (params.length === 0) {
+    if (signature === "") {
         return `() => ${JSON.stringify(path)} ${brand}`;
     }
 
@@ -61,13 +93,15 @@ export const routeBuilder = (path: string, response = UNKNOWN): string => {
         PATH_PARAM,
         (_, name: string) => `\${${name}}`,
     );
-    const signature = params.map((name) => `${name}: string`).join(", ");
+    const suffix =
+        query.length === 0 ? "" : `\${${QUERY_HELPER}(${QUERY_ARGUMENT})}`;
 
-    return `(${signature}) => \`${template}\` ${brand}`;
+    return `(${signature}) => \`${template}${suffix}\` ${brand}`;
 };
 
 export const routesFile = (paths: OpenApiDocument["paths"]): string => {
     const referenced = new Set<string>();
+    let usesQuery = false;
 
     const entries = Object.entries(paths).flatMap(([path, operations]) =>
         Object.values(operations).flatMap((operation) => {
@@ -80,12 +114,20 @@ export const routesFile = (paths: OpenApiDocument["paths"]): string => {
             }
 
             const response = data ? typeExpression(data) : UNKNOWN;
+            const query = (operation.parameters ?? []).filter(
+                (parameter) => parameter.in === QUERY_LOCATION,
+            );
+            usesQuery ||= query.length > 0;
 
             return [
-                `${routeKey(operation.operationId)}: ${routeBuilder(path, response)},`,
+                `${routeKey(operation.operationId)}: ${routeBuilder(path, response, query)},`,
             ];
         }),
     );
+
+    const helperImport = usesQuery
+        ? [`import { ${QUERY_HELPER} } from "${QUERY_HELPER_MODULE}";`]
+        : [];
 
     const schemaImport =
         referenced.size > 0
@@ -97,6 +139,7 @@ export const routesFile = (paths: OpenApiDocument["paths"]): string => {
     return [
         GENERATED,
         `import type { Endpoint } from "@/lib/types/api";`,
+        ...helperImport,
         ...schemaImport,
         "",
         "export const routes = {",
