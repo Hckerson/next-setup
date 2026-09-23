@@ -47,8 +47,8 @@ Before the twelve stages, one picture. Almost every concept in this guide is a w
 flowchart LR
     Browser["<b>Browser</b><br/><i>the user's machine</i>"]
     Edge["<b>Edge / CDN</b><br/><i>near the user</i>"]
-    Next["<b>Next.js</b><br/><i>frontend/app</i>"]
-    API["<b>NestJS API</b><br/><i>backend/src</i>"]
+    Next["<b>Next.js</b><br/><i>next-setup/app</i>"]
+    API["<b>NestJS API</b><br/><i>nest-setup/src</i>"]
     DB[("<b>Postgres</b><br/><i>the only truth</i>")]
 
     Browser -->|DNS + TLS| Edge
@@ -85,7 +85,7 @@ The stage everyone skips and everyone regrets skipping. Code is expensive to wri
 > **Where first-timers lose months**
 > Building the admin panel first. It feels productive because it is unambiguous — but nobody is waiting for it. Build the one flow that a real user would pay for, all the way through to production, before building anything else. That single vertical slice teaches you more than six horizontal ones.
 
-**In your repo** — `horizon-grove-real-estate.md` and `frontend/docs/FRONTEND_MVP_ANALYSIS.md` are this stage's artifacts: the written argument for what the product is, produced before the code existed.
+**In your repo** — nothing yet, by design: a starter has no product. A project built on it writes this stage down as Phase 1 of `docs/MASTER_PROMPT_COMPLETE.md`, generated into `design-os/generated/` — the written argument for what the product is, produced before the code exists.
 
 ---
 
@@ -113,7 +113,7 @@ Design is not decoration applied at the end. It is the decision about structure 
 >
 > **Verdict — for a first project: primitives + your own tokens.** Accessible dropdowns and dialogs are genuinely hard to write correctly and teach you nothing about your product.
 
-**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` the primitives · `docs/MASTER_PROMPT_COMPLETE.md` the system's seed document, which generates into `design-os/`.
+**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` is the home for primitives and `components/common/` for compositions · `docs/MASTER_PROMPT_COMPLETE.md` the system's seed document, which generates into `design-os/generated/`.
 
 ---
 
@@ -146,7 +146,7 @@ Architecture is the set of decisions that are expensive to reverse. You do not n
 >
 > **Verdict — start with REST.** You will know when you have outgrown it, and you will not have guessed.
 
-**In your repo** — `app/(public)/` server-renders, `app/admin|agent|dashboard/` are client-side portals · `backend/src/modules/` is one folder per domain noun · `backend/src/common/repos/` is the layer boundary.
+**In your repo** — routes under `app/` are server components until they opt into the client with `"use client"` · `proxy.ts` gates the private routes listed in `PROTECTED_ROUTE_PREFIXES` · `nest-setup/src/modules/` is one folder per domain noun · `nest-setup/src/common/repos/` is the layer boundary · `lib/contract/` is the API contract, generated from the backend's OpenAPI document.
 
 ---
 
@@ -183,7 +183,7 @@ Code is disposable; data is not. You will rewrite your frontend twice and your A
 > **The N+1 query**
 > You fetch 50 properties (1 query), then loop over them to fetch each agent (50 more queries). The page takes four seconds and nobody knows why. Every ORM has a way to fetch related records in one go — in Prisma, `include`. Learn to read the query log early; this bug is invisible in code review and obvious in the log.
 
-**In your repo** — `backend/prisma/schema.prisma` is the single source of truth for every shape in the system · `backend/prisma/seed.ts` fills a fresh database · `pnpm db:setup` does generate, push, and seed in one step.
+**In your repo** — this frontend holds no durable data of its own · `nest-setup/prisma/schema.prisma` is the single source of truth for every stored shape · `nest-setup/prisma/seed.ts` fills a fresh database.
 
 ---
 
@@ -224,7 +224,7 @@ The backend is the part of the system the user cannot lie to. It holds the rules
 >
 > **Verdict** — queues add a moving part. Add the first one when a request crosses ~1s, not before.
 
-**In your repo** — `backend/src/modules/offers/` is the controller-service-repo trio for one domain · `backend/src/common/filters/` shapes errors · `backend/src/common/interceptors/` is the cross-cutting pipeline · `@nestjs/jwt` + `@nestjs/passport` carry auth.
+**In your repo** — `nest-setup/src/modules/core/users/` is the controller-service-repo trio for one domain · `nest-setup/src/common/filters/` shapes errors · `nest-setup/src/common/interceptors/` is the cross-cutting pipeline · `@nestjs/jwt` + `@nestjs/passport` carry auth. This stack takes the JWT route but keeps its best property of sessions: the backend signs RS256 tokens, and `app/api/session/route.ts` stores them in an `httpOnly` cookie that client JavaScript never sees.
 
 ---
 
@@ -263,7 +263,7 @@ This is where HTML lives — as roughly a tenth of the work. The other nine tent
 > **Two sizes in one card**
 > An interface reads as amateur mostly through _density_, not colour. Dashboards, tables, and forms are an application register: small type, tight rows, one emphasised value per card, differences carried by weight and colour rather than size. Big display type belongs on marketing pages. This is the single fastest way to make a first project stop looking like a first project.
 
-**In your repo** — `lib/api/client.ts` is the only place that talks HTTP · `lib/api/properties.ts` wraps the endpoints · `lib/hooks/use-properties.ts` wraps that in a query hook · components consume the hook and never the client. That chain is the pattern, repeated 13 times.
+**In your repo** — `lib/api-client.ts` is the browser's only transport and `lib/api-server.ts` the server's · `lib/contract/` supplies typed endpoints and schemas · `lib/hooks/use-create-user.ts` wraps them in a query hook · components consume the hook and never the client. That chain is the pattern every new resource repeats.
 
 ---
 
@@ -286,7 +286,7 @@ The layer people skip until something inexplicable happens. Every developer even
 | **Load balancer / reverse proxy** | A front door that spreads traffic across servers, terminates TLS, and hides your topology (nginx, Caddy, or your host's).                                                                                                            |
 | **Edge functions**                | Small bits of your code running at the CDN, close to the user — redirects, auth checks, A/B splits — before the request ever reaches the origin.                                                                                     |
 
-**In your repo** — `middleware.ts` runs at the edge on every matching request, the cheapest possible place to bounce a logged-out user · `lib/constants.ts` holds `config.api.*` so no URL is ever typed twice.
+**In your repo** — `proxy.ts` (Next 16's name for middleware) runs before every matching request, the cheapest possible place to bounce a logged-out user · `lib/constants.ts` holds `API_BASE_URL` and the route constants, so no URL is ever typed twice · authenticated calls go server-to-server through `backendFetch()`, because the session cookie belongs to this origin and is never sent to the backend's.
 
 ---
 
@@ -317,7 +317,7 @@ Not a feature you add at the end. Most of security is a handful of habits applie
 > **The one to internalise on day one**
 > **Authorisation is checked on the server, per request, per row.** Not by hiding the button, not by the route the client took to get there, not once at login. If your API can be called directly with a valid token and someone else's ID, that is the only fact that matters. This has been the number-one item on the OWASP Top 10 for four consecutive editions.
 
-**In your repo** — `backend/src/common/filters/` is where a thrown error becomes a safe response, the boundary that decides whether stack traces leak · guards on the module controllers are where per-row ownership gets checked.
+**In your repo** — `nest-setup/src/common/filters/` is where a thrown error becomes a safe response, the boundary that decides whether stack traces leak · `nest-setup/src/modules/core/auth/guards/` is where identity and role get checked, and per-row ownership belongs in the service beneath them · `lib/utils/verify-session-token.ts` means no claim is trusted before its signature is · `lib/utils/internal-path.ts` stops `?next=` from walking a user off the site.
 
 ---
 
@@ -346,7 +346,7 @@ Tests are not about proving code correct. They are about changing code six month
 >
 > **Verdict** — in order: **types and lint on everything** (nearly free) → **integration tests on the money paths** → **unit tests on genuinely tricky logic** → **three or four end-to-end tests** on the flows that would be an emergency. Ignore the coverage number.
 
-**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Jest configured backend-side with `backend/test/jest-e2e.json` · husky + lint-staged run the formatter on staged files, so quality gates fire before a commit exists.
+**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Vitest here, Jest in `nest-setup` with `nest-setup/test/jest-e2e.json` · `tools/eslint/rules/` turns the house conventions into lint errors · husky + lint-staged run the formatter on staged files, and the pre-push hook blocks on type-check, lint and `pnpm contract:check`.
 
 ---
 
@@ -379,7 +379,7 @@ The gap between "works on my machine" and "works for everyone" is this stage. Au
 >
 > **Verdict — managed for the product, a VPS as a side quest.** Learning to run a server is genuinely valuable, just not while you are also learning everything else and trying to launch something.
 
-**In your repo** — `pnpm build` produces the artifact on both sides · `backend/dist/` is the compiled output · husky hooks are the local half of CI. The missing half is a pipeline file that runs lint, type-check, and test on every push.
+**In your repo** — `pnpm build` produces the artifact on both sides · `nest-setup/dist/` is the backend's compiled output · husky hooks are the local half of CI. The missing half is a pipeline file that runs lint, type-check, and test on every push.
 
 ---
 
@@ -405,7 +405,7 @@ Software runs for years and fails at inconvenient times. Operations is the disci
 | **Scaling**                           | Vertical (bigger machine — simple, has a ceiling) and horizontal (more machines — needs statelessness). Nearly always fix the slow query before adding machines.      |
 | **Cost management**                   | Cloud bills grow quietly. A forgotten cron job, an unindexed query, or an unbounded log retention policy can cost more than the servers.                              |
 
-**In your repo** — `backend/src/common/interceptors/` is where request logging and timing belong: one place, every route. Note the project rule banning `console.log` in committed code — logging is a service, not a debug statement.
+**In your repo** — `nest-setup/src/common/interceptors/` is where request logging and timing belong: one place, every route. Note the project rule banning `console.log` in committed code — logging is a service, not a debug statement.
 
 ---
 
@@ -487,4 +487,4 @@ Concepts age slowly, thresholds and rankings do not. The two facts in this guide
 
 ---
 
-_Field guide · twelve stages · anchored to a Next.js 16 + NestJS 11 codebase. A styled HTML version of this document lives at the workspace root as `from-idea-to-click.html`._
+_Field guide · twelve stages · anchored to the `next-setup` + `nest-setup` starters (Next.js 16 + NestJS 11)._

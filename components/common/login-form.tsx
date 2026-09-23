@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import Button from "@/components/common/button";
+import Button from "@/components/ui/button";
 import { INVALID_CREDENTIALS } from "@/lib/constants";
 import { useLogin } from "@/lib/hooks/use-login";
 

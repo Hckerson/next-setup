@@ -57,6 +57,10 @@ const PRIMITIVE_TYPES: Record<string, string> = {
 export const typeExpression = (schema: JsonSchema): string => {
     if (schema.$ref) return refName(schema.$ref);
 
+    if (schema.enum) {
+        return schema.enum.map((value) => JSON.stringify(value)).join(" | ");
+    }
+
     if (schema.type === "array") {
         return schema.items ? `${typeExpression(schema.items)}[]` : "unknown[]";
     }
