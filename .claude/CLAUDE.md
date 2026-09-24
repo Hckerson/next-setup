@@ -89,11 +89,8 @@ Pick the server hop by what it does to the cookie. **Route handlers** (`app/api/
 
 ## Before you commit or push
 
-Formatting and linting are automated. They are not chores you run by hand.
-
-- **Commit** — Husky's `pre-commit` hook runs `pnpm lint-staged` and nothing else: `eslint --fix` then `prettier --write`, over staged files only. It is fast by design.
 - **Push** — Husky's `pre-push` hook runs `pnpm type-check`, then `pnpm lint`, then `pnpm contract:check`, and blocks on failure. This is the real gate.
 
-`pnpm format` and `pnpm lint` stay available for a manual full-repo sweep, but no workflow requires you to run them.
+`pnpm format` and `pnpm lint` stay available for a manual full-repo sweep. Commits do not run a hook.
 
 The rules above are not restated here. They bind every edit, not the gate.
