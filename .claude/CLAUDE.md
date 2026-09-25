@@ -4,15 +4,13 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 
 ## Non-negotiable rules
 
-1. **No comments in code.** Ever. Code reads clearly on its own — when it doesn't, the abstraction is wrong. Fix the abstraction.
-2. **No hardcoding.** API routes, durations, enums, and copy that appears twice live in `lib/constants.ts` or feature-scoped `lib/<feature>/constants.ts`. Endpoints come from `lib/api-routes.ts`, shapes from Zod schemas. Seed and sample data lives in `lib/data/`, never inline in a page.
-3. **No `any` in TypeScript.** Use `unknown` + narrowing or a precise type. Derive types from Zod with `z.infer`.
-4. **Match the existing architecture.** Do not invent patterns, and do not invent locations — when you are unsure where something goes, re-read this file. State the reason before deviating.
-5. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion / CSS `clamp()`) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
-6. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
-7. **Minimize LOC.** Ship the shortest solution that stays maintainable.
-8. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
-9. **Never delete a feature because it is not built.** Unbuilt, stubbed, scaffolded and placeholder are states of work in progress — not evidence the thing was abandoned. This binds specs, seed data, types, primitives, enums, ESLint rules and codemods alike: an export nothing imports yet, a route with no page, a validation schema with no form. Removal needs an explicit instruction naming the feature; if you believe something is genuinely dead, say so and wait. Same rule for generated design OS artifacts — see `docs/MASTER_PROMPT_COMPLETE.md` › Critical Rules › Scope Preservation.
+1. **No hardcoding.** API routes, durations, enums, and copy that appears twice live in `lib/constants.ts` or feature-scoped `lib/<feature>/constants.ts`. Endpoints come from `lib/api-routes.ts`, shapes from Zod schemas. Seed and sample data lives in `lib/data/`, never inline in a page.
+2. **Match the existing architecture.** Do not invent patterns, and do not invent locations — when you are unsure where something goes, re-read this file. State the reason before deviating.
+3. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion / CSS `clamp()`) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
+4. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
+5. **Minimize LOC.** Ship the shortest solution that stays maintainable.
+6. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
+7. **Never delete a feature because it is not built.** Unbuilt, stubbed, scaffolded and placeholder are states of work in progress — not evidence the thing was abandoned. This binds specs, seed data, types, primitives, enums, ESLint rules and codemods alike: an export nothing imports yet, a route with no page, a validation schema with no form. Removal needs an explicit instruction naming the feature; if you believe something is genuinely dead, say so and wait. Same rule for generated design OS artifacts — see `docs/MASTER_PROMPT_COMPLETE.md` › Critical Rules › Scope Preservation.
 
 ## Required patterns
 
@@ -60,32 +58,11 @@ Every route builder returns an `Endpoint<TResponse>` — a branded string carryi
 
 Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api-routes.ts` remains for endpoints the backend does not publish. Hand-written Zod in `lib/validations/` composes over the generated schemas (`.extend`, `.pick`) rather than restating them.
 
-## Sessions
-
-The backend signs RS256 and holds `JWT_PRIVATE_KEY`. This tier gets `JWT_PUBLIC_KEY` only, so it can verify a session but never mint one — copy the public half from `pnpm keys:generate` in `nest-setup` into `.env`.
-
-`proxy.ts` reads the `SESSION_COOKIE`, verifies the signature with `lib/utils/verify-session-token.ts`, and gates `PROTECTED_ROUTE_PREFIXES`; a rejected cookie is cleared on the way to `LOGIN_ROUTE`. Server components read the same session through `getSession()` in `lib/utils/session.ts`. Both names live in `lib/constants.ts` — never restate a route or the cookie name.
-
-The file is `proxy.ts`, not `middleware.ts` — Next 16 renamed the convention and warns on the old name. It exports `proxy`; Next accepts that named export or a default, nothing else.
-
-An unverified token is not a session. Nothing may trust a claim that has not been through `verifySessionToken`, decoding the payload included.
-
-`app/api/session/route.ts` is the only place the token is handled: `POST` forwards credentials to the backend and puts the returned token straight into an `httpOnly` cookie, so it never reaches client JavaScript; `DELETE` clears it. The browser therefore has no token to attach — **do not add an `Authorization` header on the client, and never store a token in `localStorage` or a readable cookie.** Components reach these through `useLogin` / `useLogout`, which post same-origin via `local` in `lib/api-client.ts` — `query` targets the backend origin, so its response cannot set this origin's session cookie.
-
-A redirect target taken from the URL passes through `internalPath()` first. `?next=` is attacker-controllable, and an absolute or protocol-relative value would walk the user off the site.
-
-`query` surfaces failures rather than hiding them: a non-2xx response rejects, so TanStack Query reaches its error state and retries as configured. Nothing in the transport fabricates a successful empty payload.
-
-**Authenticated backend calls go through the server, never the browser.** The cookie belongs to this origin, so it is never sent to the backend on another port — the browser cannot authenticate a direct call, and lowering `SameSite` to let it is not the fix. Server components, route handlers and Server Actions call `backendFetch()` in `lib/api-server.ts`, which attaches the token as a Bearer header. `lib/api-client.ts` stays for unauthenticated, browser-initiated calls only; it imports `next/headers` nowhere, which is why the two files are separate. `lib/api-server.ts` and `lib/utils/session.ts` import `server-only`, so a client import of either fails the build.
-
-Pick the server hop by what it does to the cookie. **Route handlers** (`app/api/`) own the session: they set or clear it, as login, register and logout do. **Server Actions** (`lib/actions/`, one per file) use it: every other authenticated call from a component, through a `use-<resource>` hook. An action returns an `ActionResult` rather than throwing — Next hides a thrown message in production — and the hook rethrows on `ok: false` so TanStack Query still reaches its error state.
-
 ## File rules
 
 - **One component per file.** Kebab-case filename matching the export (`motion-wrapper.tsx` → `MotionWrapper`).
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Data moves to `lib/data/`, JSX to `components/`.
-- **Add packages with `pnpm add`.** Never hand-edit `package.json`.
 
 ## Before you commit or push
 
