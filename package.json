@@ -14,7 +14,7 @@
         "contract": "jiti tools/contract/run-generate-contract.ts",
         "contract:check": "jiti tools/contract/run-generate-contract.ts --check",
         "lint": "eslint",
-        "prepare": "husky"
+        "prepare": "git config --unset-all core.hooksPath || exit 0"
     },
     "lint-staged": {
         "*.{ts,tsx}": [

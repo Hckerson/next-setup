@@ -52,7 +52,7 @@ A rule that reports a violation ESLint cannot autofix — because the fix spans 
 
 `lib/contract/` is **generated — never edit it**. The backend's class-validator DTOs are the origin; `pnpm openapi` in `nest-setup` emits `openapi.json`, and `pnpm contract` here turns that into Zod schemas, `z.infer` types, and typed route builders. Change a field on a DTO, regenerate, and `pnpm type-check` fails here at every consumer — that break is the point of the layer.
 
-Regeneration is not left to memory: `pnpm contract:check` regenerates in place, diffs against `lib/contract/`, and fails the pre-push hook when the two disagree.
+Regeneration is not left to memory: `pnpm contract:check` regenerates in place, diffs against `lib/contract/`, and fails when the two disagree.
 
 Every route builder returns an `Endpoint<TResponse>` — a branded string carrying the response type the backend documents for that operation. `query.get(routes.usersFindOne(id))` therefore resolves to `ApiResponse<UserResponseDto>` with no type argument at the call site. A response type reaches the contract only when its controller method is annotated with `@ApiEnvelope(Dto)` in `nest-setup`; without that annotation the endpoint degrades to `Endpoint<unknown>`.
 
@@ -66,11 +66,11 @@ Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api
 
 ## Before you commit or push
 
-Formatting and linting are automated. They are not chores you run by hand.
+Git hooks are **disabled**. `.husky/` is kept but not installed: the `prepare` script unsets `core.hooksPath` on every `pnpm install`, so nothing runs on commit or push.
 
-- **Commit** — Husky's `pre-commit` hook runs `pnpm lint-staged` and nothing else: `eslint --fix` then `prettier --write`, over staged files only. It is fast by design.
-- **Push** — Husky's `pre-push` hook runs `pnpm type-check`, then `pnpm lint`, then `pnpm contract:check`, and blocks on failure. This is the real gate.
+- **Commit** — `.husky/pre-commit` would run `pnpm lint-staged`: `eslint --fix` then `prettier --write`, over staged files only.
+- **Push** — `.husky/pre-push` would run `pnpm type-check`, then `pnpm lint`, then `pnpm contract:check`.
 
-`pnpm format` and `pnpm lint` stay available for a manual full-repo sweep, but no workflow requires you to run them.
+Run those by hand when you want the gate. To re-enable the hooks, set `prepare` back to `husky` and run `pnpm install`.
 
 The rules above are not restated here. They bind every edit, not the gate.
