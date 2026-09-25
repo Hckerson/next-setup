@@ -2,9 +2,9 @@
 
 **A field guide to everything in web development that isn't HTML.**
 
-HTML describes what a page contains. That is roughly one concept out of sixty. This is a map of the other fifty-nine — the twelve stages a web product moves through from someone having an idea to a real person clicking a button in production, written for a first-timer and anchored to this codebase.
+HTML describes what a page contains. That is roughly one concept out of sixty. This is a map of the other fifty-nine — the twelve stages a web product moves through from someone having an idea to a real person clicking a button in production, written for a first-timer cloning this starter.
 
-`12 stages` · `~90 concepts` · `Anchored to: Next.js 16 + NestJS 11` · `August 2026`
+`12 stages` · `~90 concepts` · `This starter: Next.js 16` · `August 2026`
 
 ---
 
@@ -47,14 +47,14 @@ Before the twelve stages, one picture. Almost every concept in this guide is a w
 flowchart LR
     Browser["<b>Browser</b><br/><i>the user's machine</i>"]
     Edge["<b>Edge / CDN</b><br/><i>near the user</i>"]
-    Next["<b>Next.js</b><br/><i>next-setup/app</i>"]
-    API["<b>NestJS API</b><br/><i>nest-setup/src</i>"]
-    DB[("<b>Postgres</b><br/><i>the only truth</i>")]
+    Next["<b>This starter</b><br/><i>app/</i>"]
+    API["<b>The API</b><br/><i>whatever you call</i>"]
+    DB[("<b>The database</b><br/><i>the only truth</i>")]
 
     Browser -->|DNS + TLS| Edge
     Edge -->|cache miss| Next
-    Next -->|fetch + JWT| API
-    API -->|SQL via Prisma| DB
+    Next -->|fetch + session| API
+    API -->|SQL| DB
     Edge -.->|"cache hit — answered here,<br/>the server is never touched"| Browser
 ```
 
@@ -74,18 +74,18 @@ The stage everyone skips and everyone regrets skipping. Code is expensive to wri
 | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **User research**                      | Talking to the people who will use the thing, before building it. Five conversations catches most of what a year of guessing misses.                                                                  |
 | **Problem statement**                  | One sentence naming who is stuck, at what, and why it matters. If you cannot write it, you do not have a project yet — you have a technology you want to use.                                         |
-| **Jobs to be done**                    | Framing features as the job a user "hires" the product for. Nobody wants a saved-search feature; they want to stop refreshing a page at midnight.                                                     |
+| **Jobs to be done**                    | Framing features as the job a user "hires" the product for. Nobody wants a login form; they want to come back tomorrow already signed in.                                                              |
 | **Requirements**                       | What the system must do (functional) and how well it must do it (non-functional: speed, uptime, privacy, legal). The second kind is the kind that gets forgotten and then rewrites your architecture. |
 | **Scope & MVP**                        | The smallest version that is genuinely useful to someone. Not a broken version of the full thing — a complete version of a smaller thing.                                                             |
 | **Prioritisation**                     | Ordering the backlog on a stated basis rather than on whoever spoke last. RICE (reach, impact, confidence, effort) and MoSCoW (must / should / could / won't) are just structured arguments.          |
 | **Success metrics**                    | The number that moves if this worked, chosen **before** you build. Without it, every launch is a success, which means the word means nothing.                                                         |
-| **User stories & acceptance criteria** | "As a buyer I want to save a listing so I can compare later" plus a checklist of what "done" means. The checklist later becomes your tests, almost word for word.                                     |
+| **User stories & acceptance criteria** | "As a new user I want to register and come back already signed in" plus a checklist of what "done" means. The checklist later becomes your tests, almost word for word.                            |
 
 > [!WARNING]
 > **Where first-timers lose months**
 > Building the admin panel first. It feels productive because it is unambiguous — but nobody is waiting for it. Build the one flow that a real user would pay for, all the way through to production, before building anything else. That single vertical slice teaches you more than six horizontal ones.
 
-**In your repo** — nothing yet, by design: a starter has no product. A project built on it writes this stage down as Phase 1 of `docs/MASTER_PROMPT_COMPLETE.md`, generated into `design-os/generated/` — the written argument for what the product is, produced before the code exists.
+**In this starter** — nothing yet, by design: a starter has no product. A project built on it writes this stage down as Phase 1 of `docs/MASTER_PROMPT_COMPLETE.md`, generated into `design-os/generated/` — the written argument for what the product is, produced before the code exists.
 
 ---
 
@@ -113,7 +113,7 @@ Design is not decoration applied at the end. It is the decision about structure 
 >
 > **Verdict — for a first project: primitives + your own tokens.** Accessible dropdowns and dialogs are genuinely hard to write correctly and teach you nothing about your product.
 
-**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` is the home for primitives and `components/common/` for compositions · `docs/MASTER_PROMPT_COMPLETE.md` the system's seed document, which generates into `design-os/generated/`.
+**In this starter** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` is the home for primitives and `components/common/` for compositions · `docs/MASTER_PROMPT_COMPLETE.md` the system's seed document, which generates into `design-os/generated/`.
 
 ---
 
@@ -128,7 +128,7 @@ Architecture is the set of decisions that are expensive to reverse. You do not n
 | **Client / server split** | Which code runs on the user's machine and which runs on yours. The rule that never changes: **anything the user can see, the user can change**, so trust nothing decided on the client.     |
 | **Rendering strategy**    | Where the HTML gets built. CSR in the browser, SSR on the server per request, SSG once at build time, ISR at build time then refreshed. This choice drives speed, SEO, and hosting cost.    |
 | **API design**            | The contract between frontend and backend. REST (resources and verbs), GraphQL (client asks for exactly the fields it wants), RPC/tRPC (call a function, get types for free).               |
-| **Domain modelling**      | Naming the real-world things — Property, Offer, Viewing, Transaction — and their rules, before naming any tables or components. Get the nouns right and the code organises itself.          |
+| **Domain modelling**      | Naming the real-world things — User, Session, Account — and their rules, before naming any tables or components. Get the nouns right and the code organises itself.                        |
 | **Layered architecture**  | Controller (handles HTTP) → service (business rules) → repository (talks to the database). Each layer only knows the one below. Feels like bureaucracy until the day you swap the database. |
 | **Monolith vs. services** | One deployable unit vs. many small ones. Microservices trade a hard code problem for a hard networking problem.                                                                             |
 | **Statelessness**         | A server that keeps nothing in memory between requests can be duplicated freely behind a load balancer. State goes in the database or the cache, never in the process.                      |
@@ -146,7 +146,7 @@ Architecture is the set of decisions that are expensive to reverse. You do not n
 >
 > **Verdict — start with REST.** You will know when you have outgrown it, and you will not have guessed.
 
-**In your repo** — routes under `app/` are server components until they opt into the client with `"use client"` · `proxy.ts` gates the private routes listed in `PROTECTED_ROUTE_PREFIXES` · `nest-setup/src/modules/` is one folder per domain noun · `nest-setup/src/common/repos/` is the layer boundary · `lib/contract/` is the API contract, generated from the backend's OpenAPI document.
+**In this starter** — routes under `app/` are server components until they opt into the client with `"use client"` · `proxy.ts` gates the private routes listed in `PROTECTED_ROUTE_PREFIXES` · `lib/contract/` is the API contract this starter consumes. The starter does not own the backend's folders.
 
 ---
 
@@ -163,14 +163,14 @@ Code is disposable; data is not. You will rewrite your frontend twice and your A
 | **Relational database**         | Data in tables with enforced relationships and types (Postgres, MySQL). The database itself refuses to store nonsense, which is a feature you will come to love.                   |
 | **Document / key-value stores** | Flexible-shape documents (MongoDB) or fast key lookups (Redis). Trade guarantees for flexibility or speed.                                                                         |
 | **Schema & normalisation**      | Deciding tables, columns, and where each fact lives. Normalising means storing each fact exactly once, so it cannot disagree with itself.                                          |
-| **Relationships**               | One-to-many (an agent has many listings), many-to-many (a buyer saves many properties, a property is saved by many buyers), enforced by foreign keys.                              |
+| **Relationships**               | One-to-many (a user has many sessions), many-to-many (a user belongs to many groups, a group has many users), enforced by foreign keys.                                            |
 | **Indexes**                     | A lookup structure that turns "read every row" into "jump straight there". The single highest-leverage performance fix in most applications, and the most commonly missing one.    |
-| **Transactions & ACID**         | Grouping several writes so that either all of them happen or none do. Accepting an offer while marking a property sold must not half-succeed.                                      |
+| **Transactions & ACID**         | Grouping several writes so that either all of them happen or none do. Creating an account and its first session must not half-succeed.                                              |
 | **ORM**                         | Object-Relational Mapper — write TypeScript, get SQL (Prisma, Drizzle). Convenient and type-safe until it silently issues 400 queries in a loop; see N+1.                          |
 | **Migrations**                  | Versioned, ordered, replayable schema changes checked into git. This is how the database in production catches up with the code, safely and identically every time.                |
 | **Seeding**                     | A script that fills an empty database with realistic sample data so any developer can run the app in one command.                                                                  |
 | **Caching**                     | Keeping a copy of an expensive answer somewhere cheap: in memory, in Redis, in the browser, at the CDN. The permanent cost is **invalidation** — knowing when the copy went stale. |
-| **Blob storage**                | Files (property photos, PDFs) belong in object storage such as S3, with only the URL in the database. Databases are bad at megabytes.                                              |
+| **Blob storage**                | Files (avatars, PDFs) belong in object storage such as S3, with only the URL in the database. Databases are bad at megabytes.                                                       |
 | **Backups**                     | A backup you have never restored is a rumour. The number that matters is not "do we have backups" but "how long does a restore take".                                              |
 
 > [!NOTE]
@@ -181,9 +181,9 @@ Code is disposable; data is not. You will rewrite your frontend twice and your A
 
 > [!WARNING]
 > **The N+1 query**
-> You fetch 50 properties (1 query), then loop over them to fetch each agent (50 more queries). The page takes four seconds and nobody knows why. Every ORM has a way to fetch related records in one go — in Prisma, `include`. Learn to read the query log early; this bug is invisible in code review and obvious in the log.
+> You fetch 50 users (1 query), then loop over them to fetch each user's sessions (50 more queries). The page takes four seconds and nobody knows why. Every ORM has a way to fetch related records in one go. Learn to read the query log early; this bug is invisible in code review and obvious in the log.
 
-**In your repo** — this frontend holds no durable data of its own · `nest-setup/prisma/schema.prisma` is the single source of truth for every stored shape · `nest-setup/prisma/seed.ts` fills a fresh database.
+**In this starter** — this frontend holds no durable data of its own. Stored shapes arrive as generated types in `lib/contract/`. The starter does not own the database schema.
 
 ---
 
@@ -200,17 +200,17 @@ The backend is the part of the system the user cannot lie to. It holds the rules
 | **Middleware**                        | Functions that run before your handler, in order — parse the body, check the token, log the request, catch the error. A pipeline, not magic.                                                                                 |
 | **Controller / service / repository** | Controllers translate HTTP into plain arguments, services hold the business rules, repositories talk to the database. Business logic in a controller is the most common structural mistake in backend code.                  |
 | **Authentication**                    | Proving who you are. Passwords (hashed with bcrypt or argon2, never stored or reversible), OAuth/OIDC for "sign in with Google", magic links, passkeys.                                                                      |
-| **Authorisation**                     | What you are allowed to do once identified. An agent may edit their own listing and not someone else's. **A different problem from authentication**, and the more commonly broken one.                                       |
+| **Authorisation**                     | What you are allowed to do once identified. A user may edit their own account and not someone else's. **A different problem from authentication**, and the more commonly broken one.                                |
 | **Sessions vs. tokens**               | _Session_: the server remembers you, the browser holds an opaque cookie. _JWT_: a signed, self-describing token the server can verify without a lookup — fast, but genuinely awkward to revoke.                              |
 | **Validation**                        | Rejecting malformed input at the boundary, with a schema (Zod, class-validator). Everything past the boundary is then known-good. Client-side validation is a courtesy; server-side validation is the actual defence.        |
 | **Error handling**                    | Turning thrown exceptions into consistent, non-leaky HTTP responses. Users get a clear message; the stack trace goes to your logs, never to the browser.                                                                     |
 | **Background jobs & queues**          | Work too slow to make the user wait for: sending email, generating a PDF, resizing an image. Put it on a queue (BullMQ, SQS), return immediately, do it in a worker.                                                         |
-| **Scheduled jobs**                    | Cron-style recurring work — nightly digests, expiring old offers, reconciliation.                                                                                                                                            |
+| **Scheduled jobs**                    | Cron-style recurring work — nightly digests, expiring old sessions, reconciliation.                                                                                                                                           |
 | **File uploads**                      | Usually a pre-signed URL: the server grants a one-time permission and the browser uploads straight to storage, so large files never pass through your API.                                                                   |
 | **Webhooks**                          | Another service calling _you_ when something happens ("payment succeeded"). Always verify the signature — the URL is public.                                                                                                 |
 | **Real-time**                         | WebSockets for two-way live data (chat), SSE for one-way server push (notifications), polling for everything else because it is simple and usually enough.                                                                   |
 | **Rate limiting**                     | Capping requests per client so one bad actor or one broken loop cannot take the service down.                                                                                                                                |
-| **Idempotency**                       | Making a repeated request safe. The user double-clicks "Submit offer"; an idempotency key ensures one offer, not two. Networks retry on their own, so this is not paranoia.                                                  |
+| **Idempotency**                       | Making a repeated request safe. The user double-clicks "Create account"; an idempotency key ensures one account, not two. Networks retry on their own, so this is not paranoia.                                              |
 
 > [!NOTE]
 > **Decision · sessions or JWTs**
@@ -224,7 +224,7 @@ The backend is the part of the system the user cannot lie to. It holds the rules
 >
 > **Verdict** — queues add a moving part. Add the first one when a request crosses ~1s, not before.
 
-**In your repo** — `nest-setup/src/modules/core/users/` is the controller-service-repo trio for one domain · `nest-setup/src/common/filters/` shapes errors · `nest-setup/src/common/interceptors/` is the cross-cutting pipeline · `@nestjs/jwt` + `@nestjs/passport` carry auth. This stack takes the JWT route but keeps its best property of sessions: the backend signs RS256 tokens, and `app/api/session/route.ts` stores them in an `httpOnly` cookie that client JavaScript never sees.
+**In this starter** — the starter does not own controllers, services, or repositories. It expects a backend that signs RS256 tokens. `app/api/session/route.ts` stores that token in an `httpOnly` cookie that client JavaScript never sees. `lib/contract/` is the typed boundary.
 
 ---
 
@@ -263,7 +263,7 @@ This is where HTML lives — as roughly a tenth of the work. The other nine tent
 > **Two sizes in one card**
 > An interface reads as amateur mostly through _density_, not colour. Dashboards, tables, and forms are an application register: small type, tight rows, one emphasised value per card, differences carried by weight and colour rather than size. Big display type belongs on marketing pages. This is the single fastest way to make a first project stop looking like a first project.
 
-**In your repo** — `lib/api-client.ts` is the browser's only transport and `lib/api-server.ts` the server's · `lib/contract/` supplies typed endpoints and schemas · `lib/hooks/use-create-user.ts` wraps them in a query hook · components consume the hook and never the client. That chain is the pattern every new resource repeats.
+**In this starter** — `lib/api-client.ts` is the browser's only transport and `lib/api-server.ts` the server's · `lib/contract/` supplies typed endpoints and schemas · `lib/hooks/use-login.ts`, `lib/hooks/use-register.ts`, and `lib/hooks/use-create-user.ts` wrap them in query hooks · components consume the hook and never the client. That chain is the pattern every new resource repeats.
 
 ---
 
@@ -286,7 +286,7 @@ The layer people skip until something inexplicable happens. Every developer even
 | **Load balancer / reverse proxy** | A front door that spreads traffic across servers, terminates TLS, and hides your topology (nginx, Caddy, or your host's).                                                                                                            |
 | **Edge functions**                | Small bits of your code running at the CDN, close to the user — redirects, auth checks, A/B splits — before the request ever reaches the origin.                                                                                     |
 
-**In your repo** — `proxy.ts` (Next 16's name for middleware) runs before every matching request, the cheapest possible place to bounce a logged-out user · `lib/constants.ts` holds `API_BASE_URL` and the route constants, so no URL is ever typed twice · authenticated calls go server-to-server through `backendFetch()`, because the session cookie belongs to this origin and is never sent to the backend's.
+**In this starter** — `proxy.ts` (Next 16's name for middleware) runs before every matching request, the cheapest possible place to bounce a logged-out user · `lib/constants.ts` holds `API_BASE_URL` and the route constants, so no URL is ever typed twice · authenticated calls go server-to-server through `backendFetch()`, because the session cookie belongs to this origin and is never sent to the API.
 
 ---
 
@@ -300,7 +300,7 @@ Not a feature you add at the end. Most of security is a handful of habits applie
 
 | Concept                               | What it is                                                                                                                                                                                                                                  |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Broken access control**             | The most common serious flaw on the web. Changing `/offers/123` to `/offers/124` and seeing someone else's data. Every single request must re-check **who you are** and **whether this row is yours** — hiding the button is not a control. |
+| **Broken access control**             | The most common serious flaw on the web. Changing `/users/123` to `/users/124` and seeing someone else's account. Every single request must re-check **who you are** and **whether this row is yours** — hiding the button is not a control. |
 | **Injection**                         | User input interpreted as code. SQL injection, command injection. Parameterised queries and real ORMs close it — string-concatenating a query never does.                                                                                   |
 | **XSS**                               | Attacker JavaScript running on your page, usually via unescaped user content. Frameworks escape by default; the danger is the escape hatch (`dangerouslySetInnerHTML`).                                                                     |
 | **CSRF**                              | Another site making an authenticated request as your logged-in user. `SameSite` cookies plus a token.                                                                                                                                       |
@@ -317,7 +317,7 @@ Not a feature you add at the end. Most of security is a handful of habits applie
 > **The one to internalise on day one**
 > **Authorisation is checked on the server, per request, per row.** Not by hiding the button, not by the route the client took to get there, not once at login. If your API can be called directly with a valid token and someone else's ID, that is the only fact that matters. This has been the number-one item on the OWASP Top 10 for four consecutive editions.
 
-**In your repo** — `nest-setup/src/common/filters/` is where a thrown error becomes a safe response, the boundary that decides whether stack traces leak · `nest-setup/src/modules/core/auth/guards/` is where identity and role get checked, and per-row ownership belongs in the service beneath them · `lib/utils/verify-session-token.ts` means no claim is trusted before its signature is · `lib/utils/internal-path.ts` stops `?next=` from walking a user off the site.
+**In this starter** — `lib/utils/verify-session-token.ts` means no claim is trusted before its signature is · `lib/utils/internal-path.ts` stops `?next=` from walking a user off the site. The starter does not own the API's error filters or auth guards. It refuses to treat an unverified token as a session.
 
 ---
 
@@ -331,7 +331,7 @@ Tests are not about proving code correct. They are about changing code six month
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Unit tests**                     | One function, no database, no network. Fast enough to run on every save. Best on logic with real rules — pricing, permissions, date maths.                                                  |
 | **Integration tests**              | Several pieces together — a route, its service, a real test database. Catches the wiring mistakes unit tests structurally cannot see.                                                       |
-| **End-to-end tests**               | A real browser doing what a user does (Playwright, Cypress). Slow and occasionally flaky, so reserve them for the handful of flows that must never break: sign up, search, submit an offer. |
+| **End-to-end tests**               | A real browser doing what a user does (Playwright, Cypress). Slow and occasionally flaky, so reserve them for the handful of flows that must never break: register, sign in, sign out.    |
 | **The testing pyramid**            | Many unit, some integration, few end-to-end. Inverting it gives you a suite that takes forty minutes and that nobody trusts.                                                                |
 | **Test doubles**                   | Stubs, mocks, and fakes standing in for slow or external things. Mock the payment provider, not your own database.                                                                          |
 | **Static analysis**                | Finding problems without running anything: the type-checker, the linter, dependency scanners. The cheapest tests you will ever run.                                                         |
@@ -346,7 +346,7 @@ Tests are not about proving code correct. They are about changing code six month
 >
 > **Verdict** — in order: **types and lint on everything** (nearly free) → **integration tests on the money paths** → **unit tests on genuinely tricky logic** → **three or four end-to-end tests** on the flows that would be an emergency. Ignore the coverage number.
 
-**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Vitest here, Jest in `nest-setup` with `nest-setup/test/jest-e2e.json` · `tools/eslint/rules/` turns the house conventions into lint errors · husky + lint-staged run the formatter on staged files, and the pre-push hook blocks on type-check, lint and `pnpm contract:check`.
+**In this starter** — `pnpm type-check` and `pnpm lint` · Vitest via `pnpm test` · `tools/eslint/rules/` turns the house conventions into lint errors · the pre-push hook blocks on type-check, lint, and `pnpm contract:check`. Commits do not run a hook.
 
 ---
 
@@ -379,7 +379,7 @@ The gap between "works on my machine" and "works for everyone" is this stage. Au
 >
 > **Verdict — managed for the product, a VPS as a side quest.** Learning to run a server is genuinely valuable, just not while you are also learning everything else and trying to launch something.
 
-**In your repo** — `pnpm build` produces the artifact on both sides · `nest-setup/dist/` is the backend's compiled output · husky hooks are the local half of CI. The missing half is a pipeline file that runs lint, type-check, and test on every push.
+**In this starter** — `pnpm build` produces the artifact · Husky's pre-push hook is the local half of CI · `.github/workflows/ci.yml` runs `pnpm lint` and `pnpm build` on pull requests, and on pushes to `master` or `main`.
 
 ---
 
@@ -405,7 +405,7 @@ Software runs for years and fails at inconvenient times. Operations is the disci
 | **Scaling**                           | Vertical (bigger machine — simple, has a ceiling) and horizontal (more machines — needs statelessness). Nearly always fix the slow query before adding machines.      |
 | **Cost management**                   | Cloud bills grow quietly. A forgotten cron job, an unindexed query, or an unbounded log retention policy can cost more than the servers.                              |
 
-**In your repo** — `nest-setup/src/common/interceptors/` is where request logging and timing belong: one place, every route. Note the project rule banning `console.log` in committed code — logging is a service, not a debug statement.
+**In this starter** — no logging service yet. The house rule bans `console.log` in committed code. Logging is a service, not a debug statement.
 
 ---
 
@@ -418,10 +418,10 @@ The stage that closes the circle and gets neglected the most. Everything up to h
 | Concept                       | What it is                                                                                                                                                                                                        |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **SEO**                       | Being findable. Server-rendered content, sensible URLs, unique titles and meta descriptions, a sitemap, internal links, and pages that are actually fast.                                                         |
-| **Structured data**           | Schema.org JSON-LD describing your content in a form search engines understand — a listing's price, address, and photos, marked up so results show them.                                                          |
+| **Structured data**           | Schema.org JSON-LD describing your content in a form search engines understand — a page's title, description, and author, marked up so results can show them.                                                    |
 | **Core Web Vitals**           | Google's measured user-experience thresholds, evaluated at the 75th percentile of real visits: **LCP ≤ 2.5s** (main content visible), **INP ≤ 200ms** (interface responds), **CLS ≤ 0.1** (nothing jumps around). |
 | **RUM vs. synthetic**         | Real user monitoring measures actual visitors on real devices and networks; synthetic (Lighthouse) tests a lab machine. Lab scores are a smoke alarm, field data is the truth.                                    |
-| **Product analytics**         | Events describing what users do — viewed listing, saved, contacted agent. Design the event names deliberately; renaming them later loses the history.                                                             |
+| **Product analytics**         | Events describing what users do — viewed the sign-in page, registered, signed in. Design the event names deliberately; renaming them later loses the history.                                                  |
 | **Funnels & cohorts**         | Where people drop out of a multi-step flow, and how behaviour differs between groups who joined at different times.                                                                                               |
 | **A/B testing**               | Two versions, randomly assigned, measured. Only meaningful with enough traffic and a metric chosen before you look — otherwise you are reading noise confidently.                                                 |
 | **Session replay & heatmaps** | Watching anonymised recordings of real sessions. Ten minutes of this reliably beats an hour of speculation — mind the privacy implications and mask sensitive fields.                                             |
@@ -432,7 +432,7 @@ The stage that closes the circle and gets neglected the most. Everything up to h
 > **The measurement trap**
 > Tracking everything produces a dashboard nobody reads. Pick the **three** numbers that would change a decision — one acquisition, one activation, one retention — and instrument those properly. Add the fourth only when someone asks a question the first three cannot answer.
 
-**In your repo** — nothing yet: no analytics, no metadata strategy, no Web Vitals reporting. That is normal at this point and worth naming. The project currently has eleven stages out of twelve, and stage 12 is the one that tells you which of the other eleven to work on next.
+**In this starter** — no analytics, no metadata strategy, no Web Vitals reporting. That is normal for a starter. Stage 12 is what a project built on it uses to decide which of the other eleven to work on next.
 
 ---
 
@@ -487,4 +487,4 @@ Concepts age slowly, thresholds and rankings do not. The two facts in this guide
 
 ---
 
-_Field guide · twelve stages · anchored to the `next-setup` + `nest-setup` starters (Next.js 16 + NestJS 11)._
+_Field guide · twelve stages · written against this Next.js 16 starter._
