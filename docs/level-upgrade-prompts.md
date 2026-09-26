@@ -109,8 +109,7 @@ Simple, minimal, {{REGISTER}}: think {{REFERENCES}}.
 
 ## Ground rules (non-negotiable)
 
-- Follow `.claude/CLAUDE.md` and load the `elegant-ui` skill before touching JSX. Emit its
-  FOCAL / ERA / DEVICE / DENSITY gate lines per component before writing code.
+- Follow `.claude/CLAUDE.md` and load the `elegant-ui` skill before touching JSX.
 - Only house tokens and classes: no hex, no stock Tailwind palette, no bracketed values,
   no breakpoint prefixes in className (the lint rules enforce this).
 - Colour pairs come from {{TONES}}. Never hand-write `bg-X-light text-X`.
@@ -177,7 +176,7 @@ Known work:
 - Compact-field pass: find every `text-sm` / `text-base` in scope and demote each non-focal,
   non-title hit to `text-xs` in one sweep.
 - Every row carries ≥1 data-bearing artifact, and each view fields ≥3 kinds bound to different
-  fields (elegant-ui Craft 5). Name the field each artifact reads.
+  fields. Name the field each artifact reads.
 - Row geometry: `h-9` text rows, `h-11` rows with an avatar; artifact cells `py-0`, centred.
 - Adopt `{{NUMERIC}}` on every amount, count and reference; adopt any level 1 form primitive
   in the forms that hand-roll their inputs.
