@@ -24,7 +24,9 @@ Measured against the references in `references/`. What they share, and what ever
 2. **Scroll is the timeline.** The page is a sequence of scenes; the hero changes state between them (disperses, converges, turns, splits, opens).
 3. **Choreography.** Copy reveals are cued to the hero's motion from one shared progress value, never independent fade-ins.
 4. **Restraint.** Near-black or near-white ground, one accent at most, colour lives in the hero and in light, not in UI paint. A large light display face, tiny mono or uppercase labels, generous negative space.
-5. **Tactility.** Pointer response has inertia (damped, never 1:1). Nothing snaps, nothing bounces.
+5. **The signature recurs.** The hero device (a shape, a light, a motion) returns as a motif down the page, as image frames, dividers or transitions, so every section belongs to the same site. A hero that is never echoed makes the rest of the page read as a template.
+6. **No repeated section header.** Vary header composition (split title and lead, header beside media, centred quote); the same eyebrow, title and empty right half nine times is the template tell. Feature one item in every grid instead of equal columns.
+7. **Tactility.** Pointer response has inertia (damped, never 1:1). Nothing snaps, nothing bounces.
 
 ## Workflow
 

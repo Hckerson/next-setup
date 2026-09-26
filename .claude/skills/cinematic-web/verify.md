@@ -17,7 +17,7 @@ Verification needs a dev server and a browser. Start them only when the user's c
     - **Dead scroll:** no range of more than ~15% where nothing on screen changes.
     - **Anchor variety** holds and no device repeats back to back.
     - **Reference match:** set the peak capture beside the reference frames. Name what is weaker: density, light, type scale, pacing.
-5. Performance: record a scroll through the page with the browser's performance panel; flag frames over 16ms, and confirm the hero loop stops when scrolled past.
+5. Performance: measure, never eyeball. Per scene, record fps, p95 frame time, % of frames over 17.5 ms, and JS time per rAF callback, at DPR 1 and 2. Pass bar: 55+ fps and under 5% slow frames on the user's machine. If the Chrome extension is not connected, drive headless Chrome over CDP with Node's built-in `WebSocket` (no install): `--headless=new --remote-debugging-port`, wrap `requestAnimationFrame` via `Page.addScriptToEvaluateOnNewDocument` to time callbacks, `Emulation.setDeviceMetricsOverride` for DPR, `Page.captureScreenshot` per scene. When it fails the bar, isolate: rerun with one layer hidden at a time (canvas, overlays, text, antialiasing) before changing anything.
 6. Fix, then repeat from step 2 for the scenes that changed.
 7. Stop the dev server.
 
