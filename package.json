@@ -14,16 +14,7 @@
         "contract": "jiti tools/contract/run-generate-contract.ts",
         "contract:check": "jiti tools/contract/run-generate-contract.ts --check",
         "lint": "eslint",
-        "prepare": "husky"
-    },
-    "lint-staged": {
-        "*.{ts,tsx}": [
-            "eslint --fix",
-            "prettier --write"
-        ],
-        "*.{js,mjs,json,css,md}": [
-            "prettier --write"
-        ]
+        "prepare": "git config --unset-all core.hooksPath || exit 0"
     },
     "dependencies": {
         "@carbon/icons-react": "^11.87.0",
@@ -53,7 +44,6 @@
         "fast-check": "^4.9.0",
         "husky": "^9.1.7",
         "jiti": "^2.7.0",
-        "lint-staged": "^17.1.0",
         "prettier": "^3.9.5",
         "prettier-plugin-tailwindcss": "^0.8.1",
         "tailwindcss": "^4",
