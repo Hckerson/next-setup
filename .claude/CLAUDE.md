@@ -59,7 +59,7 @@ Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api
 
 ## File rules
 
-- **One component per file.** Kebab-case filename matching the export (`motion-wrapper.tsx` → `MotionWrapper`).
+- **One component per file.** Kebab-case filename matching the export (`motion-wrapper.tsx` → `MotionWrapper`). The one exemption is a compound primitive in `components/ui/`: `menu.tsx` may carry `MenuContent` beside `Menu`, because a primitive family is consumed as one unit. Everywhere else, prefixing a helper with the file's name does not make it a part — it gets its own file.
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Data moves to `lib/data/`, JSX to `components/`.
 
