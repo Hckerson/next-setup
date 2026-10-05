@@ -12,6 +12,7 @@ const VIEWS = ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"];
 const SOURCE = [...VIEWS, "lib/**/*.{ts,tsx}"];
 const ROUTES = ["app/**/page.tsx"];
 const COMPONENTS = ["components/**/*.tsx"];
+const PRIMITIVES = ["components/ui/**/*.tsx"];
 const TESTS = ["**/*.test.ts"];
 
 type RestrictedPath = { name: string; message: string };
@@ -26,17 +27,36 @@ type RestrictedImports = [
 
 const ID_SOURCE = "IDs come from nanoid — never uuid or Date.now().";
 
-const restrictedImports = (...paths: RestrictedPath[]): RestrictedImports => [
+const DATE_NOW =
+    "CallExpression[callee.object.name='Date'][callee.property.name='now']";
+
+const ID_SYNTAX = [
+    `TemplateLiteral > ${DATE_NOW}`,
+    `CallExpression[callee.name='String'] > ${DATE_NOW}`,
+    `MemberExpression[property.name='toString'] > ${DATE_NOW}`,
+    `Property[key.name=/^id$|Id$/] > ${DATE_NOW}`,
+].map((selector) => ({ selector, message: ID_SOURCE }));
+
+const DEEP_RELATIVE = {
+    group: ["../*", "../**"],
+    message:
+        "Import through the '@/' alias. Deep-relative paths break when a file moves.",
+};
+
+const LIB_ABOVE_COMPONENTS = {
+    group: ["@/components/*", "@/components/**"],
+    message:
+        "lib/ sits below components/. Move the shared type to lib/types or the value to lib/constants and import it from there.",
+};
+
+const restrictedImports = (
+    paths: RestrictedPath[] = [],
+    patterns = [DEEP_RELATIVE],
+): RestrictedImports => [
     "error",
     {
         paths: [{ name: "uuid", message: ID_SOURCE }, ...paths],
-        patterns: [
-            {
-                group: ["../*", "../**"],
-                message:
-                    "Import through the '@/' alias. Deep-relative paths break when a file moves.",
-            },
-        ],
+        patterns,
     },
 ];
 
@@ -62,10 +82,7 @@ const starterConfig: ConfigArray = [
             ],
             "no-console": "error",
             "@typescript-eslint/no-explicit-any": "error",
-            "no-restricted-properties": [
-                "error",
-                { object: "Date", property: "now", message: ID_SOURCE },
-            ],
+            "no-restricted-syntax": ["error", ...ID_SYNTAX],
         },
     },
     {
@@ -73,16 +90,33 @@ const starterConfig: ConfigArray = [
         rules: {
             "starter/application-register-density": "error",
             "starter/domain-types-in-lib": "error",
-            "no-restricted-imports": restrictedImports({
-                name: TRANSPORT_MODULE,
-                message:
-                    "Components consume hooks. Import a use-<resource> hook from @/lib/hooks instead.",
-            }),
+            "no-restricted-imports": restrictedImports([
+                {
+                    name: TRANSPORT_MODULE,
+                    message:
+                        "Components consume hooks. Import a use-<resource> hook from @/lib/hooks instead.",
+                },
+            ]),
+        },
+    },
+    {
+        files: ["lib/**/*.{ts,tsx}"],
+        rules: {
+            "no-restricted-imports": restrictedImports(
+                [],
+                [DEEP_RELATIVE, LIB_ABOVE_COMPONENTS],
+            ),
         },
     },
     {
         files: COMPONENTS,
         rules: { "starter/one-component-per-file": "error" },
+    },
+    {
+        files: PRIMITIVES,
+        rules: {
+            "starter/one-component-per-file": ["error", { compound: true }],
+        },
     },
     {
         files: ROUTES,
