@@ -22,7 +22,7 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 | State management   | TanStack Query for server state. `useState` / `useReducer` / URL params for local state. `useSyncExternalStore` + `localStorage` for persistence. A global store requires a stated reason.                                                                            |
 | Validation         | Zod schemas in `lib/validations/`. Types derive with `z.infer`. API responses are never loosely typed.                                                                                                                                                                |
 | IDs                | `nanoid`. Never `uuid` or `Date.now()`.                                                                                                                                                                                                                               |
-| Async flows        | Endpoints in `lib/api-routes.ts`, transport in `lib/api-client.ts`, wrapped in hooks in `lib/hooks/use-<resource>.ts`. Components consume hooks — never call the client directly. A hook for an authenticated call wraps a Server Action from `lib/actions/` instead. |
+| Async flows        | Endpoints in `lib/api-routes.ts`, transport in `lib/api-client.ts`, wrapped in hooks in `lib/hooks/use-<resource>.ts`. Components consume hooks — never call the client directly. A hook for an authenticated mutation wraps a Server Action from `lib/actions/`; an authenticated read goes through a Server Component or a GET route handler in `app/api/`, never a Server Action, because Next.js runs Server Actions one at a time per client and never caches them. |
 
 ## Folder Structure
 
@@ -59,7 +59,7 @@ Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api
 
 ## File rules
 
-- **One component per file.** Kebab-case filename matching the export (`motion-wrapper.tsx` → `MotionWrapper`).
+- **One component per file.** Kebab-case filename matching the export (`motion-wrapper.tsx` → `MotionWrapper`). The one exemption is a compound primitive in `components/ui/`: `menu.tsx` may carry `MenuContent` beside `Menu`, because a primitive family is consumed as one unit. Everywhere else, prefixing a helper with the file's name does not make it a part — it gets its own file.
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Data moves to `lib/data/`, JSX to `components/`.
 
