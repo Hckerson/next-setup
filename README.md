@@ -9,7 +9,7 @@ pnpm install
 pnpm dev
 ```
 
-The starter ships no pages. Add `app/layout.tsx` and `app/page.tsx` to start the UI; the API routes live under `app/api/`.
+The starter ships no pages. Add `app/layout.tsx` and `app/page.tsx` to start the UI; route handlers go under `app/api/`.
 
 Scripts: `pnpm dev` · `pnpm build` · `pnpm start` · `pnpm type-check` · `pnpm lint` · `pnpm format`.
 
