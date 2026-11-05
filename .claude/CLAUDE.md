@@ -15,7 +15,7 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 
 | Need               | Use                                                                                                                                                                                                                                                                   |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Styling            | Token-first: named scale classes in `styles/globals.css` (`.pad`, `.pad-x`, `.pad-y`, `.gap`, `.gap-x`, `.gap-y`, `.smooth`) over tokens in `styles/tokens.css`. Style with Tailwind utilities on house tokens, responsive prefixes included; promote a pattern to a named class only when it repeats. Colors and animations are theme tokens.              |
+| Styling            | Token-first: Tailwind utilities on the house tokens in `styles/tokens.css`, which `styles/globals.css` maps to theme names; responsive prefixes included. Promote a pattern to a named class in `globals.css` only when it repeats. Colors and animations are theme tokens. |
 | Component patterns | Reuse `components/ui/` (primitives) and `components/common/` (shared compositions) before writing JSX. A pattern used twice is promoted out of the page that birthed it.                                                                                              |
 | Domain types       | Every shared domain type lives in `lib/types/<domain>.ts` and is re-exported by `lib/types/index.ts`. Components import types; they never declare shared ones.                                                                                                        |
 | Page composition   | A route `page.tsx` composes sections and holds page-level state — nothing else. Mock/seed data goes to `lib/data/`, JSX blocks to `components/`. No inline data array, no inline sub-component.                                                                       |
@@ -65,11 +65,6 @@ Import request shapes and endpoints from `@/lib/contract`, not by hand. `lib/api
 
 ## Before you commit or push
 
-Git hooks are **disabled**. `.husky/` is kept but not installed: the `prepare` script unsets `core.hooksPath` on every `pnpm install`, so nothing runs on commit or push.
-
-- **Commit** — `.husky/pre-commit` would run `pnpm lint-staged`: `eslint --fix` then `prettier --write`, over staged files only.
-- **Push** — `.husky/pre-push` would run `pnpm type-check`, then `pnpm lint`, then `pnpm contract:check`.
-
-Run those by hand when you want the gate. To re-enable the hooks, set `prepare` back to `husky` and run `pnpm install`.
+No git hooks are installed. The `prepare` script unsets `core.hooksPath` on every `pnpm install`, so nothing runs on commit or push. The gate is manual: `pnpm type-check`, then `pnpm lint`, then `pnpm contract:check`. `pnpm format` runs Prettier over the repo.
 
 The rules above are not restated here. They bind every edit, not the gate.
