@@ -1,6 +1,6 @@
 # Project Instructions
 
-This is a reusable **Next.js App Router starter**. It ships architecture, conventions, and one example per layer as a foundation for new projects.
+This is a reusable **Next.js App Router starter**. It ships architecture, conventions, and one example per non-UI layer as a foundation for new projects. The UI layers start empty.
 
 ## Non-negotiable rules
 
