@@ -32,16 +32,6 @@
     --color-border: var(--colors-border);
     --color-border-light: var(--colors-border-light);
     --color-border-dark: var(--colors-border-dark);
-    --color-sidebar: var(--colors-sidebar);
-    --color-sidebar-border: var(--colors-sidebar-border);
-    --color-sidebar-hover: var(--colors-sidebar-hover);
-    --color-sidebar-active: var(--colors-sidebar-active);
-    --color-sidebar-text: var(--colors-sidebar-text);
-    --color-sidebar-text-active: var(--colors-sidebar-text-active);
-    --color-metric-pipeline: var(--colors-metric-pipeline);
-    --color-metric-success: var(--colors-metric-success);
-    --color-metric-activity: var(--colors-metric-activity);
-    --color-metric-warning: var(--colors-metric-warning);
     --color-overlay: var(--colors-overlay);
 
     --font-display: var(--fonts-display);
