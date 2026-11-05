@@ -1,6 +1,6 @@
 # Git History Slimming — next-setup and nest-setup
 
-`Approved` · 2026-11-05 · measured on local clones synced with `origin` · commit IDs below predate the rewrite
+`Done` · 2026-11-05 · fresh clone of next-setup 691 KB (was 19 MB `.git`), nest-setup 335 KB · commit IDs below predate the rewrite · backups in `Downloads/git-backups/`
 
 ## 1. Thesis / Problem Framing
 
