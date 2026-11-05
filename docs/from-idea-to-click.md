@@ -85,7 +85,7 @@ The stage everyone skips and everyone regrets skipping. Code is expensive to wri
 > **Where first-timers lose months**
 > Building the admin panel first. It feels productive because it is unambiguous — but nobody is waiting for it. Build the one flow that a real user would pay for, all the way through to production, before building anything else. That single vertical slice teaches you more than six horizontal ones.
 
-**In this starter** — nothing yet, by design: a starter has no product. A project built on it writes this stage down as Phase 1 of `docs/MASTER_PROMPT_COMPLETE.md`, generated into `design-os/generated/` — the written argument for what the product is, produced before the code exists.
+**In this starter** — nothing yet, by design: a starter has no product. A project built on it writes this stage down as Phase 1 of `design-os/MASTER_PROMPT_COMPLETE.md`, generated into `design-os/generated/` — the written argument for what the product is, produced before the code exists.
 
 ---
 
@@ -113,7 +113,7 @@ Design is not decoration applied at the end. It is the decision about structure 
 >
 > **Verdict — for a first project: primitives + your own tokens.** Accessible dropdowns and dialogs are genuinely hard to write correctly and teach you nothing about your product.
 
-**In this starter** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` is the home for primitives and `components/common/` for compositions · `docs/MASTER_PROMPT_COMPLETE.md` the system's seed document, which generates into `design-os/generated/`.
+**In this starter** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` is the home for primitives and `components/common/` for compositions · `design-os/MASTER_PROMPT_COMPLETE.md` the system's seed document, which generates into `design-os/generated/`.
 
 ---
 
