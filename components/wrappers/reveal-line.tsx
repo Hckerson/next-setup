@@ -39,7 +39,7 @@ export default function RevealLine({
     const intro = edge.intro && !still;
 
     return (
-        <span className="-mb-[0.1em] block overflow-hidden pb-[0.1em]">
+        <span className="-mb-(--paddings-descender) block overflow-hidden pb-(--paddings-descender)">
             <motion.span
                 className="block"
                 initial={intro ? { y: "100%" } : false}
