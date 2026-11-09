@@ -5,6 +5,8 @@ export interface TargetFormat {
     type: GLenum;
 }
 
+export const glFloat = (value: number): string => value.toFixed(5);
+
 export const renderFormat = (gl: WebGL2RenderingContext): TargetFormat =>
     gl.getExtension("EXT_color_buffer_float")
         ? { internal: gl.RGBA16F, type: gl.HALF_FLOAT }
