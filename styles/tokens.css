@@ -34,10 +34,12 @@
     --colors-border-dark: ;
 
     --colors-overlay: ;
+    --colors-focus: ;
 
     --fonts-display: ;
     --fonts-body: ;
     --fonts-mono: ;
+    --fonts-display-extent: 1.4;
 
     --font-sizes-h1: ;
     --line-heights-h1: ;
@@ -121,7 +123,6 @@
     --paddings-lg: ;
     --paddings-xl: ;
     --paddings-2xl: ;
-    --paddings-descender: 0.1em;
 
     --margins-section-sm: ;
     --margins-section-md: ;
@@ -132,6 +133,7 @@
     --durations-normal: ;
     --durations-slow: ;
     --durations-slower: ;
+    --durations-reveal-fallback: 2.5s;
 
     --timing-functions-in: ;
     --timing-functions-out: ;
@@ -152,6 +154,9 @@
     --radii-lg: ;
     --radii-xl: ;
     --radii-full: ;
+
+    --outline-widths-focus: ;
+    --outline-offsets-focus: ;
 
     --z-indices-base: ;
     --z-indices-dropdown: ;
