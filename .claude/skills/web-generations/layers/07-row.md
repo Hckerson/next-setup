@@ -1,0 +1,91 @@
+# Layer 7: Row
+
+`components/features/`. One entity in a list: a user, a deal, an issue, a deployment, a transaction.
+
+**Upstream:** Token, Primitive, Pattern, Mark. A recurring tell here is usually inherited from these layers: trace it there and fix it once, not once per file here.
+
+## Tells
+
+A tell fires on a row left at a template default, decided by nobody. The same form chosen on purpose and recorded in the brief (two lines, a filled card per row, a register-wide edge device) is a register, not a tell.
+
+| ID       | Symptom                                                                                                                                                          | Why it dates                                 | Replacement                                                                                                                                                                                       | Detector                                                                                                  |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| ROW-G1-1 | A directory-listing row: a bare link, a fixed-format date, a size; actions as `[edit] [delete]`; a fixed-size thumbnail with no crop rule                        | Auto-generated index pages; no icon buttons  | Row anatomy in the entity's scan order; a trailing action area or menu; the whole row as the hit target; an image or avatar primitive with a crop rule and a fallback                             | `list-disc` as the row marker; `[edit]` strings; `<img width="40" height="40">`                           |
+| ROW-G2-1 | A gradient hover highlight, a bevel imitating Aqua selection, action columns of sliced icon images with `title` tooltips, and zebra plus row plus column borders | Aqua selection and the spreadsheet look      | Tonal hover and selected tokens; one separation device; icon buttons with accessible names. A register-wide edge device with press logic, recorded in the brief (Duolingo's lip), is not the tell | `hover:bg-gradient-*`; `odd:bg-* even:bg-*` with `border` on every cell; icon `<img>` with only a `title` |
+| ROW-G3-1 | A media object: 64px thumbnail left, bold title, grey meta, "Read more"; text links ("Edit", "Delete") separated by a pipe                                       | Bootstrap media object; prototype CRUD       | Aligned metadata in the entity's scan order; actions as named icon buttons or a menu                                                                                                              | `.media-left`; adjacent anchors separated by a pipe character                                             |
+| ROW-G4-1 | Avatar, name, muted email, badge, three-dot menu, identical for every entity type                                                                                | One row template                             | Row anatomy designed per entity: what is scanned first gets scale or weight, and secondary facts align across rows                                                                                | `flex items-center justify-between` with `MoreHorizontal` in every row component                          |
+| ROW-G4-2 | `hover:bg-muted/50` as the only state, or a card per row whose shadow lifts on hover as the affordance                                                           | State without continuity; lift as affordance | Hover, focus and selected as designed states on one row surface, with selection persisting. A fill-only card row recorded as the register's row form (Wise) is not the tell                       | `hover:bg-muted/50` with no selected or focus state; `hover:shadow-md` or a `-translate-y` lift on a row  |
+| ROW-G4-3 | `truncate` with no tooltip and no min-width rule                                                                                                                 | Cosmetic                                     | An overflow rule per field (wrap, ellipsis with the full value on hover and focus, abbreviate)                                                                                                    | `truncate` with no full value reachable on focus (a bare `title` shows on hover only)                     |
+| ROW-G4-4 | No selected, pending, errored or removed variant                                                                                                                 | The happy path only                          | Rows carry optimistic, selected, errored and removed states                                                                                                                                       | a row component with no state prop                                                                        |
+
+## Floor versus baseline
+
+A competent fourth-generation row is tidy and aligned, and it is one template for every entity: avatar, name, muted line, badge, three-dot menu, with a muted hover as its only state. It lacks an anatomy designed for the entity, the states a real list goes through (selected, pending, errored, removed), and a focus and keyboard model. The baseline asks for those; the register decides line count, separation, container and how affordances show.
+
+## Baseline
+
+Every register meets these. Counts are of the 18 exemplars (`references/classification-ledger.md`, section 07).
+
+- **ROW-B1. Scan order.** Row anatomy follows the entity's scan order: what is read first gets scale or weight, and secondary facts align down the list. One line or two is the entity's call; a second line is earned when two facts belong to one thing. `(S)` One line in Linear, Stripe, Mercury, Apple Store iOS and Notion; two lines in Vercel, Things and Wise. The field order is the entity's own, recorded in the brief.
+- **ROW-B2. Amounts aligned.** Where a row carries amounts, they are right-aligned with their unit or currency. `(S 3/18)` Stripe, Mercury, Apple Store iOS.
+- **ROW-B3. One separation device.** Each list uses one separation device (none, hairline or stripe; a fill per row counts as one), never two stacked, such as stripes plus row and cell borders. `(S 4/18)` Linear none; Stripe, Mercury and Apple Store iOS a hairline. Vercel's striped variant is one device.
+- **ROW-B4. Affordances on hover and focus.** Secondary affordances (drag handle, row actions) appear on hover and on keyboard focus alike, and a touch fallback shows them always where hover does not exist. `(S 3/18)` Linear's drag dots, Aesop's minicart remove, Notion's 80ms fade; Things iOS shows them at rest on touch.
+- **ROW-B5. Whole-row target.** The whole row is the hit target, keyboard focus lands on the same row surface that hover lights, and on touch the row is at least 44px tall. A tabular list (facts aligned in columns down the rows) uses real table semantics (`<table>`) or `role="grid"`, not a `ul` of `li`, so the whole-row target and PAT-B1 (a table with a caption and sort semantics) are both met. `(S 2/18)` Mercury and Wise take focus on the row as a unit. Thin evidence; none breaks it. The 44px floor is the touch-target resolution (ledger C6).
+- **ROW-B6. Designed row focus.** The row's focus indicator is designed, not the UA default. It reaches 3:1 against every colour adjacent to it on every surface it can land on (rest, hover, selected), is distinct from hover, does not shift layout, works without JavaScript, and sits inset where an outer ring would clip or overlap the next row. A gap layer in the surface colour is added only when one ring colour cannot reach 3:1 everywhere. `(S)` Ledger C2. Inset variants: Mercury menu items at -2px, Wise list items at -1px, Linear inner items at a negative offset. Duolingo's removed outlines and Things' ring at about 1.99:1 are defects.
+- **ROW-B7. Readable metadata.** Secondary and tertiary facts that carry information reach 4.5:1 on the row's surface in every state; the lowest ladder step is for decoration and placeholders only. `(S)` As TOK-B1 and ledger C3: Linear's 3.45:1 and Vercel's 3.10:1 bottom steps are not used for running copy.
+- **ROW-B8. Row states.** Selected, pending, errored and removed variants exist, with entry and exit motion for list changes. `(S 3/18)` Mercury's failed rows strike the amount and add a "Failed" chip; Duolingo's one selection recipe; Wise's dashed "not yet set up". List-change motion is thin: not measured in any exemplar.
+- **ROW-B9. Overflow rule per field.** Every text field has an overflow rule (wrap, ellipsis with the full value available on hover and focus, or abbreviate) and a minimum width. `(J, thin)`
+- **ROW-B10. Narrow rows keep their actions.** A narrow row drops columns by priority and never drops an action: an action removed from the row at 390px moves to an overflow menu or the detail view, and is reachable from there. `(J)` Thin: not measured; none breaks it. Same rule as `cross-cutting.md`, Responsive.
+- **ROW-B11. Density is a token.** Row height comes from a density token decided per product and recorded in the brief, never a literal. `(S)` Every register records a density position (Duolingo low, Mercury mid); the value is the register's. Pixel row heights are UNVERIFIED in the evidence.
+- **ROW-B12. One row component.** One row component and one selected surface are reused across lists, menus and panels. `(S 2/18)` Raycast's action panel reuses the list row; Duolingo shares one selection recipe across nav items, answer tiles and list items. Thin evidence.
+- **ROW-B13. Critical state findable at a glance.** A row in a critical state (stopped, failed, error, blocked) differs from its neighbours by at least two cues: colour plus one of shape, position, weight, or a ground that reaches 3:1 against the page. A tinted ground at about 1.3:1 alone does not meet it. `(J, thin)` Same rule as MRK-B6, applied to the row.
+
+## Register notes
+
+How each register realises this layer. Full detail in `registers/`.
+
+| Register       | Row decisions                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Editorial      | The list unit is an object, not a row: Stripe Press's 3D books, The Pudding's image-first story cards with an issue number, title and blurb                                                                                                                                                                                                                                                                                                                                       |
+| Warm utility   | Two-line rows with a muted context line are normal (Things); selected is a neutral fill; hover affordances fade in at about 80ms (Notion) and show at rest on touch (Things iOS)                                                                                                                                                                                                                                                                                                  |
+| Tactile        | No distinct evidence; follow the baseline                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Industrial     | Dense, aligned, colour-coded rows with stable column positions (Bloomberg Terminal, UNVERIFIED; needs capture)                                                                                                                                                                                                                                                                                                                                                                    |
+| Trust          | Right-aligned amounts with currency in the money type role; masked identifiers by default (Mercury's `••7127`); failed and pending variants that change the amount itself; one line with a hairline (Mercury) or a filled card per row with no shadow (Wise); an inline category select where the field is edited often (Mercury)                                                                                                                                                 |
+| Playful        | One selection recipe shared by nav items, answer tiles and list items (Duolingo). A register-wide lip with press logic is the register, not ROW-G2-1; a zebra token exists (usage UNVERIFIED)                                                                                                                                                                                                                                                                                     |
+| Luxury         | One-line rows with a full-width hairline and right-aligned amounts (Apple Store iOS); row actions revealed on hover (Aesop's minicart remove)                                                                                                                                                                                                                                                                                                                                     |
+| Developer-tool | One line with fixed aligned columns, tertiary metadata and titles that do not wrap (Linear); no divider (Linear) or one hairline (Stripe), no zebra; affordances hidden at rest and revealed on hover and focus; parent and child on one line, "Parent > child" (Linear); two-line rows with mono identifiers for branch and commit (Vercel); right-aligned amounts, mono IDs, a truncated description and a status chip (Stripe); the action panel reuses the list row (Raycast) |
+
+## Techniques
+
+Register-neutral methods, recommended, not required.
+
+- **Deriving the anatomy.** Ask what an operator reads first for this entity, put that first, give it scale or weight, and record the order in the brief. Never reproduce a reference's field order (identifier, glyph, title, project, assignee, date).
+- **Whole-row target in a table.** In a `<table>`, make the row one target by stretching the primary cell's link over the row (a positioned pseudo-element) or, in a `role="grid"`, by giving the row focus and handling Enter on it; either keeps caption and sort semantics intact (ROW-B5, PAT-B1).
+- **Inline edit in the row.** Where a field is edited often (a category, an assignee), an inline control in the row saves a trip to the detail view (Mercury's category select). One exemplar, so a technique.
+
+## Token roles this layer needs
+
+Row height steps by density, column gutter, metadata text roles, hover, selected and focus surfaces, the separation device, list entry and exit motion, amount type role.
+
+## Checks
+
+Baseline:
+
+1. Does the row anatomy follow this entity's scan order, with secondary facts aligned down the list? `[source]` for a shared grid, `[app]` for the look
+2. Are amounts right-aligned with their unit? `[source]`
+3. Is there one separation device per list, never stripes plus borders? `[source]`
+4. Do affordances that appear on hover also appear on focus, with a touch fallback? `[source]`
+5. Is the whole row the hit target, at least 44px tall on touch, and does a tabular list use table or grid semantics rather than a `ul` of `li`? `[source]`
+6. Is row focus designed, distinct from hover, at 3:1 on every adjacent colour, inset where it would clip, and free of layout shift? `[source]`
+7. Does metadata that carries information reach 4.5:1 on the row in every state? `[source]`
+8. Do selected, pending, errored and removed variants exist? `[source]`
+9. Does every text field have an overflow rule (wrap, ellipsis, or abbreviate) and a minimum width, and where it truncates, is the full value available on hover and on keyboard focus (a tooltip on a focusable element, or an expanding cell)? A `title` alone fails: it shows on hover only, never on keyboard focus or touch. `[source]`
+10. At 390px, are columns dropped by priority with every action still reachable? `[app]`
+11. Is row height a density token? `[source]`
+12. Is one row component and one selected surface reused across lists, menus and panels? `[source]`
+13. Does a row in a critical state differ from its neighbours by colour plus one more cue (shape, position, weight, or a ground at 3:1 against the page)? `[source]`, at a glance `[app]`
+
+Register fit:
+
+14. Do line count, separation, container, metadata emphasis and affordance reveal match the register the brief names, rather than developer-tool by default? `[source]`
+15. Is any card per row the register's recorded row form, with no shadow lift on hover? `[source]`
