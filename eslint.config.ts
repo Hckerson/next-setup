@@ -37,6 +37,41 @@ const ID_SYNTAX = [
     `Property[key.name=/^id$|Id$/] > ${DATE_NOW}`,
 ].map((selector) => ({ selector, message: ID_SOURCE }));
 
+const SKILL = "See .claude/skills/web-generations";
+
+const classStrings = (pattern: string, message: string) => [
+    { selector: `Literal[value=${pattern}]`, message },
+    { selector: `TemplateElement[value.raw=${pattern}]`, message },
+];
+
+const UI_SYNTAX = [
+    ...classStrings(
+        "/(^|\\s|:)transition-all(\\s|$)/",
+        `Name the transitioned properties and take duration and easing from tokens (TOK-G4-4, SC-G4-4). ${SKILL}/layers/01-token.md.`,
+    ),
+    ...classStrings(
+        "/(^|\\s|:)duration-\\d+(\\s|$)/",
+        `Durations come from motion tokens, never a literal duration class (TOK-B14). ${SKILL}/layers/01-token.md.`,
+    ),
+    ...classStrings(
+        "/^(?!.*focus-visible:).*(^|\\s)focus:outline-none(\\s|$)/",
+        `Removing the outline needs a designed focus-visible replacement (PRI-B4). ${SKILL}/layers/03-primitive.md.`,
+    ),
+    ...[
+        "JSXAttribute[name.name='aria-expanded'][value=null]",
+        "JSXAttribute[name.name='aria-expanded'] > Literal",
+        "JSXAttribute[name.name='aria-expanded'] > JSXExpressionContainer > Literal",
+    ].map((selector) => ({
+        selector,
+        message: `Bind aria-expanded to the open state; a literal value announces the wrong state. ${SKILL}/audit.md.`,
+    })),
+    {
+        selector:
+            "CallExpression[callee.object.name='window'][callee.property.name=/^(confirm|alert|prompt)$/]",
+        message: `Use the dialog primitive with a consequence-first confirm, not a browser dialog (PRI-G1-2, LST-G1-1). ${SKILL}/layers/08-list-modal.md.`,
+    },
+];
+
 const DEEP_RELATIVE = {
     group: ["../*", "../**"],
     message:
@@ -82,7 +117,7 @@ const starterConfig: ConfigArray = [
             ],
             "no-console": "error",
             "@typescript-eslint/no-explicit-any": "error",
-            "no-restricted-syntax": ["error", ...ID_SYNTAX],
+            "no-restricted-syntax": ["error", ...ID_SYNTAX, ...UI_SYNTAX],
         },
     },
     {
