@@ -1,6 +1,6 @@
 # Techniques
 
-How the cinematic register is built in this starter. Mechanics only; the concept comes from SKILL.md steps 1–4.
+How a stagecraft page is built in this starter. Mechanics only; the concept comes from SKILL.md steps 0 to 3 and the look from the set.
 
 ## The stack
 
@@ -23,6 +23,27 @@ Each job has one library, chosen as the best available, not the most common. Ver
 | Measurement        | `stats-gl` (dev only): GPU time on both backends                                                      |
 | Font metrics       | `@capsizecss/metrics` (dev only): the display face's extent for the glyph bleed                       |
 
+## Actor and script
+
+The performance is data. `lib/types/stage.ts` defines the script (shots, each a list of moves with `at` and `length` as fractions of the shot) and the actor handle. `compileScript(film, script, context)` in `lib/stage/compile-script.ts` adds every move to one master timeline, so `useStageTimeline`'s `compose` is one call.
+
+| Piece                                   | File                                | Does                                                                                                                              |
+| --------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `createActor(rest)`                     | `lib/stage/actor.ts`                | A handle: position, rotation, scale, presence, tint (from, to, mix, wipe). Components read it; moves write it                      |
+| Moves                                   | `lib/stage/moves/`                  | One function per verb (`verbs.md`). Position moves tween the handle; path and recolour tween a proxy and write the handle in `onUpdate`, so scrubbing both ways is exact |
+| `settle`, `rebound`, `anticipate`, `smoother` | `lib/stage/ease.ts`           | The mass curves. `rebound` never passes through a surface; use it for any move that ends on one                                  |
+| `shadowScale`, `shadowOpacity`          | `lib/stage/shadow.ts`               | The contact shadow from the actor's height                                                                                         |
+| `createPath`, `headingAt`, `turnAt`     | `lib/stage/path.ts`                 | A centripetal Catmull-Rom path, the heading along it and the turn rate that banks the actor                                       |
+| `AnimaticActor`                         | `components/features/animatic-actor.tsx` | The grey placeholder for the animatic gate: a block, a contact shadow, and the tint lerp                                      |
+| `exposeStage(context)`                  | `lib/stage/debug.ts`                | Development only: `window.__stage.snapshot()` returns each actor's position, presence and tint, so `tools/shoot.mjs` can assert the script happened |
+
+Rules the code relies on:
+
+- **Every move states its start.** `enter`, `exit`, `lift` and `land` carry explicit `from` values, so a tween never reads a state set by an earlier tween. A scrubbed timeline jumped to the middle must give the same result as one played through.
+- **Mass tokens come from the build.** `context.mass` has no defaults in the library. A default is a look chosen by nobody.
+- **Scene lengths are timeline units.** Every shot, cue and reveal is a fraction of the one timeline. A tween measured in seconds stretches the timeline and shifts every later scene (measured: reveals of 1.3 s on a timeline of length 1 put the last scene at 45 percent of the scroll).
+- **The script contains no values that belong to an asset.** Swapping a placeholder for the real actor changes no script line.
+
 ## What the starter ships
 
 Five pieces of wiring and two classes. None of them carries a look: every value that decides how a build looks or moves is a prop from the build's tokens in `lib/<feature>/constants.ts`.
@@ -37,7 +58,7 @@ Five pieces of wiring and two classes. None of them carries a look: every value 
 | `.stage-line`                                             | `styles/globals.css`                             | Glyph bleed for SplitText line masks, derived from `--fonts-display-extent`. See Copy choreography.                                                                                                                                                                                                                                                                |
 | `.stage-reveal`                                           | `styles/globals.css`                             | Hides a heading until SplitText has built its masks, only when scripting is on and motion is allowed, with a fallback after `--durations-reveal-fallback`. See Copy choreography.                                                                                                                                                                                  |
 
-Mount `StageScrollProvider` in the cinematic route group's layout, never the root layout: app screens keep native scroll. Extend these pieces in place; never write a parallel helper.
+Mount `StageScrollProvider` in the stage route group's layout, never the root layout: app screens keep native scroll. Extend these pieces in place; never write a parallel helper.
 
 ## The one clock
 
@@ -122,7 +143,11 @@ R3F's `state.pointer` only tracks events on the canvas, and a stage under DOM co
 - **Preload models** at module scope with `useGLTF.preload(url, false, true)` (meshopt on).
 - **Image sequences load coarse to fine:** every eighth frame first, then the gaps, so scrubbing works early at lower time resolution and sharpens as frames arrive.
 - **Video starts before it finishes downloading:** encode with `-movflags +faststart` so the index sits at the front, and mediabunny decodes the first frames while the rest arrives.
-- **No full-page preloader or percentage counter** (CIN-11). If the hero needs heavy assets, its first state is one that needs none, such as the ground, the light or a poster, and the assets arrive inside it.
+- **No full-page preloader or percentage counter** (PAGE-G1-1). If the hero needs heavy assets, its first state is one that needs none, such as the ground, the light or a poster, and the assets arrive inside it.
+
+## Actor routes
+
+The route is chosen from the actor and the asset tier (`assets.md`), never because it is installed. Five exist.
 
 ## Route A: procedural field
 
@@ -130,7 +155,7 @@ R3F's `state.pointer` only tracks events on the canvas, and a stage under DOM co
 - A field that must simulate (flow, flocking, settling) runs as TSL compute (`Fn(...).compute(count)`). Check the WebGL2 fallback for it in verify.
 - Noise is TSL's MaterialX set (`mx_noise_float`, `mx_fractal_noise_float`, `mx_worley_noise_float`).
 - **`antialias: false` for dense additive fields.** Measured on the first build (Intel HD 620): MSAA alone halved the frame rate on a thousand faint overlapping lines, which show no aliasing.
-- Glow: additive blending on a node material with `depthWrite: false`, over a ground cleared to the ground token, so density builds the light.
+- Glow: only for the night-luminous set. Additive blending on a node material with `depthWrite: false`, over a ground cleared to the ground token, so density builds the light. Budget the sum of alpha per pixel: a field of fine lines turned white until the line count fell about fivefold and alpha rose (measured, 900 lines at 0.4 alpha read as threads; 14,000 at 0.035 read as fog).
 - **Colour temperature is narrow.** A heat ramp reads as heat only when the hot zone is tight around the focal point and the hot token is a saturated gold, not near-white; otherwise the whole field turns silver.
 - 2D canvas or SVG only for a few hundred strokes. Measured: 900 strands in 2D canvas ran at 3–13 fps; the same field on the GPU runs at 60.
 
@@ -151,7 +176,27 @@ R3F's `state.pointer` only tracks events on the canvas, and a stage under DOM co
 - Animate in `useFrame` through refs and uniforms; never set state per frame.
 - Load the stage with `next/dynamic` so three stays out of the first chunk and the copy hydrates first. Server rendering the stage is safe (measured: `three/webgpu` imports on the server without error), so `ssr: false` is not required.
 
+## Route D: 2.5D plates
+
+For a client with photographs and no model (`assets.md`, tier C).
+
+- Cut the subject out of each photo (a local cut-out model, or by hand) and estimate a depth map for it. Render each plate as a plane displaced by its depth in the shader; a small camera move then shows real parallax.
+- One plate per angle; cross-fade between plates with the camera's heading so the actor appears to turn. Stay within the arc the photos cover: past it the illusion breaks.
+- Recolour by mask: a hand-painted or generated mask per part, applied as a tint in the plate's material, driven by the actor's tint handle.
+- Contact shadow is a separate plane under the actor, driven by `shadowScale`. A photographed shadow baked into the plate fights it: cut it out.
+- Match the light: the photo's light direction is the set's light direction. Choose the set from the photos, not the other way round.
+
+## Route E: vector and 2D
+
+For print, paper-cut, technical and colour-field sets and for non-physical actors.
+
+- SVG for a few hundred paths (GSAP DrawSVG and MorphSVG are in the stack); a 2D canvas or a shader plane for more. Animate `transform`, `opacity` and `clip-path` only in the DOM.
+- A stepped time model is a quantised timeline: round the scrubbed time to the frame length (`Math.floor(t * rate) / rate`) before writing state.
+- The actor handle is the same; the component writes to a CSS transform instead of a Three group.
+
 ## Light chain
+
+Only when the brief names emitted light (the night-luminous set). Every other set is lit by a named source with shadows and needs none of this. There is no default budget: each node needs a reason in the brief.
 
 ```ts
 const compose = (scene: PassNode) => {
@@ -165,7 +210,7 @@ const compose = (scene: PassNode) => {
 - **Lens streak** has no stock node. Build it from the stock `gaussianBlur(brightPass, vec2(1, 0), sigma)`, horizontal only, added at its own strength token.
 - Tone mapping is the renderer's (`AgXToneMapping` or `NeutralToneMapping`, chosen per build), passed to `StageCanvas`; the pipeline applies it at output. `StageCanvas` sets `flat` so R3F's default ACES never applies.
 - Light buffers are half-float by default in the pipeline.
-- Each node costs every frame. Bloom and film are the default budget; depth of field, motion blur, SSR, GTAO, lensflare and god rays only when the concept names them.
+- Each node costs every frame. Add a node only when the concept names it.
 
 ## Colour from tokens
 
@@ -189,7 +234,7 @@ const [r, g, b] = new Color(style.getPropertyValue("--colors-ground"))
 
 ## Devices
 
-The scene table assigns one device per scene. At least four families per page, never the same twice in a row, at most two scrubs.
+The script's verbs carry the performance; the devices below are page-level presentation moves for shots that need one beyond a verb. At least four families per page, never the same twice in a row, at most two scrubs.
 
 | Device       | Reads as                                                     | Mechanism                                                          |
 | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------------ |
@@ -212,13 +257,23 @@ The scene table assigns one device per scene. At least four families per page, n
 
 ## Theming the stage
 
-A cinematic page usually needs a dark ground the starter's light tokens do not have. Add a theme class in `styles/tokens.css` that redefines the `--colors-*` values (plus whatever the hero reads) and put it on the element the stage owns. When the project maps its tokens with `@theme inline` (the starter has since 2026-11-12), utilities read the `--colors-*` tokens where they are used, so the class works on any element: a dark stage section can carry its own theme and every house utility (`bg-background`, `text-text`, `Button` tones) follows without a parallel set of classes. With a plain `@theme` block the mapping resolves once at `:root`, so the class has to sit on `<html>`, or the `--color-*` mappings be redeclared in the scope. The stage reads its colours from the same tokens (see Colour from tokens).
+The ground comes from the actor's variants, not from a mood. Give each variant a pair of ground and ink tokens and switch them with the actor's state; a dark theme is one choice among them. To theme a stage section, add a theme class in `styles/tokens.css` that redefines the `--colors-*` values (plus whatever the hero reads) and put it on the element the stage owns. When the project maps its tokens with `@theme inline` (the starter has since 2026-11-12), utilities read the `--colors-*` tokens where they are used, so the class works on any element: a dark stage section can carry its own theme and every house utility (`bg-background`, `text-text`, `Button` tones) follows without a parallel set of classes. With a plain `@theme` block the mapping resolves once at `:root`, so the class has to sit on `<html>`, or the `--color-*` mappings be redeclared in the scope. The stage reads its colours from the same tokens (see Colour from tokens).
 
 Display and scene sizes are `clamp()` tokens, used as `text-(length:--stage-display)` (Tailwind reads a bare `text-(--var)` as a colour) or through a named class when several elements share them. Layout and breakpoints are Tailwind utilities in the JSX; CSS is for what utilities cannot express: keyframes, sticky tracks, state selectors and the stage itself.
 
 ## Build notes
 
 Measured on the first test builds (2026-11, since deleted). Each one cost a debugging round once.
+
+**Lessons from the stagecraft proof and the Ward test (2026-11-12)**
+
+- **A scrubbed state must not depend on what ran before.** Give every tween explicit start values and `immediateRender: false` on all but the first, or a reload mid-page renders later tweens first and captures wrong starts.
+- **`useGSAP` scopes string selectors to its root.** A selector for an element outside the root finds nothing (the nav could not find the section below it); pass the element.
+- **`invalidateOnRefresh` is a ScrollTrigger property.** Set on a tween it is ignored with a warning; set it on the timeline's `scrollTrigger` so function-based values re-measure.
+- **Tailwind needs a token for `z-fixed`.** A named z-index with no theme mapping produces no class; the header sat under the canvas. Use `z-(--z-indices-fixed)`.
+- **Draw the canvas against a measured budget.** Check a frame with `tools/shoot.mjs` before tuning by eye: the first field was overexposed to white, and the numbers showed it at once.
+- **A damped overshoot on a drop drives the actor through the floor.** Use `rebound` for any move that ends on a surface.
+- **Production builds drop the `__stage` hook.** Assert choreography against the dev server.
 
 **Hero and look**
 

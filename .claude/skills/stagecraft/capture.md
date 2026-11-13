@@ -1,6 +1,6 @@
 # Capturing a reference
 
-Turn a site the user likes into a file in `references/` so its taste is available to every later build.
+Turn a site the user likes into a file in `references/` so its taste is available to every later build. Record what it does (the verbs, the timings, the set, the arc, how it ends) and measure its frames with `tools/shoot.mjs`. Never record its look as something to copy.
 
 ## From a URL
 
@@ -30,4 +30,4 @@ If `ffmpeg` is already installed (`ffmpeg -version`), extract one frame per seco
 
 Copy `references/_template.md` to `references/<slug>.md` and fill every field. Describe what moves and why it works, not only what it looks like. Record whether the site is live and where it came from.
 
-Borrow structure, technique and devices. Never carry a reference's brand name, copy, logos or numbers into a build.
+Borrow structure, technique, timing and devices. Never carry a reference's brand name, copy, logos or numbers into a build.

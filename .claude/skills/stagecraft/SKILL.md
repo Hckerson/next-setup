@@ -1,112 +1,89 @@
 ---
-name: cinematic-web
+name: stagecraft
 description: >-
-    The cinematic register: award-level, motion-led marketing pages where one
-    hero object or world carries the brand and scroll plays the page like a
-    film. Use for any landing page, marketing site, product launch page, hero
-    section, "make it look like an Awwwards site", "not a template", "premium
-    website", or when the user shares reference frames / URLs of a motion-heavy
-    site. Tokens, primitives and file structure stay with .claude/CLAUDE.md.
-    Not for dashboards, forms or app screens.
+    Makes the stage of a cinematic, scroll-driven landing page and every asset
+    it uses: the concept and script, the actors and their form, materials,
+    light, set, camera, motion, simulation, render, posters and fallbacks, for
+    any client in any sector. Runs like a production studio: styleframes before
+    motion, a blind critic before the owner sees anything, graded on its own
+    generation ladder. Use for "landing page", "product launch", "make it
+    animate", "make it cinematic", "premium", "Awwwards", or any idea for a
+    motion-led page; an idea from the user is a seed, never the spec. Tokens,
+    type, primitives, chrome and copy layout belong to web-generations.
 ---
 
-# Cinematic Web
+# Stagecraft
 
-A basic site is what happens when code starts before a concept exists. This skill forces the concept, the scene score and the technique to exist first, builds against them, then checks the result against them.
+A stage is judged as a film is judged: frame by frame, by people who have seen great ones. This skill makes a stage that holds up to that, and makes every asset it needs to get there.
 
-Read `.claude/CLAUDE.md` alongside this. It owns vocabulary and structure; this skill owns the visual register. `techniques.md` owns the stack and the mechanics.
+## What it owns, and what it does not
 
-## The standard
+| stagecraft makes                                                                 | web-generations makes                                   |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Concept, story, script                                                           | Tokens, type, spacing, colour roles                     |
+| Actors: form, materials, textures                                                | Primitives, patterns, chrome, nav                       |
+| Light, set, camera, motion, simulation                                           | The layout and typography of the copy                   |
+| Render, grade, posters, video fallbacks, the reduced-motion still                | Everything that is not the stage                        |
 
-What every build must have:
+The handoff is two things: the stage gives web-generations its per-shot tones (ground and ink) and its copy slots (where each line may sit in each shot). Nothing else is shared.
 
-1. **One hero object or world that is a metaphor for the product.** Someone who reads no copy still gets the idea. Never a generic gradient blob, a globe, floating UI cards, or particles with no structure.
-2. **Scroll is the timeline.** The page is a sequence of scenes; the hero changes state between them (disperses, converges, turns, splits, opens).
-3. **Choreography.** The hero's state and the copy sit on one master timeline per scroll track, cued at the same scene labels. Never independent fade-ins.
-4. **Restraint.** Near-black or near-white ground, one accent at most, colour lives in the hero and in light, not in UI paint. A large light display face, tiny mono or uppercase labels, generous negative space.
-5. **The signature recurs.** The hero device (a shape, a light, a motion) returns as a motif down the page, as image frames, dividers or transitions, so every section belongs to the same site. A hero that is never echoed makes the rest of the page read as a template.
-6. **No repeated section header.** Vary header composition (split title and lead, header beside media, centred quote); the same eyebrow, title and empty right half nine times is the template tell. Feature one item in every grid instead of equal columns.
-7. **Tactility.** Pointer response is damped in the frame loop, never 1:1. Nothing snaps, nothing bounces.
+## The bar
+
+`generations.md` is the ladder, from Pre-first to Fifth, with nine layers in `layers/`. The fifth is five properties: every frame could hang on a wall; the world has physics and it scrubs; light is a character; the visitor is inside it; one film on every device. Each concept also earns one signature move, struck from the next draw so it never becomes a template.
+
+Pre-first work (grey blocks, unlit placeholders) is never shown to the owner or a client. It may exist on the maker's machine as a layout check, nowhere else.
+
+## The studio
+
+Each department owns layers. One session can play every role; the critic is always a separate agent.
+
+| Department        | Layers                  | Makes                                                                    |
+| ----------------- | ----------------------- | ------------------------------------------------------------------------ |
+| Art direction     | concept, 4 set, 8       | Truth sheet, concept cards, world rules, styleframe compositions         |
+| Modelling         | 1 form                  | Models from client files, Blender scripts, scans, CC0 libraries          |
+| Look development  | 2 material, 3 light, 7  | Materials, light rigs, baked lighting, the grade                         |
+| Simulation        | 6 motion                | Physics baked to vertex-animation textures for scrubbed playback         |
+| Animation         | 5 camera, 6 motion      | The script: verbs with mass, the camera, timing                          |
+| Delivery          | 9                       | Posters, video fallbacks, budgets, the reduced-motion still              |
+| Critic            | all, blind              | Grades every frame set before the owner sees it (`critic.md`)            |
 
 ## Workflow
 
-Run these in order. Steps 1–4 produce a written concept and **end the turn** for approval unless the user said "just build it".
+Steps 0 to 2 end the turn for approval unless the owner said "just build it". Step 5 ends the turn again.
 
-### 1. Brief
+0. **Intake.** Ask once, only what is missing: what the client sells and to whom, the belief after five seconds, the action, mood (never "modern", "clean", "sleek" or "premium": those are what the work must earn, not a brief), and **what assets exist**. With no client, take a sector from `docs/economy-coverage-map.md` and invent a realistic one; placeholder copy is marked.
+1. **Truth sheet.** Five lines: what it is, what it replaces, the moment of use, the moment of action, the feeling. Every choice traces to one.
+2. **Concept.** `tools/draw.mjs` deals three cards (`concept.md`). Each becomes a six-panel storyboard, a logline, the sentence that would make it fail, and a swap test. Recommend one and say what you kept from the owner's idea.
+3. **Script and stage brief.** The script as data (`lib/<feature>/script.ts`, `verbs.md`). The stage brief in `docs/STAGE_BRIEF.md`: world rules (material, light, lens, time, ground), the signature move, the shot list with focal lengths, and the **asset manifest** (every asset, its source, licence, size and status; `assets.md`).
+4. **Look development.** Build the two or three key shots at final quality: real form, materials, light and grade. Capture them with `tools/shoot.mjs`; the critic grades them blind.
+5. **Styleframes to the owner.** Only frames the critic grades Fifth, or Fifth with named gaps, with the critic's table. **End the turn.** The look is approved before anything moves.
+6. **Asset production.** Everything on the manifest: models, textures, baked lighting, baked simulations, HDRIs, video. Sources and costs are in `assets.md`; free trials are named before use.
+7. **Motion pass.** The script runs on the real assets. Dailies after each iteration (`critic.md`); the critic's three changes are the next iteration's list.
+8. **Delivery.** Posters from the real render, the reduced-motion still, the phone path (lighter real-time or the identical camera path as video), budgets.
+9. **Verify and report.** `verify.md`, the measured convergence gate, the stage audit per layer (`generations.md`), and the row in `references/fingerprints.md`.
 
-Ask once, in one message, only what is missing: product and what it does, audience and what they must believe after five seconds, mood (three adjectives), references (URLs, frames, or names in `references/`), real copy or placeholder, existing assets. Never invent real-looking customer numbers, logos or testimonials; placeholder copy is marked as placeholder.
+## Tools
 
-When the user gives no product, the concept starts from a sector on `docs/economy-coverage-map.md`, with a realistic client in it. Every build is client and portfolio work; a product invented to exercise the stack is the failure this rule exists for.
-
-### 2. Metaphor
-
-Three candidate hero objects. For each: the object, the product truth it expresses, why it beats the obvious choice. Recommend one in two sentences. The hero must be legible and striking in its first frame: no fade from nothing, no dark subject on a dark ground. Real data (a real city, real geography) beats invented structure.
-
-### 3. Journey and score
-
-- **Beats:** four to seven, e.g. recognition → tension → turn → substance → proof → commitment. State what the visitor believes after each.
-- **Feeling curve:** one emotion per scene; neighbours differ; the peak gets the most scroll length and the one before it is quieter.
-- **Scene table:** `timeline label | length | hero state | camera | copy on screen | device | pointer`. Devices come from `techniques.md` › Devices; use at least four families, never the same device twice in a row, at most two scrubs.
-- **Anchor variety:** copy alternates lead / trail / split; never centred in every scene.
-
-### 4. Technique and art direction
-
-- Pick the **hero route** from `techniques.md` (procedural field, scrubbed media, or real-time 3D) on what the metaphor needs, and say why the other two lose for this metaphor.
-- Name the single hardest visual problem and the plan for it.
-- Palette as tokens (ground, ink, muted ink, accent, glow), type pair with `clamp()` sizes, motion curves and durations as tokens. These become entries in `styles/tokens.css` and `lib/<feature>/constants.ts`, never inline values.
-- **Every library setting that decides the look is a token too:** eases, Lenis smoothing, tone mapping and exposure, bloom strength, radius and threshold, grain, DPR range, the display face's extent (`--fonts-display-extent`). A library default left in place is a look chosen by nobody.
-- ASCII wireframes of the hero and the peak scene at desktop and 390px.
-- **Fingerprint gate:** compare against `references/fingerprints.md`. The build must differ from every prior row on at least 4 of: page shape, nav treatment, hero route, scene sequence, close, signature move. Report the comparison.
-- The stack in `techniques.md` is installed. Name everything else the concept needs in the concept itself: footage, models, datasets, a generation service, a package outside the stack, and what each costs. Approving the concept approves them. Never shrink the concept to avoid asking.
-
-### 5. Build
-
-**Hero gate first.** Build the hero alone (scene one only), then show the user a first-frame still and a short capture from a real browser and **end the turn**. Build the remaining scenes only after the hero passes. A weak hero costs one step, not a whole build.
-
-Follow `techniques.md` for the stack and mechanics and `.claude/CLAUDE.md` for structure. `StageScrollProvider` goes in the cinematic route group's layout; the stage is a `StageCanvas`; one master timeline per track drives the hero's uniforms and the copy. `prefers-reduced-motion` gets a composed still of the peak scene; no WebGPU falls back to WebGL2 on its own, and no WebGL2 or a failed media load gets a poster image.
-
-### 6. Verify
-
-Follow `verify.md`. A build that has not been checked against the scene table is not done; say so explicitly if verification could not run.
-
-Append the build to `references/fingerprints.md`.
+| Tool               | Does                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------- |
+| `tools/draw.mjs`   | Deals concept cards that differ from each other and from every earlier build                 |
+| `tools/shoot.mjs`  | Drives Chrome over the DevTools protocol: frames per shot, measured fingerprint, clone gate, state probe |
+| `tools/assets.mjs` | Fetches CC0 HDRIs and texture sets from Poly Haven into the build's asset folder             |
+| Blender, headless  | Modelling, baking light and simulation, offline renders (`pipeline.md`)                      |
 
 ## Requirements
 
-Not taste: a build that breaks one of these is broken.
+Not taste: breaking one is a defect.
 
-- All copy is real DOM text in reading order; the stage is `aria-hidden`. No text baked into images, video or the canvas.
+- All copy is real DOM text in reading order; the stage is `aria-hidden`. Text that appears in the world is DOM tracked to the surface, never baked into a texture.
 - In the DOM, animate only `transform`, `opacity` and `clip-path`.
 - One scroll owner per stage: GSAP. Motion's `useScroll` never drives a stage.
-- No ScrollTrigger markers, `stats-gl` panel or debug UI in a shipped build.
-- Scrub media ships with its audio track removed.
-- No em dashes in visible copy.
-
-## Tells
-
-Each of these is what a generator reaches for by default. Avoiding one is not enough: replace it with the column on the right, or the build slides to the next default.
-
-| ID     | Tell                                                                                                                   | Why it reads as a template                                          | Instead                                                                                               |
-| ------ | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| CIN-1  | Centred headline over a gradient blob                                                                                  | The default hero of every generator and starter                     | The hero object from step 2, with copy anchored lead, trail or split                                  |
-| CIN-2  | Three feature cards with icons; a logo cloud as the second section                                                     | Template section order, not a score                                 | One featured item per grid; proof placed where the feeling curve needs it                             |
-| CIN-3  | Purple-to-blue gradient grounds; gradient text                                                                         | The 2020–2024 SaaS signature                                        | A near-black or near-white ground; colour lives in the hero and in light                              |
-| CIN-4  | Glassmorphism cards; glow on UI chrome                                                                                 | Light painted onto the interface instead of emitted by the scene    | Light comes from the hero through the light chain; chrome stays flat                                  |
-| CIN-5  | Everything fades in on load; the same fade-up on every section                                                         | Motion with no cue, so nothing reads as caused                      | Copy cued to the hero at its timeline labels; devices vary as the scene table says                    |
-| CIN-6  | Bouncy or elastic easing                                                                                               | Reads as a toy, not a film                                          | Eases per segment from tokens: out on entry, linear hold, in on exit                                  |
-| CIN-7  | A 3D object spinning in place, unrelated to scroll                                                                     | A screensaver, not a story                                          | The hero moves between named scene states on the timeline                                             |
-| CIN-8  | Scroll arrows, animated mice, section counters (`01 / 06`)                                                             | A crutch for a first scene that does not invite scrolling           | The first scene plays on load and its motion leads the eye down                                       |
-| CIN-9  | Library defaults left in place: GSAP's `power1.out`, Lenis's smoothing, R3F's ACES tone mapping, bloom at its defaults | Every other site using the library looks the same                   | Each value set from the build's tokens (step 4)                                                       |
-| CIN-10 | The same section header composition repeated                                                                           | The template's rhythm shows through                                 | Vary the composition per section (standard 6)                                                         |
-| CIN-11 | A full-page preloader with a percentage counter                                                                        | Makes every visitor wait for the heaviest asset, and delays the LCP | Copy shows at hydration; the hero opens on a state that needs no assets, and they stream in behind it |
-
-## Browser
-
-Capture and verify run in the user's Chrome through the `chrome-browser` skill and the Claude in Chrome extension. Before either starts, check both and install whatever is missing first:
-
-- **`chrome-browser` is not in the skill list:** it is Anthropic's skill and only arrives through claude.ai sync. Ask the user to turn it on in their claude.ai skills settings and restart Claude Code; it lands in `~/.claude/skills/synced/`.
-- **No `mcp__claude-in-chrome__*` tools:** ask the user to run `/chrome`, or restart with `claude --chrome`, and take the **Install extension** prompt. The extension must be signed in to the same claude.ai account as Claude Code.
+- No markers, `stats-gl` panel or debug UI in a shipped build.
+- Scrub media ships with audio removed. Sound, if any, starts only on the visitor's action.
+- No em dashes in visible copy. Never invent customer numbers, logos or testimonials.
+- Nothing flashes more than three times a second.
+- Every asset has a recorded source and licence.
 
 ## Adding references
 
-When the user shares a site they like, follow `capture.md` and write a new file in `references/` from `references/_template.md`. The library is how this skill learns the user's taste.
+When the owner shares a site, follow `capture.md`: capture it with `tools/shoot.mjs`, record its verbs, light, materials and camera, and where it sits on the ladder with frame evidence. The library calibrates the critic.

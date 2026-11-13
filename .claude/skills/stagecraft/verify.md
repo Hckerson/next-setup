@@ -6,17 +6,29 @@ Code that looks right in the editor proves nothing about a scroll-driven page. T
 
 Verification needs a dev server and a browser. Start them only when the user's current message asks for it ("verify", "run it", "check it in the browser"). Otherwise end the build report with **Not verified** and the command they can give you to run it. Never present an unverified build as finished.
 
+## Tools
+
+`tools/shoot.mjs` drives the user's Chrome over the DevTools protocol with no install. It scrolls to each fraction of the page (or of `--track`), waits, saves a screenshot and measures the frame: ground luminance, ground hue, accent hue and the bright share. It writes a JSON report and exits 1 when `--compare` finds an earlier build too close.
+
+```
+node .claude/skills/stagecraft/tools/shoot.mjs --url http://localhost:3000/ --tag build \
+  --frames 0,0.2,0.4,0.6,0.8,1 --size 1440x900 --track .stage-track --compare [--reduce]
+```
+
 ## Steps
 
+0. **Measure, then compare.** Run the tool with `--compare`. A build whose fingerprint sits within the threshold (0.25, normalised) of any row in `references/fingerprints.md` fails CONV-G4-1 whatever its structure says: change the set, the ground rule or the arc and measure again.
+0b. **Assert the script.** On the dev server, read `window.__stage.snapshot()` at each shot's frame (the tool stores it as `probe`) and check it against the script: at the packing shot the actor sits at the destination, at the recolour shot `tintMix` is between 0 and 1, no actor has `position.y` below its surface. A story that is not happening is a defect even when every frame looks fine.
+
 1. `pnpm dev`, then open the route with the `chrome-browser` skill (SKILL.md › Browser).
-2. For every scene in the scene table, screenshot at its start, midpoint and end, at 1440×900 and at 390×844.
+2. For every shot in the script, screenshot at its start, midpoint and end, at 1440×900 and at 390×844.
 3. Emulate `prefers-reduced-motion: reduce` and screenshot the top of the page. `<html>` must not carry the `lenis` class, the copy must be visible, and the stage must show the composed peak scene.
-4. Put each capture beside its scene-table row and check:
+4. Put each capture beside its script shot and check:
     - **Hero state** matches the row (scattered vs converged, angle, plate positions).
     - **Copy** on screen is the row's copy, fully revealed at the midpoint, legible against the hero (contrast at least 4.5:1 for body, 3:1 for display).
     - **Dead scroll:** no range of more than ~15% where nothing on screen changes.
     - **Anchor variety** holds and no device repeats back to back.
-    - **Reference match:** set the peak capture beside the reference frames. Name what is weaker: density, light, type scale, pacing.
+    - **Reference match:** set the peak capture beside the reference frames, when `references/` holds any. Name what is weaker: density, light, type scale, pacing, mass.
 5. **Both backends.** Repeat step 2 with `?webgl` added to the URL (development only). `data-stage-backend` on the stage wrapper must read `webgl` with it and `webgpu` without it. Every scene must match the WebGPU pass. TSL compute and any WebGPU-only node are where they diverge.
 6. **Text.** Resize 1440 → 390 → 1440. SplitText must re-split each time: lines rebuilt, no clipped descenders or accents, no word cut at the column edge, and the reveal still in step with its label. With JavaScript disabled, every `.stage-reveal` heading is visible; with it enabled, none shows before its reveal.
 7. **Phone.** On a real phone: showing and hiding the address bar opens no gap under the stage and does not re-split a heading; touch scrolling keeps the phone's own momentum; in Low Power Mode (30 fps) every scene still reads.

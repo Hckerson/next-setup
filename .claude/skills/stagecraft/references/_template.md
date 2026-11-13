@@ -5,17 +5,20 @@
 | Source     | URL, template marketplace, or "frames from a video"                        |
 | Live       | yes / no / template preview only; date checked                             |
 | Builder    | Framer / Webflow / Aura / custom / unknown                                 |
-| Hero route | A procedural field / B scrubbed media / C real-time 3D, and the evidence   |
+| Actor route | A procedural field / B scrubbed media / C real-time 3D / D 2.5D plates / E vector, and the evidence |
+| Set        | One of the nine in `sets/`, or a new one with its point of view            |
+| Arc        | An arc from `tools/menus.json`, or a new one                               |
+| Measured   | `tools/shoot.mjs` output: ground L, ground range, ground hue, accent hue   |
 | Stack      | Renderer and backend, timeline, smooth scroll, text splitting, as detected |
 | Captured   | date and how (browser capture, user frames, recording)                     |
 
-## Metaphor
+## Actor and destination
 
-What the hero object is, and what product truth it stands for.
+Who or what performs, what product truth it stands for, and where it ends (and the action that holds).
 
 ## What moves
 
-Scene by scene: what changes between frames, what drives it (scroll, time, pointer), and how copy is cued to it.
+Shot by shot: the verbs, their length and mass, what drives them (scroll, time, pointer), and how copy is cued.
 
 ## Layout
 
