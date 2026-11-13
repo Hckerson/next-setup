@@ -255,7 +255,7 @@ Marketing (Linear/Stripe/Vercel/Raycast sites, Apple)
 - Rhythm: 8px core scale (Stripe), 4px base (Vercel), fluid clamp spacing (Vercel).
 - Motion .3-.8s on cards/accordions; reduced-motion handled (Apple page only 1 match).
 - Marketing radius larger than app (Vercel 8 vs 6; Apple tiles/modals 28).
-- Proof (logos, quotes, numbers) and footers not measured (UNVERIFIED). Scroll-film heroes defer to cinematic-web.
+- Proof (logos, quotes, numbers) and footers not measured (UNVERIFIED). Scroll-film heroes defer to stagecraft.
 
 ## Evidence gaps
 

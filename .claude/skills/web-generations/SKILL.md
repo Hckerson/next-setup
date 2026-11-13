@@ -9,7 +9,7 @@ description: >-
     composed one). Use whenever building, restyling or reviewing any layer in
     docs/UI_LAYERS.md (token, scale class, primitive, brand, pattern, mark, row,
     list or modal, section, console, page, chrome, portal layout, root layout),
-    for app screens and marketing pages alike, and on "make it premium", "this
+    for app screens and ordinary marketing pages (an animated, scroll-driven landing page is built with the stagecraft skill), and on "make it premium", "this
     looks basic", "looks like a template", "looks dated", "give it a different
     style" or "audit the UI". Tokens, primitives and file structure stay with
     .claude/CLAUDE.md.
@@ -60,11 +60,11 @@ A **deliberate exception** is a conscious use of an older generation's device in
 Pick per surface, before building.
 
 - **App**: dashboards, consoles, forms, settings, anything a person works in. State-complete, efficient for its users, motion that carries meaning. How dense, quiet or loud it is belongs to the register.
-- **Marketing**: landing and product pages. Type with tension, a grid, one idea per band, proof as evidence. For scroll-driven, motion-led pages built around a hero object, use the `cinematic-web` skill; this skill's layer files still apply to everything around the hero.
+- **Marketing**: landing and product pages. Type with tension, a grid, one idea per band, proof as evidence. For scroll-driven pages where an actor performs, use the `stagecraft` skill; this skill's layer files still apply to everything around the stage.
 
 A product may use one register for the app and another for marketing; the brief records both.
 
-**Relation to `cinematic-web`.** The two skills are independent. On a scroll-driven page built around a hero object, `cinematic-web` governs the stage (its scene score, its requirements, such as animating only transform, opacity and clip-path, and its tells) and wins any conflict inside it. This skill governs everything around the stage and every app screen. The two agree on the main bans (gradient text, glassmorphism cards, the same fade-up everywhere, three feature cards); where this skill allows a colour transition on hover, that applies outside the stage.
+**Relation to `stagecraft`.** The two skills are independent. On a scroll-driven page built around a performing actor, `stagecraft` governs the stage (its script, its requirements, such as animating only transform, opacity and clip-path, and its tells) and grades it with its own `generations.md`; it wins any conflict inside the stage. This skill governs and grades everything around the stage and every app screen. The two agree on the main bans (gradient text, glassmorphism cards, the same fade-up everywhere, three feature cards); where this skill allows a colour transition on hover, that applies outside the stage.
 
 ## Workflow
 

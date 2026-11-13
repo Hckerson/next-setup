@@ -28,7 +28,7 @@ Component layers under `components/`: `ui` (domain-free primitives), `common` (s
 
 UI quality: the `web-generations` skill holds every layer to the fifth generation, in the register named in `docs/DESIGN_BRIEF.md`.
 
-`lib/` has no JSX. The cinematic stage runs on libraries (gsap, lenis, three on WebGPU via @react-three/fiber); the cinematic-web skill owns how. `tools/` is not app code.
+`lib/` has no JSX. The stage runs on libraries (gsap, lenis, three on WebGPU via @react-three/fiber) and a script compiled from `lib/stage/`; the stagecraft skill owns how. `tools/` is not app code.
 
 New ESLint rules go in `tools/eslint/rules/` with a colocated `.test.ts`, registered in `eslint.config.ts`; use plain flat config where it suffices. A rule whose fix spans files gets a codemod in `tools/codemods/` (dry-run by default, `--write` to apply, skip and report when intent would be guessed).
 
