@@ -1,0 +1,361 @@
+{
+    "arcs": [
+        {
+            "id": "unboxing",
+            "logline": "The box opens and the thing arrives, then the visitor holds it",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "packing",
+            "logline": "The thing is made ready and travels into its container; the container is the action",
+            "fits": [
+                "physical"
+            ]
+        },
+        {
+            "id": "journey",
+            "logline": "The actor crosses places or seasons and is changed by each",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "assembly",
+            "logline": "Parts arrive from the edges and become the whole; each part carries one claim",
+            "fits": [
+                "physical",
+                "digital"
+            ]
+        },
+        {
+            "id": "disassembly",
+            "logline": "The whole comes apart into its parts, each one explained, then closes again",
+            "fits": [
+                "physical",
+                "digital"
+            ]
+        },
+        {
+            "id": "metamorphosis",
+            "logline": "The actor changes form or colourway and the whole page changes with it",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "replacement",
+            "logline": "The old actor leaves and the new one arrives; the difference is the pitch",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "parade",
+            "logline": "A line of variants passes the camera like a collection on a runway",
+            "fits": [
+                "physical",
+                "digital"
+            ]
+        },
+        {
+            "id": "craft",
+            "logline": "A making-of in miniature: material becomes object under visible hands or tools",
+            "fits": [
+                "physical",
+                "service"
+            ]
+        },
+        {
+            "id": "scale-shift",
+            "logline": "The camera falls from the world into the material, or climbs back out",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "moment-of-use",
+            "logline": "One ordinary use, slowed until it is beautiful, then the actor is the visitor's",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "cause-chain",
+            "logline": "One action triggers the next, a chain that ends in the result the client sells",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "reveal-by-removal",
+            "logline": "Layers are stripped away until the one true thing is left",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "counting",
+            "logline": "A measurement is the actor: it fills, ticks or accrues until it crosses the line that matters",
+            "fits": [
+                "digital",
+                "service"
+            ]
+        }
+    ],
+    "actors": [
+        {
+            "id": "product",
+            "fits": [
+                "physical"
+            ]
+        },
+        {
+            "id": "packaging",
+            "fits": [
+                "physical"
+            ]
+        },
+        {
+            "id": "component",
+            "fits": [
+                "physical",
+                "digital"
+            ]
+        },
+        {
+            "id": "ingredient",
+            "fits": [
+                "physical",
+                "service"
+            ]
+        },
+        {
+            "id": "artefact-of-use",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "tool",
+            "fits": [
+                "physical",
+                "service"
+            ]
+        },
+        {
+            "id": "measurement",
+            "fits": [
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "place-in-miniature",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        }
+    ],
+    "destinations": [
+        {
+            "id": "box",
+            "fits": [
+                "physical"
+            ]
+        },
+        {
+            "id": "bag",
+            "fits": [
+                "physical"
+            ]
+        },
+        {
+            "id": "hand",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "shelf",
+            "fits": [
+                "physical"
+            ]
+        },
+        {
+            "id": "door",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "slot",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "table",
+            "fits": [
+                "physical",
+                "service"
+            ]
+        },
+        {
+            "id": "pocket",
+            "fits": [
+                "physical",
+                "digital"
+            ]
+        },
+        {
+            "id": "scale",
+            "fits": [
+                "physical",
+                "digital",
+                "service"
+            ]
+        },
+        {
+            "id": "screen",
+            "fits": [
+                "digital",
+                "service"
+            ]
+        }
+    ],
+    "cameras": [
+        {
+            "id": "locked-off"
+        },
+        {
+            "id": "follow"
+        },
+        {
+            "id": "orbit"
+        },
+        {
+            "id": "top-down"
+        },
+        {
+            "id": "macro-dolly"
+        },
+        {
+            "id": "isometric"
+        },
+        {
+            "id": "cut-edit"
+        },
+        {
+            "id": "no-camera-flat"
+        }
+    ],
+    "times": [
+        {
+            "id": "continuous"
+        },
+        {
+            "id": "stepped"
+        },
+        {
+            "id": "slow-motion"
+        },
+        {
+            "id": "time-lapse"
+        },
+        {
+            "id": "reversed"
+        },
+        {
+            "id": "looped"
+        }
+    ],
+    "sets": [
+        {
+            "id": "studio-sweep"
+        },
+        {
+            "id": "daylight-location"
+        },
+        {
+            "id": "paper-cut"
+        },
+        {
+            "id": "macro-material"
+        },
+        {
+            "id": "miniature-world"
+        },
+        {
+            "id": "print-catalogue"
+        },
+        {
+            "id": "technical-drawing"
+        },
+        {
+            "id": "night-luminous"
+        },
+        {
+            "id": "colour-field"
+        }
+    ],
+    "signatures": [
+        {
+            "id": "one-shot-camera"
+        },
+        {
+            "id": "text-in-the-world"
+        },
+        {
+            "id": "live-surface"
+        },
+        {
+            "id": "visitor-input"
+        },
+        {
+            "id": "visitor-local-time"
+        },
+        {
+            "id": "baked-simulation"
+        },
+        {
+            "id": "scanned-actor"
+        },
+        {
+            "id": "caustic-light"
+        },
+        {
+            "id": "rack-focus-reveal"
+        },
+        {
+            "id": "pass-through-transition"
+        }
+    ]
+}

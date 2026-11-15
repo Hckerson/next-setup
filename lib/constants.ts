@@ -37,3 +37,5 @@ export const MOTION_SPRING = {
     stiffness: 100,
     damping: 30,
 } as const;
+
+export const STAGE_WEBGL_PARAM = "webgl";
