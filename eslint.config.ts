@@ -157,6 +157,10 @@ const starterConfig: ConfigArray = [
         rules: { "starter/page-composes-only": "error" },
     },
     {
+        files: SOURCE,
+        rules: { "starter/stage-tells": "error" },
+    },
+    {
         files: TESTS,
         rules: { "max-lines": "off" },
     },
