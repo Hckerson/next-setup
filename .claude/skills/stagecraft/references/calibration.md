@@ -4,8 +4,9 @@ Each run: a fresh critic agent, given only the frames, `critic.md`, `generations
 
 | Date       | Specimen                                   | Owner's verdict | Critic's grades (blind)                                                                                       | Result |
 | ---------- | ------------------------------------------ | --------------- | ------------------------------------------------------------------------------------------------------------- | ------ |
-| 2026-11-12 | Tidemark Sunline grey-block animatic, 5 desktop frames | Below first ("-5") | Form, Material, Light, Set, Render: Pre-first. Camera, Integration: First. Motion, Delivery: Not graded. "Would a client see this today: No" | Pass: nothing graded above First |
+| 2026-11-12 | Tidemark Sunline grey-block animatic, 5 desktop frames in `references/calibration/animatic/` (the build itself was deleted) | Below first ("-5") | Form, Material, Light, Set, Render: Pre-first. Camera, Integration: First. Motion, Delivery: Not graded. "Would a client see this today: No" | Pass: nothing graded above First |
 | 2026-11-12 | Ward healthcare filament page             | First in quality, fourth by cluster | Not run: the frames were lost from /tmp and the build was reverted | Not run |
+| 2026-11-13 | A captured premium-template page (watch brand), 3 frames in `references/calibration/fourth/` | Fourth (chosen as the template the skill must not produce) | Form, Material, Light, Camera, Render, Integration: Fourth. Set: Third. Motion, Delivery: Not graded. "Would a client see this today: No" | Pass: nothing graded above Fourth |
 
 ## What the critic found that the maker missed
 
@@ -13,5 +14,4 @@ The 2026-11-12 run named defects the maker had not reported: the traced coin lan
 
 ## Next specimens
 
-- A fourth-generation specimen to replace Ward: a capture of a page the reference agents rejected as the premium template, graded blind; the critic must not place it above Fourth.
 - The first fifth-generation references from `references/`: the critic must not place them below Fifth with gaps.

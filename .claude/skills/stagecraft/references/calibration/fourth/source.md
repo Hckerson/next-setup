@@ -1,0 +1,1 @@
+Girard-Perregaux Casquette microsite, https://www.girard-perregaux.com/casquette-collection/ (Immersive Garden, Awwwards Site of the Day 2024-07-31), captured 2026-11-13 with tools/shoot.mjs at 1440x900: open 0 (floating watch in unsourced gold flare), peak 0.7 (LED numerals in red haze), close 0.9 (glowing red line grid on black).
