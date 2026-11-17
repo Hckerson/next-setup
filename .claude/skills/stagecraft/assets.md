@@ -32,20 +32,20 @@ Never shrink the concept to avoid paying. If the best concept needs a paid asset
 
 ## Fetching CC0 assets
 
-`tools/assets.mjs search <category> --type hdris|textures` lists Poly Haven assets; `get <id> --type textures --res 2k --maps Diffuse,Rough,nor_gl --out public/stage/<feature>` downloads them and records each in the folder's `manifest.json` with source, licence (CC0), authors and real-world dimensions in millimetres, so materials are scaled to size. Offline modelling, baking and rendering are in `pipeline.md`.
+`tools/assets.mjs search <category> --type hdris|textures` lists Poly Haven assets; `get <id> --type textures --res 2k --maps Diffuse,Rough,nor_gl --out public/stage/<feature>` downloads them and records each in the folder's `manifest.json` with source, licence (CC0), authors and real-world dimensions in millimetres, so materials are scaled to size. Every baked or rendered output is recorded the same way: `generated <id> --tool <script> --spec <spec.json> --files a,b --out public/stage/<feature>` writes its tool, the spec that made it and its file sizes. Offline modelling, baking and rendering are in `pipeline.md`.
 
 ## Preparing the actor
 
 - **States are data.** The actor's variants live in `lib/data/<feature>.ts`: name, colours as tokens, material parameters, and for tier A or C the mask or part each colour applies to. A recolour verb reads this; it never hardcodes a colour.
 - **Parts.** Name meshes and materials in the source so a recolour can target the upper, the sole, the lid. Unnamed meshes cannot be recoloured.
 - **Contact.** Every actor has a footprint for its contact shadow and a height reference for lift and land.
-- **Provenance.** Record where each asset came from and its licence in the brief. A client asset is the client's; a generated asset needs its terms checked.
+- **Provenance.** Record where each asset came from and its licence in the stage brief's asset manifest. A client asset is the client's; a generated asset needs its terms checked.
 - **Weight.** Models: optimise geometry with meshopt and textures with KTX2 or WebP; budget the first load so the copy never waits (`techniques.md`).
 - **Posters.** Every actor has a still for first paint, for no-GPU, and for reduced motion: the peak shot.
 
 ## Placeholders first
 
-The animatic gate (`SKILL.md` step 4) uses grey blocks for every actor, the real ground and the real copy. Swap an asset in only after the story is approved; the compiled script does not change when an asset does. If swapping an asset requires changing the script, the script was carrying the look.
+Grey blocks are a layout check on the maker's machine and nothing more: they are Pre-first and are never shown to the owner (`SKILL.md`, The bar). Real assets enter at look development (`SKILL.md` step 4). The compiled script does not change when an asset is swapped; if it must, the script was carrying the look.
 
 ## When an asset is not good enough
 
