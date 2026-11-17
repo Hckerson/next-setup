@@ -12,6 +12,9 @@
 | Lens     | Long lens, shallow depth; a macro move for detail shots                                       |
 | Mass     | Full: anticipation, settle, a shadow that responds                                            |
 
-**Failure mode.** A product on white that spins: ACT-G1-1. The second failure: a dark ground and a glow, which is another set.
+**Failure mode.** A product on white that spins: MOT-G3-1 and CAM-G1-1. The second failure: a dark ground and a glow, which is another set.
 
-**Exemplars.** None captured yet.
+**Exemplars.**
+
+- `references/vero-studio.md` (Vero, captured 2026-11-13): Fifth with gaps. The sweep changes colour with each state; the opening shot floats with no ground.
+- A second exemplar is open.

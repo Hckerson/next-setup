@@ -12,6 +12,6 @@
 | Lens     | Long and shallow, so the light falls off                                                 |
 | Mass     | Light has inertia: it swells and decays, it does not blink                               |
 
-**Failure mode.** The stage default cluster itself: a field of fine lines, bloom, one accent and a light serif. SET-G4-1 and SET-G4-2 fire on it. Using this set needs a reason from the domain, and the draw never picks it twice in a row.
+**Failure mode.** The stage default cluster itself: a field of fine lines, bloom, one accent and a light serif. SET-G4-1 and LGT-G4-2 fire on it. Using this set needs a reason from the domain, and the draw never picks it twice in a row.
 
-**Exemplars.** None captured yet.
+**Exemplars.** None accepted yet. Candidates were rejected as fourth-generation or could not be captured in headless Chrome (2026-11-13).

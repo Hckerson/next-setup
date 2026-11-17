@@ -2,7 +2,7 @@
 
 A set is the world the actor plays in. It is not a theme: it is a point of view on light, material, lens, time and ground that a whole build obeys. Each file names its core axes (what defines the set) and its free axes (where any instance a reference shows is only an instance).
 
-`tools/draw.mjs` deals the set, striking those used before. The brief records the world rules (`concept.md`).
+`tools/draw.mjs` deals the set, striking those used before. The stage brief records the world rules (`concept.md`).
 
 | Set                    | Point of view                                              | Suits                                      | Strains for                         |
 | ---------------------- | ---------------------------------------------------------- | ------------------------------------------ | ----------------------------------- |
