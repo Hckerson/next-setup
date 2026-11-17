@@ -30,9 +30,31 @@ Then:
 
 A layer the frames cannot show is **Not graded**, never passed. A grade without a named frame is not a grade.
 
+## Sampling is fixed
+
+Rounds of the same kind see the same frames, so a grade can only move when the pixels do.
+
+- **Stills:** one frame per shot, at its rest pose.
+- **Motion:** 36 frames evenly spaced from the top of the page to the bottom, every round. Prevalence (`generations.md`) counts shots, so a count over 24 frames and one over 36 do not compare.
+
+## Rest frames and change frames
+
+A **rest frame** is one where no verb is in progress: the actor holds. A **change frame** is sampled mid-verb, which a scrubbed page allows anywhere.
+
+- Set density (SET-G4-5), Material, Light, Render and copy contrast are graded on rest frames. On a change frame they are listed, never grade-setting: a sheet mid-collapse is sparse by nature, and a headline mid-wipe is faint by nature.
+- A change frame is graded for coherence only: MOT-G4-3, and FRM-G4-3 where an object is drawn wrong rather than caught moving.
+
+## Two critics, one verdict
+
+A single critic drifts. Across six rounds on Receipt, the same unchanged frames swung between Fourth and Fifth on Form, Set, Material and Integration (2026-11-16/17), so one critic's table is a reading, not a verdict.
+
+- A round that decides a grade runs two critics on the same frames, independently, and neither sees the other.
+- A tell sets a layer's grade only when both cite it: the same ID on overlapping frames. A tell only one cites is listed as **disputed**, with its evidence, and fixed if the maker agrees, but it does not set the grade.
+- If the two tables still differ on a layer, report the range ("Fourth to Fifth with gaps") with both evidence lists. The owner sees the range, never a coin toss presented as a verdict.
+
 ## Dailies
 
-Each iteration's frames go to `/tmp/stagecraft/dailies/<build>/<iteration>/` with the critic's table beside them. Only frames the critic grades Fifth, or Fifth with named gaps, reach the owner, and they reach the owner with the table. The critic's three changes become the next iteration's work list.
+Each iteration's frames go to `~/.cache/stagecraft/dailies/<build>/<iteration>/` (`/tmp` is wiped on restart) with the critic's table beside them. Only frames the critic grades Fifth, or Fifth with named gaps, reach the owner, and they reach the owner with the table. The critic's three changes become the next iteration's work list.
 
 ## Calibration
 
