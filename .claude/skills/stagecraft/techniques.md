@@ -289,9 +289,9 @@ The script's verbs carry the performance; the devices below are page-level prese
 - The stage is `aria-hidden`; every word on screen is real DOM text in reading order.
 - In the DOM, animate only `transform`, `opacity` and `clip-path`.
 
-## Tones: the handoff to web-generations
+## Tones: the handoff to pagecraft
 
-The ground and ink come from the actor's variants and the set's light, never from a mood. The stage brief lists one tone (ground, ink) per shot. web-generations writes them as tokens named `--tones-<shot>-ground` and `--tones-<shot>-ink`; `loadTone` in `lib/stage/tone.ts` reads them and `compileTone` tweens the live tone across the timeline, so the page and the canvas ground change together. Type, spacing, colour roles and every other token are web-generations' decisions, not this skill's.
+The ground and ink come from the actor's variants and the set's light, never from a mood. The stage brief lists one tone (ground, ink) per shot. pagecraft writes them as tokens named `--tones-<shot>-ground` and `--tones-<shot>-ink`; `loadTone` in `lib/stage/tone.ts` reads them and `compileTone` tweens the live tone across the timeline, so the page and the canvas ground change together. Type, spacing, colour roles and every other token are pagecraft's decisions, not this skill's.
 
 ## Build notes
 

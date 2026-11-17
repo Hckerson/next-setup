@@ -1,6 +1,6 @@
 # Stage brief: <project>
 
-Copy to `docs/STAGE_BRIEF.md`. This is stagecraft's record of the stage. Type, tokens, primitives and chrome go in web-generations' `docs/DESIGN_BRIEF.md`; this brief hands that one only the tones and the copy slots below. Mark anything undecided as **open**; never guess.
+Copy to `docs/STAGE_BRIEF.md`. This is stagecraft's record of the stage. Type, tokens, primitives and chrome go in pagecraft's `docs/DESIGN_BRIEF.md`; this brief hands that one only the tones and the copy slots below. Mark anything undecided as **open**; never guess.
 
 ## Truth sheet
 
@@ -54,9 +54,9 @@ The script in `lib/<feature>/script.ts` is the source of truth; this table is it
 
 **Peak shot:** the one reduced motion shows, and the poster.
 
-## Handoff to web-generations
+## Handoff to pagecraft
 
-- **Tones:** one ground and ink pair per shot, written by web-generations as `--tones-<shot>-ground` and `--tones-<shot>-ink`.
+- **Tones:** one ground and ink pair per shot, written by pagecraft as `--tones-<shot>-ground` and `--tones-<shot>-ink`.
 - **Copy slots:** per shot, the region of the frame reserved for copy (for example, left third below the horizon), so the camera keeps it clear and contrast holds.
 
 Nothing else is shared.

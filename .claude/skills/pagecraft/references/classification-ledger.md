@@ -1,4 +1,4 @@
-# Classification ledger: web-generations layers, QUALITY versus REGISTER
+# Classification ledger: pagecraft layers, QUALITY versus REGISTER
 
 Built 2026-11-11. Read-only on the skill. Every count and every break cites its source key.
 
@@ -6,8 +6,8 @@ Built 2026-11-11. Read-only on the skill. Every count and every break cites its 
 
 | Key           | File                                                                                                                                   |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| FE            | `next-setup/.claude/skills/web-generations/references/fifth-evidence.md` (Linear, Stripe, Vercel, Raycast, Apple iPhone page)          |
-| MC            | `next-setup/.claude/skills/web-generations/references/measured-captures.md` (computed values, 22 sites, plus `transition: all` counts) |
+| FE            | `next-setup/.claude/skills/pagecraft/references/fifth-evidence.md` (Linear, Stripe, Vercel, Raycast, Apple iPhone page)          |
+| MC            | `next-setup/.claude/skills/pagecraft/references/measured-captures.md` (computed values, 22 sites, plus `transition: all` counts) |
 | EW            | `AppData/Local/Temp/wg-research/registers-editorial-warm.md` (Stripe Press, The Pudding, Notion, Things)                               |
 | TI            | `AppData/Local/Temp/wg-research/registers-tactile-industrial.md` (Teenage Engineering, Nothing, Ableton, Bloomberg)                    |
 | TP            | `AppData/Local/Temp/wg-research/registers-trust-playful.md` (Mercury, Wise, Duolingo, Figma)                                           |

@@ -1,10 +1,10 @@
 # Generations of the stage
 
-web-generations grades the layers of an interface. This file grades the stage: everything stagecraft makes. That means the actors and their form, materials, light, set, camera, motion, render, how each frame sits with its copy, and how it is delivered. It uses web-generations' dial: third or older fails, fourth passes only with a stated reason, fifth is the goal.
+pagecraft grades the layers of an interface. This file grades the stage: everything stagecraft makes. That means the actors and their form, materials, light, set, camera, motion, render, how each frame sits with its copy, and how it is delivered. It uses pagecraft's dial: third or older fails, fourth passes only with a stated reason, fifth is the goal.
 
 ## The ladder
 
-Named like web-generations' generations: each is defined by the technology shift that produced its look.
+Named like pagecraft's generations: each is defined by the technology shift that produced its look.
 
 | Generation    | Enabling shift                                     | What the stage looks like                                                                                          |
 | ------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -15,7 +15,7 @@ Named like web-generations' generations: each is defined by the technology shift
 | **Fourth**    | PBR and post-processing defaults                   | The premium template: dark ground, studio-HDRI gloss, bloom, one flawless object floating, a field of fine glowing lines, everything clean |
 | **Fifth**     | Decided pipelines: scan, simulate, bake, grade, critique | A world you could photograph, that reacts to the visitor, filmed by someone who knows what they are doing      |
 
-The fourth is the dangerous one, as in web-generations: it looks expensive and passes structural checks. Its **default cluster** on the stage: dark ground, emitted glow, a floating hero, perfect materials, library tone mapping, one ease. One axis at default is a gap; three at once is the fourth generation.
+The fourth is the dangerous one, as in pagecraft: it looks expensive and passes structural checks. Its **default cluster** on the stage: dark ground, emitted glow, a floating hero, perfect materials, library tone mapping, one ease. One axis at default is a gap; three at once is the fourth generation.
 
 ## The fifth, defined
 
@@ -58,7 +58,7 @@ A build can pass every layer and still be the last build again. This tell is gra
 
 ## Grading
 
-- **Prevalence**, as in web-generations: a tell on 3 or more shots, or on at least half the graded shots when fewer than five are graded, or in one shared material, rig or ease, sets the layer's grade. A tell on a small prop (anything that is not the hero or the set's ground) is isolated unless it appears in 3 or more shots: it is listed and fixed, but does not set the layer's grade. The opening shot is the first paint: a tell on it sets the grade of Set and Delivery whatever the count. An isolated hit is listed and fixed.
+- **Prevalence**, as in pagecraft: a tell on 3 or more shots, or on at least half the graded shots when fewer than five are graded, or in one shared material, rig or ease, sets the layer's grade. A tell on a small prop (anything that is not the hero or the set's ground) is isolated unless it appears in 3 or more shots: it is listed and fixed, but does not set the layer's grade. The opening shot is the first paint: a tell on it sets the grade of Set and Delivery whatever the count. An isolated hit is listed and fixed.
 - **Evidence** is a file and line, an asset report (`gltf-transform inspect`), or a captured frame with its measured numbers. A grade without evidence is not a grade.
 - **Blind.** Frame grades come from the critic (`critic.md`), who never sees who made the frames, the concept's story, or the grade anyone hopes for.
 - **Fifth with gaps** when no tell recurs but a baseline criterion is unmet; it is not Fifth until met or named as a deliberate exception.

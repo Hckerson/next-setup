@@ -1,5 +1,5 @@
 ---
-name: web-generations
+name: pagecraft
 description: >-
     The quality dial for every UI layer, in any style. Classifies work into five
     web generations, named like computer generations, so dated and
@@ -15,7 +15,7 @@ description: >-
     .claude/CLAUDE.md.
 ---
 
-# Web Generations
+# Pagecraft
 
 Basic output is what happens when every look decision is made once, globally, as a default. This skill names five generations, tells you which one a layer reads as, and holds every layer you touch to the fifth, in whichever register the product calls for.
 

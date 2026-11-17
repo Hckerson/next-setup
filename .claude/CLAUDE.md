@@ -26,7 +26,7 @@ Reusable **Next.js App Router starter**: architecture and conventions, one examp
 
 Component layers under `components/`: `ui` (domain-free primitives), `common` (shared compositions), `wrappers` (motion, boundaries), `brand`, `patterns` (domain-free compositions), `features` (domain marks, rows, modals), `sections`, `layout` (chrome), `providers`. See `docs/UI_LAYERS.md`.
 
-UI quality: the `web-generations` skill holds every layer to the fifth generation, in the register named in `docs/DESIGN_BRIEF.md`.
+UI quality: the `pagecraft` skill holds every layer to the fifth generation, in the register named in `docs/DESIGN_BRIEF.md`.
 
 `lib/` has no JSX. The stage runs on libraries (gsap, lenis, three on WebGPU via @react-three/fiber) and a script compiled from `lib/stage/`; the stagecraft skill owns how. `tools/` is not app code.
 

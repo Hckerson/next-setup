@@ -9,7 +9,7 @@ description: >-
     generation ladder. Use for "landing page", "product launch", "make it
     animate", "make it cinematic", "premium", "Awwwards", or any idea for a
     motion-led page; an idea from the user is a seed, never the spec. Tokens,
-    type, primitives, chrome and copy layout belong to web-generations.
+    type, primitives, chrome and copy layout belong to pagecraft.
 ---
 
 # Stagecraft
@@ -18,14 +18,14 @@ A stage is judged as a film is judged: frame by frame, by people who have seen g
 
 ## What it owns, and what it does not
 
-| stagecraft makes                                                                 | web-generations makes                                   |
+| stagecraft makes                                                                 | pagecraft makes                                   |
 | -------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | Concept, story, script                                                           | Tokens, type, spacing, colour roles                     |
 | Actors: form, materials, textures                                                | Primitives, patterns, chrome, nav                       |
 | Light, set, camera, motion, simulation                                           | The layout and typography of the copy                   |
 | Render, grade, posters, video fallbacks, the reduced-motion still                | Everything that is not the stage                        |
 
-The handoff is two things: the stage gives web-generations its per-shot tones (ground and ink) and its copy slots (where each line may sit in each shot). Nothing else is shared.
+The handoff is two things: the stage gives pagecraft its per-shot tones (ground and ink) and its copy slots (where each line may sit in each shot). Nothing else is shared.
 
 ## The bar
 
