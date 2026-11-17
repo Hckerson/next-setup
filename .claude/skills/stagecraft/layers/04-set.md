@@ -11,6 +11,9 @@ The world around the actor: ground, environment, props, atmosphere. The set file
 | SET-G3-1  | Third     | A gradient sky dome, a floor grid, low-poly stock props                  | Gradient background shader; stock prop names; frame: uniform gradient behind    | A set with material and purpose                                      |
 | SET-G4-1  | Fourth    | An infinite dark void with a reflective floor                            | Frame ground luminance below 0.12 with a mirror plane                           | A place, or a sweep whose colour comes from the actor                |
 | SET-G4-2  | Fourth    | Props as decoration: floating spheres and shapes with no job             | Props with no reference in the script                                           | Every prop has a story job                                           |
+| SET-G4-3  | Fourth    | Built worst where the lens is closest: the foreground smears                | Frame: `softestForeground` below 0.5 where no depth of field was chosen; source: textures without anisotropic filtering, a texel larger than a pixel at the nearest visible point | Anisotropy at the device maximum; texel density checked at the nearest point of every shot; foreground detail (seams, wear) |
+| SET-G4-4  | Fourth    | A drawing set with no sheet: a grid edge to edge, with no border, rulers, title block or view labels | Frame (J): the ground is grid wallpaper; nothing names the drawing, its scale or its view | A sheet framed by the camera: border with tick rulers, a title block whose fields change with the script, view labels |
+| SET-G4-5  | Fourth    | A sparse drawing: a lone outline on an empty sheet, no information on the actor's half | Frame (J): the actor's half of a line frame carries no dimension chain, section, detail callout or leader | Each shot carries information where the eye lands: dimensions, a section, a detail, a callout tied to the story |
 
 ## Floor versus baseline
 

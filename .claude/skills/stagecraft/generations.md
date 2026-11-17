@@ -47,9 +47,18 @@ The stage is graded per layer, never as a whole. Each layer file has tells with 
 
 A recurring tell is usually inherited: a flat frame is a light problem before it is a render problem. Trace it upstream and fix it where it starts.
 
+## Convergence
+
+| ID        | Gen    | Tell                                                         | Detector                                                                                   | Instead                                                        |
+| --------- | ------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| CONV-G4-1 | Fourth | The build resembles an earlier build on its measured frames | `tools/shoot.mjs --compare` finds a row in `references/fingerprints.md` within the threshold | Change the set, the light's world rule or the arc, and measure again |
+| CONV-G4-2 | Fourth | The frame is the category's stock photo: a heap of gold coins under shallow focus, a sneaker floating on colour, a laptop on a desk at golden hour | Frame (J): a blind viewer names it as stock imagery of the category | The concept's own frame: the signature move, the story's moment, a view the stock library does not have |
+
+A build can pass every layer and still be the last build again. This tell is graded across the whole stage, not per layer.
+
 ## Grading
 
-- **Prevalence**, as in web-generations: a tell on 3 or more shots, or in one shared material, rig or ease, sets the layer's grade. An isolated hit is listed and fixed.
+- **Prevalence**, as in web-generations: a tell on 3 or more shots, or on at least half the graded shots when fewer than five are graded, or in one shared material, rig or ease, sets the layer's grade. A tell on a small prop (anything that is not the hero or the set's ground) is isolated unless it appears in 3 or more shots: it is listed and fixed, but does not set the layer's grade. The opening shot is the first paint: a tell on it sets the grade of Set and Delivery whatever the count. An isolated hit is listed and fixed.
 - **Evidence** is a file and line, an asset report (`gltf-transform inspect`), or a captured frame with its measured numbers. A grade without evidence is not a grade.
 - **Blind.** Frame grades come from the critic (`critic.md`), who never sees who made the frames, the concept's story, or the grade anyone hopes for.
 - **Fifth with gaps** when no tell recurs but a baseline criterion is unmet; it is not Fifth until met or named as a deliberate exception.

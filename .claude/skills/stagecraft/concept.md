@@ -28,7 +28,7 @@ node .claude/skills/stagecraft/tools/draw.mjs --kind physical|digital|service
 | **Set**         | In what world?                                 | the nine in `sets/README.md`                                                                                |
 | **Signature**   | What one move will people remember?            | one-shot-camera, text-in-the-world, live-surface, visitor-input, visitor-local-time, baked-simulation, scanned-actor, caustic-light, rack-focus-reveal, pass-through-transition |
 
-These are directions, not instances. The menu is a floor: add an entry when a client needs one, and say so in the brief. The draw's value is that it is not drawn from the model's taste.
+These are directions, not instances. The menu is a floor: add an entry when a client needs one, and say so in the stage brief. The draw's value is that it is not drawn from the model's taste.
 
 ## From card to concept
 
@@ -41,12 +41,13 @@ For each card:
 5. **Write the logline** in one line, and **the sentence that would make it fail**. A failure sentence you cannot write means you do not understand the concept.
 6. **Run the swap test.** Replace the client's logo with a competitor's. If the concept still works, it is a template: reject it.
 7. **Run the squint test.** Blur the six panels. Do they still differ from each other, and from the earlier builds' panels? If not, the set or the ground has not been decided.
+8. **Run the stock test.** For each panel, ask what a stock library returns for the category ("savings jar", "gold coins", "running shoe", "laptop on desk"). A panel that a library already holds is the category's photo, not this client's: a blind critic graded a fully lit, physically baked jar of coins Fourth for that alone (CONV-G4-2, 2026-11-14). Change the actor's state, the view or the moment until the panel shows something only this product's story has.
 
 Recommend one card and say what you kept from the user's idea. An idea is a seed: when it fits the truth, build on it; when it does not, say why and propose what replaces it. Never discard an idea silently and never copy it blindly.
 
 ## World rules
 
-Before looks, write five rules the world obeys. These are the brief's spine.
+Before looks, write five rules the world obeys. These are the stage brief's spine.
 
 | Rule     | Question                                       | Example realisations (instances, not defaults) |
 | -------- | ---------------------------------------------- | ---------------------------------------------- |
@@ -76,3 +77,5 @@ A storyboard is words and, where it helps, a sketch in ASCII. It is not a mood b
 ## When the draw cannot be followed
 
 If a client's constraint contradicts every card, the constraint wins and the card is redrawn with a `--lock`. Never override the draw because a card feels unfamiliar: unfamiliar is what it is for.
+
+A re-concept strikes the rejected card's values with `--avoid axis=value` (one per axis), as shipped builds are struck from `references/fingerprints.md`. Take the first deal of a seed; dealing several and choosing among them is choosing by taste, which the draw exists to stop. The draw only deals cameras a set's lens rule allows (`cameras` on each set in `menus.json`); a valid `--kind` is `physical`, `digital` or `service`.

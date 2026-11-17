@@ -4,7 +4,7 @@ Turn a site the user likes into a file in `references/` so its taste is availabl
 
 ## From a URL
 
-1. Open it with the `chrome-browser` skill (SKILL.md › Browser) at 1440×900.
+1. Capture it with `tools/shoot.mjs` at 1440×900 (see Capturing with the tool below).
 2. Screenshot at scroll progress 0, 10, 20 … 100%, pausing ~600ms at each so animation settles. Repeat the hero and peak at 390×844.
 3. Inspect the page to identify the route, not guess it:
     - `<canvas>` drawing a modelled scene (`.glb` or `.gltf` requests, `three` / `@react-three` in the scripts) → route C.
@@ -31,3 +31,16 @@ If `ffmpeg` is already installed (`ffmpeg -version`), extract one frame per seco
 Copy `references/_template.md` to `references/<slug>.md` and fill every field. Describe what moves and why it works, not only what it looks like. Record whether the site is live and where it came from.
 
 Borrow structure, technique, timing and devices. Never carry a reference's brand name, copy, logos or numbers into a build.
+
+## Capturing with the tool
+
+```
+node .claude/skills/stagecraft/tools/shoot.mjs --url <url> --tag <slug> --frames 0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1 --settle 2500
+  --click "Enter"          click the element whose text matches, before capturing (separate several with |)
+  --wheel 8000             drive the page with wheel events over 8000px instead of window scrolling
+  --port 9341              a free DevTools port, so parallel captures do not collide
+```
+
+Pages whose own scroller is not the window (smooth-scroll libraries, inner containers, canvas worlds) are driven by wheel events automatically when the window cannot scroll; pass `--wheel` to set the distance. Captures go to `~/.cache/stagecraft/captures` unless `--out` says otherwise; `/tmp` is cleared on restart.
+
+Keep three frames per reference in the repo, downscaled, for the critic's calibration: `references/<slug>/` with the opening, the peak and the close, each `sips -Z 720` (about 40 KB each). Name them `open.jpg`, `peak.jpg`, `close.jpg`.

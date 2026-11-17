@@ -54,7 +54,7 @@ Steps 0 to 2 end the turn for approval unless the owner said "just build it". St
 0. **Intake.** Ask once, only what is missing: what the client sells and to whom, the belief after five seconds, the action, mood (never "modern", "clean", "sleek" or "premium": those are what the work must earn, not a brief), and **what assets exist**. With no client, take a sector from `docs/economy-coverage-map.md` and invent a realistic one; placeholder copy is marked.
 1. **Truth sheet.** Five lines: what it is, what it replaces, the moment of use, the moment of action, the feeling. Every choice traces to one.
 2. **Concept.** `tools/draw.mjs` deals three cards (`concept.md`). Each becomes a six-panel storyboard, a logline, the sentence that would make it fail, and a swap test. Recommend one and say what you kept from the owner's idea.
-3. **Script and stage brief.** The script as data (`lib/<feature>/script.ts`, `verbs.md`). The stage brief in `docs/STAGE_BRIEF.md`: world rules (material, light, lens, time, ground), the signature move, the shot list with focal lengths, and the **asset manifest** (every asset, its source, licence, size and status; `assets.md`).
+3. **Script and stage brief.** The script as data (`lib/<feature>/script.ts`, `verbs.md`). The stage brief in `docs/STAGE_BRIEF.md`, copied from `references/_stage-brief-template.md`: world rules (material, light, lens, time, ground), the signature move, the shot list with focal lengths, and the **asset manifest** (every asset, its source, licence, size and status; `assets.md`).
 4. **Look development.** Build the two or three key shots at final quality: real form, materials, light and grade. Capture them with `tools/shoot.mjs`; the critic grades them blind.
 5. **Styleframes to the owner.** Only frames the critic grades Fifth, or Fifth with named gaps, with the critic's table. **End the turn.** The look is approved before anything moves.
 6. **Asset production.** Everything on the manifest: models, textures, baked lighting, baked simulations, HDRIs, video. Sources and costs are in `assets.md`; free trials are named before use.
@@ -69,6 +69,11 @@ Steps 0 to 2 end the turn for approval unless the owner said "just build it". St
 | `tools/draw.mjs`   | Deals concept cards that differ from each other and from every earlier build                 |
 | `tools/shoot.mjs`  | Drives Chrome over the DevTools protocol: frames per shot, measured fingerprint, clone gate, state probe |
 | `tools/assets.mjs` | Fetches CC0 HDRIs and texture sets from Poly Haven into the build's asset folder             |
+| `tools/blender/bake_rigid.py` | Bakes rigid-body physics (pours, falls, scatters) in Blender's Bullet, deterministic, for scrubbed playback, including piles of thin bodies (`pipeline.md`) |
+| `tools/blender/bake_set.py` | Bakes soft shadows, bounce and caustics for any static set into lightmaps and a GLB; `BakedSet` and `ShadowCatcher` put it on the stage (`pipeline.md`) |
+| `tools/ruled-sheet.mjs` | Writes paper at real scale as a PNG: graph paper, engineering pads, dot grids (`--grid`, `--major`), or plain stock with fibres such as kraft (`--grid 0 --fibres`) |
+| `tools/sun-keys.mjs` | Writes sun keys (direction and colour per hour, from the stage's own sun) into a set spec, for a sun that moves through the story |
+| `tools/overlap.mjs`, `tools/freeze.mjs` | Measure interpenetration in a bake; hold a settled pile still from its calmest frame |
 | Blender, headless  | Modelling, baking light and simulation, offline renders (`pipeline.md`)                      |
 
 ## Requirements

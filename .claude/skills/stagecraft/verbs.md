@@ -21,13 +21,17 @@ Moves that end on a surface use `rebound`, never `settle`: a verified bug in the
 | ---------- | ----------------------------------------------------- | ------------------------------------------------------- | --------------------------------- |
 | `enter`    | The actor arrives; equal `from` and `to` is a fade in place | `from`, `to` waypoints                          | Rebound on arrival, shadow grows in |
 | `exit`     | The actor leaves                                      | `from`, `to` waypoints                                  | Anticipation, then away           |
-| `travel`   | The actor crosses the set along a path                | `path` waypoints, `bank`, `ease`                        | Banks into curves, settles at the end |
+| `travel`   | The actor crosses the set along a path                | `path` waypoints, `bank`, `face` (default true: turns to its heading; false for paper, cards and anything that slides without turning) | Banks into curves, settles at the end |
 | `recolour` | The actor changes variant                             | `from`, `to` variant ids, `wipe`: `up`, `down`, `left`, `right`, `radial` | The change has a direction and takes time |
 | `swap`     | One actor leaves while another arrives                | `outgoing`, `incoming`, `overlap` (0 to 1)              | Both carry their own enter and exit mass |
-| `rotate`   | The actor turns to show another face                  | `axis`, `degrees`                                       | Anticipation and settle           |
+| `rotate`   | The actor turns to show another face                  | `axis`, `degrees`, `from` (degrees; give it whenever another move turns the same axis) | Anticipation and settle           |
 | `scale`    | The actor grows or shrinks                            | `to`                                                    | Settle                            |
 | `lift`     | The actor leaves the ground and hovers                | `from` height, `height`                                 | Shadow scales with height         |
 | `land`     | The actor meets a surface                             | `from` height, `surface` height                         | Rebound and contact response      |
+| `simulate` | Many bodies move together under physics (pour, fall, scatter) | `simulation` id, `from`, `to` progress (0 to 1)  | The physics is the mass: baked by `tools/blender/bake_rigid.py` |
+| `draw`     | Line work draws itself, or unprints when `to` is below `from` | `actor`, `layer` (a layer named in `createActor`), `from`, `to` (0 to 1) | The pen's pace is even (`smoother`); no overshoot |
+| `fold`     | Panels turn on their creases (paper, card, cloth, a box's flaps) | `actor`, `from` and `to`: one angle per hinge, in degrees; flaps above the root fold toward the viewer with a positive angle, below it with a negative one | Rebound: a flap lands on the panel and never passes through it |
+| `resolve`  | A drawing becomes the solid thing: material and light arrive | `actor`, `from`, `to` (0 to 1) | Even; the ink fades as the solid arrives |
 | `hold`     | The actor waits; the set carries the beat             | none                                                    | None; use it deliberately         |
 
 Extend the vocabulary in `lib/stage/moves/` and here together: a verb without a row is undocumented, and a row without a move is a promise.

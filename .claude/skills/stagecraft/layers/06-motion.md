@@ -11,6 +11,7 @@ How things move: verbs, mass, overlap, simulation. `verbs.md` is the vocabulary;
 | MOT-G3-1  | Third     | Linear tweens, one duration everywhere, spinning in place                   | `ease: "none"` on actor moves; one duration constant reused; `rotation.y +=` in a frame loop    | Verbs with mass and timing roles                                    |
 | MOT-G4-1  | Fourth    | One ease family, no secondary motion, actors passing through surfaces       | One ease for every verb; probe shows an actor below its surface                                 | Overlap, follow-through and secondary motion; `rebound` on contact   |
 | MOT-G4-2  | Fourth    | Fake physics: many bodies tweened where they should interact                | Ten or more actors moving on tweens in one shot with no simulation                              | A simulation baked for scrubbed playback                            |
+| MOT-G4-3  | Fourth    | A shot change shows two states at once: several changes dissolve together   | A frame sampled mid-change shows a face without its edge, a line stub mid-edge, a label off its leader, line ink over a half-resolved solid, or a view label ahead of or behind its geometry | One change at a time: outline and face arrive and leave together, annotations ride their geometry, re-project, then resolve, then light |
 
 ## Floor versus baseline
 
