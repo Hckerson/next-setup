@@ -1,5 +1,6 @@
-import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, join, resolve } from "node:path";
+import { execFileSync } from "node:child_process";
+import { createWriteStream, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { basename, join, relative, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
@@ -9,6 +10,8 @@ const TEXTURE_MAPS = ["Diffuse", "Rough", "nor_gl", "AO", "Displacement", "arm"]
 const SOURCE = "Poly Haven";
 const LICENCE = "CC0";
 const MANIFEST = "manifest.json";
+const AMBIENT = "https://ambientcg.com";
+const AMBIENT_MAPS = ["Color", "Roughness", "NormalGL"];
 
 const args = process.argv.slice(2);
 const [command, subject] = args;
@@ -94,10 +97,58 @@ const get = async () => {
     });
 };
 
-const run = { search, get }[command];
+const generated = () => {
+    const spec = value("spec", "");
+    const tool = value("tool", "");
+    const files = value("files", "").split(",").filter(Boolean);
+    if (!subject || !tool || files.length === 0) throw new Error("generated <id> --tool <script> --files a,b --spec <spec.json> --out <folder>");
+    record({
+        id: subject,
+        name: subject,
+        type: "generated",
+        source: tool,
+        licence: "Owned: generated for this build from the recorded inputs",
+        authors: [],
+        spec: spec ? relative(out, resolve(spec)) : null,
+        files: files.map((file) => ({ file, bytes: statSync(join(out, file)).size })),
+    });
+    console.log(`recorded ${subject}: ${files.length} files`);
+};
+
+const ambientcg = async () => {
+    if (!subject) throw new Error("Name the asset id: ambientcg <id> [--res 2K] [--maps Color,Roughness,NormalGL]");
+    const size = value("res", "2K");
+    const wanted = (value("maps", "") || AMBIENT_MAPS.join(",")).split(",");
+    const folder = join(out, value("name", subject));
+    mkdirSync(folder, { recursive: true });
+    const archive = join(folder, `${subject}.zip`);
+    await download(`${AMBIENT}/get?file=${subject}_${size}-JPG.zip`, archive);
+    const files = wanted.map((map) => `${subject}_${size}-JPG_${map}.jpg`);
+    execFileSync("unzip", ["-o", "-j", archive, ...files, "-d", folder]);
+    rmSync(archive);
+    const written = wanted.map((map, index) => {
+        const file = join(folder, files[index]);
+        console.log(`${map.padEnd(14)} ${(statSync(file).size / 1048576).toFixed(1)} MB  ${file}`);
+        return { map, file: relative(out, file), bytes: statSync(file).size };
+    });
+    record({
+        id: value("name", subject),
+        name: subject,
+        type: "textures",
+        source: "ambientCG",
+        licence: LICENCE,
+        authors: ["Lennart Demes"],
+        page: `${AMBIENT}/view?id=${subject}`,
+        resolution: size,
+        format: "jpg",
+        files: written,
+    });
+};
+
+const run = { search, get, generated, ambientcg }[command];
 
 if (!run) {
-    console.error("Usage: assets.mjs search [category] --type hdris|textures|models | get <id> --type hdris|textures [--res 2k] [--format hdr|jpg] [--maps Diffuse,Rough] [--out dir]");
+    console.error("Usage: assets.mjs search [category] --type hdris|textures|models | get <id> --type hdris|textures [--res 2k] [--format hdr|jpg] [--maps Diffuse,Rough] [--out dir] | ambientcg <id> [--res 2K] [--maps Color,Roughness,NormalGL] [--name id] [--out dir] | generated <id> --tool <script> --files a,b [--spec spec.json] [--out dir]");
     process.exit(1);
 }
 

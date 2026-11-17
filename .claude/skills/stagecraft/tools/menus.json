@@ -299,31 +299,88 @@
     ],
     "sets": [
         {
-            "id": "studio-sweep"
+            "id": "studio-sweep",
+            "cameras": [
+                "locked-off",
+                "follow",
+                "orbit",
+                "macro-dolly",
+                "cut-edit"
+            ]
         },
         {
-            "id": "daylight-location"
+            "id": "daylight-location",
+            "cameras": [
+                "locked-off",
+                "follow",
+                "orbit",
+                "top-down",
+                "macro-dolly",
+                "cut-edit"
+            ]
         },
         {
-            "id": "paper-cut"
+            "id": "paper-cut",
+            "cameras": [
+                "locked-off",
+                "follow",
+                "no-camera-flat"
+            ]
         },
         {
-            "id": "macro-material"
+            "id": "macro-material",
+            "cameras": [
+                "locked-off",
+                "macro-dolly",
+                "cut-edit"
+            ]
         },
         {
-            "id": "miniature-world"
+            "id": "miniature-world",
+            "cameras": [
+                "locked-off",
+                "follow",
+                "orbit",
+                "top-down",
+                "isometric"
+            ]
         },
         {
-            "id": "print-catalogue"
+            "id": "print-catalogue",
+            "cameras": [
+                "locked-off",
+                "cut-edit",
+                "no-camera-flat"
+            ]
         },
         {
-            "id": "technical-drawing"
+            "id": "technical-drawing",
+            "cameras": [
+                "locked-off",
+                "isometric",
+                "top-down",
+                "cut-edit",
+                "no-camera-flat"
+            ]
         },
         {
-            "id": "night-luminous"
+            "id": "night-luminous",
+            "cameras": [
+                "locked-off",
+                "follow",
+                "orbit",
+                "macro-dolly",
+                "cut-edit"
+            ]
         },
         {
-            "id": "colour-field"
+            "id": "colour-field",
+            "cameras": [
+                "locked-off",
+                "isometric",
+                "top-down",
+                "no-camera-flat"
+            ]
         }
     ],
     "signatures": [

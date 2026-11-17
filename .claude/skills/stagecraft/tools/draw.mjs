@@ -22,7 +22,7 @@ const MIN_FROM_LAST = 4;
 const ATTEMPTS = 20000;
 
 const options = (() => {
-    const found = { kind: "physical", seed: null, json: false, repeat: false, lock: {} };
+    const found = { kind: "physical", seed: null, json: false, repeat: false, lock: {}, avoid: {} };
     const args = process.argv.slice(2);
     for (let i = 0; i < args.length; i += 1) {
         const arg = args[i];
@@ -33,6 +33,9 @@ const options = (() => {
         else if (arg === "--lock") {
             const [axis, value] = args[(i += 1)].split("=");
             found.lock[axis] = value;
+        } else if (arg === "--avoid") {
+            const [axis, value] = args[(i += 1)].split("=");
+            found.avoid[axis] = [...(found.avoid[axis] ?? []), value];
         }
     }
     return found;
@@ -61,6 +64,12 @@ const readRows = () => {
     });
 };
 
+const KINDS = new Set(Object.values(MENUS).flatMap((entries) => entries.flatMap((entry) => entry.fits ?? [])));
+if (!KINDS.has(options.kind)) {
+    console.error(`--kind must be one of: ${[...KINDS].join(", ")}`);
+    process.exit(1);
+}
+
 const rows = readRows();
 const struck = (axis) => new Set(rows.map((row) => row[axis]).filter(Boolean));
 
@@ -70,7 +79,7 @@ const pool = (axis) => {
     );
     if (options.lock[axis]) return fitting.filter((entry) => entry.id === options.lock[axis]);
     if (options.repeat) return fitting;
-    const used = struck(axis);
+    const used = new Set([...struck(axis), ...(options.avoid[axis] ?? [])]);
     const fresh = fitting.filter((entry) => !used.has(entry.id));
     return fresh.length >= 2 ? fresh : fitting;
 };
@@ -92,6 +101,8 @@ const farFromLast = (card) =>
     options.repeat ||
     AXES.filter((axis) => card[axis].id !== last[axis]).length >= Math.min(MIN_FROM_LAST, free.length);
 
+const lensFits = (card) => !card.set.cameras || card.set.cameras.includes(card.camera.id);
+
 const search = () => {
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
         const cards = Array.from({ length: CARDS }, draw);
@@ -106,7 +117,7 @@ const search = () => {
                         card.signature.id !== other.signature.id,
                 ),
         );
-        if (apart && cards.every(farFromLast)) return cards;
+        if (apart && cards.every(farFromLast) && cards.every(lensFits)) return cards;
     }
     return null;
 };

@@ -1,7 +1,9 @@
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { measureFrame } from "./measure-frame.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const CHROME =
@@ -9,6 +11,7 @@ const CHROME =
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const FINGERPRINTS = join(HERE, "..", "references", "fingerprints.md");
 const SAMPLE_WIDTH = 160;
+const REGION_WIDTH = 480;
 const BORDER = 8;
 const BRIGHT = 0.85;
 const ACCENT_SHARE = 0.01;
@@ -24,7 +27,7 @@ const value = (name, fallback) => {
 
 const url = value("url", "http://localhost:3000/");
 const tag = value("tag", "shot");
-const out = resolve(value("out", "/tmp/stagecraft"));
+const out = resolve(value("out", join(homedir(), ".cache", "stagecraft", "captures")));
 const [width, height] = value("size", "1440x900").split("x").map(Number);
 const frames = value("frames", "0,0.2,0.4,0.6,0.8,1").split(",").map(Number);
 const settle = Number(value("settle", "2500"));
@@ -33,8 +36,24 @@ const track = value("track", "");
 const reduce = flag("reduce");
 const compare = flag("compare");
 const PORT = Number(value("port", "9333"));
+const clicks = value("click", "").split("|").filter(Boolean);
+const wheelTotal = Number(value("wheel", "0"));
+const WHEEL_STEP = 100;
+const WHEEL_PAUSE = 24;
+const MIN_RANGE = 50;
+const AUTO_WHEEL = 8000;
+const copySelector = value("copy", "[data-copy]");
+const sequence = Number(value("sequence", "0"));
+const hide = value("hide", "nextjs-portal");
+const BLANK_RANGE = 0.02;
+const BLANK_RETRIES = 4;
+const QUIET_MS = 1000;
+const QUIET_LIMIT_MS = Number(value("quiet-limit", "60000"));
+const POLL_MS = 100;
 
 mkdirSync(out, { recursive: true });
+const profile = join(out, `.profile-${tag}-${process.pid}`);
+const WATCHDOG_MS = Number(value("timeout", "300000"));
 
 const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
@@ -49,12 +68,25 @@ const chrome = spawn(
         "--disable-backgrounding-occluded-windows",
         "--disable-renderer-backgrounding",
         "--disable-background-timer-throttling",
-        `--user-data-dir=${join(out, `profile-${tag}`)}`,
+        `--user-data-dir=${profile}`,
         `--window-size=${width},${height}`,
         "about:blank",
     ],
     { stdio: "ignore" },
 );
+
+const finish = (code) => {
+    chrome.kill();
+    setTimeout(() => {
+        rmSync(profile, { recursive: true, force: true });
+        process.exit(code);
+    }, 500);
+};
+
+const watchdog = setTimeout(() => {
+    console.error(`shoot.mjs gave up after ${WATCHDOG_MS} ms`);
+    finish(2);
+}, WATCHDOG_MS);
 
 const connect = async () => {
     for (let attempt = 0; attempt < 60; attempt += 1) {
@@ -75,8 +107,18 @@ await new Promise((open) => (socket.onopen = open));
 let counter = 0;
 const waiting = new Map();
 const logs = [];
+const inFlight = new Set();
+let lastActivity = Date.now();
 socket.onmessage = (message) => {
     const data = JSON.parse(message.data);
+    if (data.method === "Network.requestWillBeSent") {
+        inFlight.add(data.params.requestId);
+        lastActivity = Date.now();
+    }
+    if (data.method === "Network.loadingFinished" || data.method === "Network.loadingFailed") {
+        inFlight.delete(data.params.requestId);
+        lastActivity = Date.now();
+    }
     if (data.id && waiting.has(data.id)) {
         waiting.get(data.id)(data.result ?? data.error);
         waiting.delete(data.id);
@@ -97,69 +139,54 @@ const send = (method, params = {}) =>
 const evaluate = async (expression, awaitPromise = false) =>
     (await send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise })).result?.value;
 
-const MEASURE = `(async (dataUrl, sampleWidth, border, bright, accentShare, chromaFloor) => {
-    const image = new Image();
-    image.src = dataUrl;
-    await image.decode();
-    const scale = sampleWidth / image.width;
-    const w = sampleWidth;
-    const h = Math.max(1, Math.round(image.height * scale));
-    const canvas = new OffscreenCanvas(w, h);
-    const context = canvas.getContext("2d");
-    context.drawImage(image, 0, 0, w, h);
-    const { data } = context.getImageData(0, 0, w, h);
-    const lin = (c) => { const s = c / 255; return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; };
-    const stats = (filter) => {
-        let count = 0, lum = 0, chromaSum = 0, x = 0, y = 0;
-        for (let row = 0; row < h; row += 1) for (let col = 0; col < w; col += 1) {
-            if (!filter(col, row)) continue;
-            const i = (row * w + col) * 4;
-            const r = data[i], g = data[i + 1], b = data[i + 2];
-            const L = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-            const max = Math.max(r, g, b) / 255, min = Math.min(r, g, b) / 255;
-            const chroma = max - min;
-            let hue = 0;
-            if (chroma > 0) {
-                if (max === r / 255) hue = ((g - b) / 255 / chroma) % 6;
-                else if (max === g / 255) hue = (b - r) / 255 / chroma + 2;
-                else hue = (r - g) / 255 / chroma + 4;
-                hue *= 60; if (hue < 0) hue += 360;
-            }
-            count += 1; lum += L; chromaSum += chroma;
-            x += Math.cos(hue * Math.PI / 180) * chroma; y += Math.sin(hue * Math.PI / 180) * chroma;
-        }
-        const hue = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-        return { count, lum: lum / Math.max(count, 1), chroma: chromaSum / Math.max(count, 1), hue };
-    };
-    const edge = (col, row) => col < border || row < border || col >= w - border || row >= h - border;
-    const ground = stats(edge);
-    const whole = stats(() => true);
-    const pixels = [];
-    for (let i = 0; i < data.length; i += 4) {
-        const max = Math.max(data[i], data[i + 1], data[i + 2]) / 255, min = Math.min(data[i], data[i + 1], data[i + 2]) / 255;
-        pixels.push({ i, chroma: max - min, lum: 0.2126 * lin(data[i]) + 0.7152 * lin(data[i + 1]) + 0.0722 * lin(data[i + 2]) });
-    }
-    const brightShare = pixels.filter((p) => p.lum > bright).length / pixels.length;
-    const vivid = pixels.filter((p) => p.chroma > chromaFloor).sort((a, b) => b.chroma - a.chroma).slice(0, Math.max(1, Math.round(pixels.length * accentShare)));
-    let ax = 0, ay = 0;
-    vivid.forEach((p) => {
-        const r = data[p.i], g = data[p.i + 1], b = data[p.i + 2];
-        const max = Math.max(r, g, b) / 255, c = p.chroma;
-        let hue = 0;
-        if (c > 0) { if (max === r / 255) hue = ((g - b) / 255 / c) % 6; else if (max === g / 255) hue = (b - r) / 255 / c + 2; else hue = (r - g) / 255 / c + 4; hue *= 60; if (hue < 0) hue += 360; }
-        ax += Math.cos(hue * Math.PI / 180); ay += Math.sin(hue * Math.PI / 180);
-    });
-    const accentHue = vivid.length ? (Math.atan2(ay, ax) * 180 / Math.PI + 360) % 360 : null;
-    return { groundL: ground.lum, groundChroma: ground.chroma, groundHue: ground.hue, meanL: whole.lum, meanChroma: whole.chroma, brightShare, accentHue };
-})`;
+const MEASURE = `(${measureFrame.toString()})`;
+
+const READ_COPY = `(() => {
+    const linear = (value) => { const unit = value / 255; return unit <= 0.04045 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4; };
+    return [...document.querySelectorAll(${JSON.stringify(copySelector)})]
+        .filter((element) => { const style = getComputedStyle(element); return style.visibility !== "hidden" && Number(style.opacity) > 0.5 && element.getClientRects().length; })
+        .map((element) => {
+            const box = element.getBoundingClientRect();
+            const [red, green, blue] = getComputedStyle(element).color.match(/[\\d.]+/g).map(Number);
+            return {
+                text: element.textContent.trim().slice(0, 40),
+                box: [box.left / innerWidth, box.top / innerHeight, box.right / innerWidth, box.bottom / innerHeight],
+                ink: 0.2126 * linear(red) + 0.7152 * linear(green) + 0.0722 * linear(blue),
+            };
+        });
+})()`;
 
 await send("Runtime.enable");
 await send("Page.enable");
 if (reduce)
     await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
 await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: width < 500 });
+await send("Network.enable");
 await send("Page.navigate", { url });
-await sleep(settle + 3000);
+const started = Date.now();
+while (Date.now() - started < QUIET_LIMIT_MS && (inFlight.size > 0 || Date.now() - lastActivity < QUIET_MS)) await sleep(POLL_MS);
+await sleep(settle);
+
+const clickByText = async (text) => {
+    const point = await evaluate(`(() => {
+        const wanted = ${JSON.stringify(text.toLowerCase())};
+        const candidates = [...document.querySelectorAll("button, a, [role=button], [onclick], div, span")]
+            .filter((element) => element.textContent.trim().toLowerCase().includes(wanted) && element.getClientRects().length)
+            .sort((a, b) => a.textContent.length - b.textContent.length);
+        const target = candidates[0];
+        if (!target) return null;
+        const box = target.getBoundingClientRect();
+        return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+    })()`);
+    if (!point) return false;
+    for (const type of ["mouseMoved", "mousePressed", "mouseReleased"])
+        await send("Input.dispatchMouseEvent", { type, x: point.x, y: point.y, button: "left", clickCount: 1 });
+    await sleep(settle);
+    return true;
+};
+
+const clicked = [];
+for (const text of clicks) clicked.push({ text, found: await clickByText(text) });
 
 const range = await evaluate(
     track
@@ -173,18 +200,69 @@ const circular = (angles) => {
     return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
 };
 
+const drive = wheelTotal > 0 || range < MIN_RANGE ? "wheel" : "window";
+const wheelRange = wheelTotal > 0 ? wheelTotal : AUTO_WHEEL;
+let wheeled = 0;
+
+const wheelTo = async (target) => {
+    while (Math.abs(target - wheeled) >= 1) {
+        const delta = Math.sign(target - wheeled) * Math.min(WHEEL_STEP, Math.abs(target - wheeled));
+        await send("Input.dispatchMouseEvent", { type: "mouseWheel", x: width / 2, y: height / 2, deltaX: 0, deltaY: delta });
+        wheeled += delta;
+        await sleep(WHEEL_PAUSE);
+    }
+};
+
+if (sequence > 1) {
+    const folder = join(out, `${tag}-sequence`);
+    mkdirSync(folder, { recursive: true });
+    for (let index = 0; index < sequence; index += 1) {
+        const fraction = index / (sequence - 1);
+        if (drive === "wheel") await wheelTo(Math.round(wheelRange * fraction));
+        else await evaluate(`window.scrollTo(0, ${Math.round(range * fraction)})`);
+        await sleep(settle);
+        const shot = await send("Page.captureScreenshot", { format: "jpeg", quality: 82 });
+        writeFileSync(join(folder, `${String(index).padStart(4, "0")}.jpg`), Buffer.from(shot.data, "base64"));
+    }
+    console.log(JSON.stringify({ sequence: folder, frames: sequence, size: `${width}x${height}` }));
+    socket.close();
+    clearTimeout(watchdog);
+    finish(0);
+} else {
+
+const hideOverlays = () => evaluate(`document.querySelectorAll(${JSON.stringify(hide)}).forEach((element) => element.remove())`);
+
 const results = [];
 for (const fraction of frames) {
-    const position = fraction <= 1 ? Math.round(range * fraction) : fraction;
-    await evaluate(`window.scrollTo(0, ${position})`);
+    if (drive === "wheel") await wheelTo(fraction <= 1 ? Math.round(wheelRange * fraction) : fraction);
+    else await evaluate(`window.scrollTo(0, ${fraction <= 1 ? Math.round(range * fraction) : fraction})`);
     await sleep(settle);
-    const shot = await send("Page.captureScreenshot", { format: "jpeg", quality: 72 });
+    await hideOverlays();
+    let shot = await send("Page.captureScreenshot", { format: "jpeg", quality: 72 });
     const file = join(out, `${tag}-${String(fraction).replace(".", "_")}.jpg`);
-    writeFileSync(file, Buffer.from(shot.data, "base64"));
-    const metrics = await evaluate(
-        `${MEASURE}(${JSON.stringify(`data:image/jpeg;base64,${shot.data}`)}, ${SAMPLE_WIDTH}, ${BORDER}, ${BRIGHT}, ${ACCENT_SHARE}, ${CHROMA_FLOOR})`,
+    const boxes = await evaluate(`window.__stageBoxes ? window.__stageBoxes() : null`);
+    const copies = await evaluate(READ_COPY);
+    const measure = () => evaluate(
+        `${MEASURE}(${JSON.stringify(`data:image/jpeg;base64,${shot.data}`)}, ${JSON.stringify({
+            sampleWidth: SAMPLE_WIDTH,
+            regionWidth: REGION_WIDTH,
+            border: BORDER,
+            bright: BRIGHT,
+            accentShare: ACCENT_SHARE,
+            chromaFloor: CHROMA_FLOOR,
+            boxes,
+            copies,
+        })})`,
         true,
     );
+    let metrics = await measure();
+    for (let attempt = 0; attempt < BLANK_RETRIES && metrics.range.high - metrics.range.low < BLANK_RANGE; attempt += 1) {
+        await sleep(settle);
+        shot = await send("Page.captureScreenshot", { format: "jpeg", quality: 72 });
+        metrics = await measure();
+    }
+    if (metrics.range.high - metrics.range.low < BLANK_RANGE) logs.push(`blank frame at ${fraction}: nothing painted after ${BLANK_RETRIES} retries`);
+    writeFileSync(file, Buffer.from(shot.data, "base64"));
     const probe = await evaluate(`window.__stage ? window.__stage.snapshot() : null`);
     results.push({ fraction, file, ...metrics, probe });
 }
@@ -238,10 +316,33 @@ const near = compare
           .filter((row) => row.distance < threshold)
     : [];
 
-const report = { url, tag, size: `${width}x${height}`, range, fingerprint, frames: results, tooClose: near, console: logs.slice(0, 20) };
+const actorIds = [...new Set(results.flatMap((frame) => Object.keys(frame.actors ?? {})))];
+const critic = {
+    maxClipped: Number(Math.max(...results.map((frame) => frame.clippedShare)).toFixed(4)),
+    maxCrushed: Number(Math.max(...results.map((frame) => frame.crushedShare)).toFixed(4)),
+    maxChannelCrushed: Number(Math.max(...results.map((frame) => frame.channelCrushedShare)).toFixed(4)),
+    maxSaturated: Number(Math.max(...results.map((frame) => frame.saturatedShare)).toFixed(4)),
+    maxChannelClipped: Number(Math.max(...results.map((frame) => frame.channelClippedShare)).toFixed(4)),
+    maxBanding: Number(Math.max(...results.map((frame) => frame.banding)).toFixed(3)),
+    flattestRange: Number(Math.min(...results.map((frame) => frame.range.high - frame.range.low)).toFixed(3)),
+    softestForeground: Number(Math.min(...results.map((frame) => frame.sharpness.near / Math.max(frame.sharpness.middle, 1e-6))).toFixed(2)),
+    minCopyContrast: results.flatMap((frame) => frame.copy.map((line) => line.contrast)).reduce((low, value) => Math.min(low, Number(value.toFixed(2))), Infinity),
+    actors: Object.fromEntries(actorIds.map((id) => {
+        const seen = results.map((frame) => frame.actors?.[id]).filter(Boolean);
+        return [id, {
+            meanVariation: Number((seen.reduce((sum, actor) => sum + actor.variation, 0) / seen.length).toFixed(4)),
+            worstContact: Number(Math.max(...seen.map((actor) => actor.contact ?? 1)).toFixed(3)),
+            darkestExposure: Number(Math.min(...seen.map((actor) => actor.exposure ?? 1)).toFixed(2)),
+            palestHighlight: Number(Math.min(...seen.map((actor) => actor.highlightSaturation ?? 1)).toFixed(3)),
+        }];
+    })),
+};
+
+const report = { url, tag, critic, size: `${width}x${height}`, range, drive, wheelRange: drive === "wheel" ? wheelRange : null, clicked, fingerprint, frames: results, tooClose: near, console: logs.slice(0, 20) };
 writeFileSync(join(out, `${tag}-report.json`), JSON.stringify(report, null, 2));
-console.log(JSON.stringify({ fingerprint, tooClose: near, report: join(out, `${tag}-report.json`) }, null, 2));
+console.log(JSON.stringify({ fingerprint, critic, tooClose: near, report: join(out, `${tag}-report.json`) }, null, 2));
 
 socket.close();
-chrome.kill();
-process.exit(near.length > 0 ? 1 : 0);
+clearTimeout(watchdog);
+finish(near.length > 0 ? 1 : 0);
+}
