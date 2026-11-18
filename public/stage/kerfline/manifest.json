@@ -1,0 +1,55 @@
+{
+  "assets": [
+    {
+      "id": "aircraft_workshop_01",
+      "name": "Aircraft Workshop 01",
+      "type": "hdris",
+      "source": "Poly Haven",
+      "licence": "CC0",
+      "authors": [
+        "Oliksiy Yakovlyev"
+      ],
+      "page": "https://polyhaven.com/a/aircraft_workshop_01",
+      "dimensionsMm": null,
+      "resolution": "2k",
+      "format": "hdr",
+      "files": [
+        {
+          "map": "hdri",
+          "file": "/Users/mac/Downloads/Personal/js/setup/next-setup/public/stage/kerfline/aircraft_workshop_01/aircraft_workshop_01_2k.hdr",
+          "bytes": 6907231
+        }
+      ]
+    },
+    {
+      "id": "Cardboard004",
+      "name": "Cardboard004",
+      "type": "textures",
+      "source": "ambientCG",
+      "licence": "CC0",
+      "authors": [
+        "Lennart Demes"
+      ],
+      "page": "https://ambientcg.com/view?id=Cardboard004",
+      "resolution": "2K",
+      "format": "jpg",
+      "files": [
+        {
+          "map": "Color",
+          "file": "Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "bytes": 5176501
+        },
+        {
+          "map": "Roughness",
+          "file": "Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "bytes": 2598344
+        },
+        {
+          "map": "NormalGL",
+          "file": "Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg",
+          "bytes": 5995598
+        }
+      ]
+    }
+  ]
+}

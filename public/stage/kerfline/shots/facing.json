@@ -1,0 +1,151 @@
+{
+  "objects": [
+    {
+      "type": "heightfield",
+      "name": "top",
+      "toolmarks": "../toolmarks.json",
+      "topMm": 20,
+      "meshStep": 5,
+      "material": {
+        "color": "#d6d9dc",
+        "metalness": 1,
+        "roughness": 0.13,
+        "rawRoughness": 0.28,
+        "bumpStrength": 1
+      },
+      "wallMaterial": {
+        "color": "#a9adb1",
+        "metalness": 1,
+        "roughness": 0.5
+      }
+    },
+    {
+      "type": "box",
+      "name": "body",
+      "minMm": [
+        0,
+        0,
+        0
+      ],
+      "sizeMm": [
+        60,
+        40,
+        19.5
+      ],
+      "bevelMm": 0.15,
+      "material": {
+        "color": "#c4c8cc",
+        "metalness": 1,
+        "roughness": 0.34
+      }
+    },
+    {
+      "type": "box",
+      "name": "jaw-front",
+      "minMm": [
+        -25,
+        -16,
+        0
+      ],
+      "sizeMm": [
+        110,
+        16,
+        13
+      ],
+      "bevelMm": 0.4,
+      "material": {
+        "color": "#6a6e72",
+        "metalness": 1,
+        "roughness": 0.3
+      }
+    },
+    {
+      "type": "box",
+      "name": "jaw-back",
+      "minMm": [
+        -25,
+        40,
+        0
+      ],
+      "sizeMm": [
+        110,
+        16,
+        13
+      ],
+      "bevelMm": 0.4,
+      "material": {
+        "color": "#6a6e72",
+        "metalness": 1,
+        "roughness": 0.3
+      }
+    },
+    {
+      "type": "box",
+      "name": "table",
+      "minMm": [
+        -300,
+        -300,
+        -10
+      ],
+      "sizeMm": [
+        600,
+        600,
+        10
+      ],
+      "material": {
+        "color": "#34373a",
+        "metalness": 0.7,
+        "roughness": 0.55
+      }
+    }
+  ],
+  "lights": [
+    {
+      "name": "machine-lamp",
+      "positionMm": [
+        190,
+        45,
+        42
+      ],
+      "aimMm": [
+        33,
+        20,
+        19.6
+      ],
+      "sizeMm": [
+        30,
+        160
+      ],
+      "watts": 1.5,
+      "kelvin": 6000,
+      "rollDeg": 0
+    }
+  ],
+  "world": {
+    "path": "../aircraft_workshop_01/aircraft_workshop_01_2k.hdr",
+    "strength": 0.12,
+    "rotationDeg": 60
+  },
+  "camera": {
+    "positionMm": [
+      -12,
+      -82,
+      87
+    ],
+    "aimMm": [
+      30,
+      8,
+      19.6
+    ],
+    "lensMm": 100,
+    "fStop": 8
+  },
+  "render": {
+    "size": [
+      1600,
+      900
+    ],
+    "samples": 96,
+    "exposure": 1.6
+  }
+}
