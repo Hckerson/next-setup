@@ -22,12 +22,32 @@ export interface ActorHandle {
     scale: { value: number };
     presence: { value: number };
     tint: { from: Color; to: Color; mix: number; wipe: WipeDirection };
+    drawn: Record<string, { value: number }>;
+    hinges: { angles: number[] };
+    solid: { value: number };
+}
+
+export interface ActorParts {
+    layers?: string[];
+    hinges?: number;
+}
+
+export interface SimulationHandle {
+    progress: { value: number };
 }
 
 export interface StageContext {
     actors: Record<string, ActorHandle>;
     variants: Record<string, Color>;
     mass: MassTokens;
+    simulations?: Record<string, SimulationHandle>;
+}
+
+export interface BakedRigid {
+    rate: number;
+    frames: number;
+    bodies: number;
+    data: Float32Array;
 }
 
 export type Move =
@@ -39,7 +59,7 @@ export type Move =
           incoming: { actor: string; from: Waypoint; to: Waypoint };
           overlap: number;
       }
-    | { verb: "travel"; actor: string; path: Waypoint[]; bank: number }
+    | { verb: "travel"; actor: string; path: Waypoint[]; bank: number; face?: boolean }
     | { verb: "lift"; actor: string; from: number; height: number }
     | { verb: "land"; actor: string; from: number; surface: number }
     | {
@@ -49,8 +69,12 @@ export type Move =
           to: string;
           wipe: WipeDirection;
       }
-    | { verb: "rotate"; actor: string; axis: Axis; degrees: number }
+    | { verb: "rotate"; actor: string; axis: Axis; degrees: number; from?: number }
     | { verb: "scale"; actor: string; to: number }
+    | { verb: "simulate"; simulation: string; from: number; to: number }
+    | { verb: "draw"; actor: string; layer: string; from: number; to: number }
+    | { verb: "fold"; actor: string; from: number[]; to: number[] }
+    | { verb: "resolve"; actor: string; from: number; to: number }
     | { verb: "hold" };
 
 export interface MoveCue {
@@ -70,6 +94,7 @@ export interface Shot {
     length: number;
     camera: string;
     copy?: boolean;
+    copyAt?: number;
     tone?: string;
     moves: MoveCue[];
 }

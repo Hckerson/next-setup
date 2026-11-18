@@ -14,4 +14,7 @@
 
 **Failure mode.** Layers moving smoothly at 60 fps with a paper texture: the stepped time model is the point.
 
-**Exemplars.** None captured yet.
+**Exemplars.**
+
+- `references/aimees-papercraft-world.md` (captured 2026-11-13): Fifth with gaps. Stepped paper terraces in a room whose colour changes by season; copy printed on the walls.
+- `references/mr-pandas-paper-portfolio.md` (captured 2026-11-13): Fifth with gaps. One light offsets every cut-out's shadow on a notebook sheet. Same author and pipeline as the first, so the pair is narrow.

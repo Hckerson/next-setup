@@ -14,4 +14,12 @@
 
 **Failure mode.** A stock photo as a backdrop with a cut-out pasted over it: the actor shares no light with the place.
 
-**Exemplars.** None captured yet.
+**Measured on Sunline (2026-11-13).**
+
+- **The hero stands in a pool of sun, with shade around it.** A window opening of 0.62 × 0.9 m aimed behind the hero left it at the edge of the light; aimed at it, the patch covered the whole desk and the frame went flat (range 0.38). An opening of 0.38 × 0.55 m aimed at the hero's middle made a pool with shade at its edges, and metering exposure on the pool (1.9) gave a range of 0.505 with nothing clipped.
+- **The shade is mostly bounce, not sky.** Halving the environment's strength barely darkened it; the light that the sunlit desk and wall throw back fills it. Shape the shade by the size of the pool, not by the sky.
+
+**Exemplars.**
+
+- `references/daylight-computer.md` (Daylight Computer, captured 2026-11-13): Fifth with gaps. The sun is the page's clock; leaf shadows fall on the product; the light changes by section cuts, not continuously.
+- A second exemplar is open.

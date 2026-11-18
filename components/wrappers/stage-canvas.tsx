@@ -16,6 +16,9 @@ interface Props {
     toneMapping: ToneMapping;
     exposure: number;
     camera?: CanvasProps["camera"];
+    shadows?: CanvasProps["shadows"];
+    orthographic?: boolean;
+    colouredShadows?: boolean;
     className?: string;
     children: ReactNode;
 }
@@ -26,6 +29,9 @@ export default function StageCanvas({
     toneMapping,
     exposure,
     camera,
+    shadows,
+    orthographic = false,
+    colouredShadows = false,
     className,
     children,
 }: Props) {
@@ -67,6 +73,7 @@ export default function StageCanvas({
             powerPreference: "high-performance",
         });
         await renderer.init();
+        renderer.shadowMap.transmitted = colouredShadows;
         return renderer;
     };
 
@@ -91,6 +98,8 @@ export default function StageCanvas({
                 frameloop={still ? "demand" : "never"}
                 dpr={[minDpr, minDpr + (maxDpr - minDpr) * factor]}
                 camera={camera}
+                orthographic={orthographic}
+                shadows={shadows}
                 onCreated={onCreated}
             >
                 <PerformanceMonitor

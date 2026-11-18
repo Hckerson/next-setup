@@ -14,4 +14,4 @@
 
 **Failure mode.** A gradient background with a drop shadow: that is the fourth generation again, in colour.
 
-**Exemplars.** None captured yet.
+**Exemplars.** None accepted yet. Candidates were rejected as fourth-generation or could not be captured in headless Chrome (2026-11-13).

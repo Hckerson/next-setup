@@ -1,0 +1,33 @@
+{
+  "sizeMm": [
+    60,
+    40
+  ],
+  "mmPerPx": 0.012,
+  "depthOfCut": 0.5,
+  "seed": 7,
+  "raw": {
+    "pitch": 0.35,
+    "bowPerMm": 0.0015,
+    "depthMicrons": 6
+  },
+  "faceMill": {
+    "diameter": 63,
+    "teeth": 5,
+    "feedPerTooth": 0.12,
+    "noseRadius": 0.8,
+    "pathY": 14,
+    "stopX": 999,
+    "runoutMicrons": [
+      0,
+      1.1,
+      0.3,
+      1.5,
+      0.6
+    ],
+    "chatter": {
+      "amplitudeMicrons": 0,
+      "wavelength": 0.9
+    }
+  }
+}

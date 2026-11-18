@@ -23,8 +23,9 @@ export const addRecolour = (
     const progress = { t: 0 };
     film.fromTo(
         progress,
-        { t: 0, immediateRender: false },
+        { t: 0 },
         {
+            immediateRender: false,
             t: 1,
             duration: length,
             ease: smoother,
@@ -47,11 +48,15 @@ export const addRotate = (
     context: StageContext,
 ) => {
     const actor = actorOf(context, move.actor);
-    const start = actor.rotation[move.axis];
+    const start =
+        move.from === undefined
+            ? actor.rotation[move.axis]
+            : move.from * RADIANS;
     film.fromTo(
         actor.rotation,
-        { [move.axis]: start, immediateRender: false },
+        { [move.axis]: start },
         {
+            immediateRender: false,
             [move.axis]: start + move.degrees * RADIANS,
             duration: length,
             ease: settle(context.mass.damping, context.mass.frequency),
@@ -70,8 +75,9 @@ export const addScale = (
     const actor = actorOf(context, move.actor);
     film.fromTo(
         actor.scale,
-        { value: actor.scale.value, immediateRender: false },
+        { value: actor.scale.value },
         {
+            immediateRender: false,
             value: move.to,
             duration: length,
             ease: settle(context.mass.damping, context.mass.frequency),

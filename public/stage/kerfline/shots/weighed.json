@@ -1,0 +1,534 @@
+{
+  "objects": [
+    {
+      "type": "box",
+      "name": "bench",
+      "minMm": [
+        -600,
+        -400,
+        -30
+      ],
+      "sizeMm": [
+        1200,
+        800,
+        30
+      ],
+      "material": {
+        "color": "#4a4e52",
+        "roughness": 0.6
+      }
+    },
+    {
+      "type": "box",
+      "name": "scale-body",
+      "minMm": [
+        -150,
+        -170,
+        0
+      ],
+      "sizeMm": [
+        300,
+        340,
+        45
+      ],
+      "material": {
+        "color": "#3b3e42",
+        "roughness": 0.55
+      },
+      "bevelMm": 3
+    },
+    {
+      "type": "box",
+      "name": "scale-display",
+      "minMm": [
+        -50,
+        -172,
+        12
+      ],
+      "sizeMm": [
+        100,
+        3,
+        22
+      ],
+      "material": {
+        "color": "#0d0f10",
+        "roughness": 0.05
+      }
+    },
+    {
+      "type": "box",
+      "name": "platform",
+      "minMm": [
+        -140,
+        -140,
+        45
+      ],
+      "sizeMm": [
+        280,
+        280,
+        8
+      ],
+      "material": {
+        "color": "#c9ccce",
+        "metalness": 1,
+        "roughness": 0.28
+      },
+      "bevelMm": 1
+    },
+    {
+      "type": "box",
+      "name": "box-bottom",
+      "minMm": [
+        -90,
+        -65,
+        53
+      ],
+      "sizeMm": [
+        180,
+        130,
+        3
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        }
+      }
+    },
+    {
+      "type": "box",
+      "name": "box-front",
+      "minMm": [
+        -90,
+        -65,
+        53
+      ],
+      "sizeMm": [
+        180,
+        3,
+        75
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        },
+        "tint": "#b9bcc0"
+      },
+      "bevelMm": 0.5
+    },
+    {
+      "type": "box",
+      "name": "box-back",
+      "minMm": [
+        -90,
+        62,
+        53
+      ],
+      "sizeMm": [
+        180,
+        3,
+        75
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        }
+      },
+      "bevelMm": 0.5
+    },
+    {
+      "type": "box",
+      "name": "box-left",
+      "minMm": [
+        -90,
+        -62,
+        53
+      ],
+      "sizeMm": [
+        3,
+        124,
+        75
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        }
+      },
+      "bevelMm": 0.5
+    },
+    {
+      "type": "box",
+      "name": "box-right",
+      "minMm": [
+        87,
+        -62,
+        53
+      ],
+      "sizeMm": [
+        3,
+        124,
+        75
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        }
+      },
+      "bevelMm": 0.5
+    },
+    {
+      "type": "box",
+      "name": "foam",
+      "minMm": [
+        -87,
+        -62,
+        56
+      ],
+      "sizeMm": [
+        174,
+        124,
+        60
+      ],
+      "material": {
+        "color": "#2b2d30",
+        "roughness": 0.9,
+        "cellMm": 0.6,
+        "tileMm": 1
+      },
+      "bevelMm": 1,
+      "pockets": [
+        {
+          "minMm": [
+            -50.0,
+            -20.0,
+            101
+          ],
+          "sizeMm": [
+            60.6,
+            40.6,
+            30
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heightfield",
+      "name": "top",
+      "toolmarks": "../toolmarks-finished.json",
+      "topMm": 20,
+      "meshStep": 5,
+      "offsetMm": [
+        -49.7,
+        -19.7,
+        101
+      ],
+      "material": {
+        "color": "#d6d9dc",
+        "metalness": 1,
+        "roughness": 0.13,
+        "rawRoughness": 0.34,
+        "bumpStrength": 1
+      },
+      "wallMaterial": {
+        "color": "#a9adb1",
+        "metalness": 1,
+        "roughness": 0.5
+      },
+      "holes": [
+        {
+          "centreMm": [
+            30,
+            20
+          ],
+          "diameterMm": 20
+        }
+      ]
+    },
+    {
+      "type": "box",
+      "name": "body",
+      "minMm": [
+        -49.7,
+        -19.7,
+        101
+      ],
+      "sizeMm": [
+        60,
+        40,
+        19.5
+      ],
+      "material": {
+        "color": "#c4c8cc",
+        "metalness": 1,
+        "roughness": 0.34
+      },
+      "bevelMm": 0.15,
+      "holes": [
+        {
+          "centreMm": [
+            -19.700000000000003,
+            0.3000000000000007
+          ],
+          "diameterMm": 20
+        }
+      ]
+    },
+    {
+      "type": "cylinder",
+      "name": "bore",
+      "centreMm": [
+        -19.700000000000003,
+        0.3000000000000007,
+        110.75
+      ],
+      "diameterMm": 19.98,
+      "lengthMm": 19.5,
+      "capped": false,
+      "material": {
+        "color": "#cfd2d5",
+        "metalness": 1,
+        "roughness": 0.18
+      }
+    },
+    {
+      "type": "box",
+      "name": "flap-front",
+      "minMm": [
+        -90,
+        -65,
+        128
+      ],
+      "sizeMm": [
+        180,
+        3,
+        62
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        },
+        "tint": "#b9bcc0"
+      },
+      "bevelMm": 0.5,
+      "hingeMm": [
+        0,
+        -65,
+        128
+      ],
+      "rotationDeg": [
+        110,
+        0,
+        0
+      ]
+    },
+    {
+      "type": "box",
+      "name": "flap-back",
+      "minMm": [
+        -90,
+        62,
+        128
+      ],
+      "sizeMm": [
+        180,
+        3,
+        62
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        },
+        "tint": "#b9bcc0"
+      },
+      "bevelMm": 0.5,
+      "hingeMm": [
+        0,
+        65,
+        128
+      ],
+      "rotationDeg": [
+        -105,
+        0,
+        0
+      ]
+    },
+    {
+      "type": "box",
+      "name": "flap-left",
+      "minMm": [
+        -90,
+        -62,
+        128
+      ],
+      "sizeMm": [
+        3,
+        124,
+        62
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        },
+        "tint": "#b9bcc0"
+      },
+      "bevelMm": 0.5,
+      "hingeMm": [
+        -90,
+        0,
+        128
+      ],
+      "rotationDeg": [
+        0,
+        -100,
+        0
+      ]
+    },
+    {
+      "type": "box",
+      "name": "flap-right",
+      "minMm": [
+        87,
+        -62,
+        128
+      ],
+      "sizeMm": [
+        3,
+        124,
+        62
+      ],
+      "material": {
+        "color": "#ffffff",
+        "roughness": 0.8,
+        "tileMm": 300,
+        "maps": {
+          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+        },
+        "tint": "#b9bcc0"
+      },
+      "bevelMm": 0.5,
+      "hingeMm": [
+        90,
+        0,
+        128
+      ],
+      "rotationDeg": [
+        0,
+        115,
+        0
+      ]
+    }
+  ],
+  "lights": [
+    {
+      "name": "overhead-strip",
+      "positionMm": [
+        0,
+        60,
+        900
+      ],
+      "aimMm": [
+        0,
+        0,
+        0
+      ],
+      "sizeMm": [
+        1200,
+        120
+      ],
+      "watts": 30,
+      "kelvin": 4300
+    },
+    {
+      "name": "side-window",
+      "positionMm": [
+        600,
+        -350,
+        260
+      ],
+      "aimMm": [
+        -20,
+        0,
+        110
+      ],
+      "sizeMm": [
+        400,
+        600
+      ],
+      "watts": 28,
+      "kelvin": 5600
+    }
+  ],
+  "world": {
+    "path": "../aircraft_workshop_01/aircraft_workshop_01_2k.hdr",
+    "strength": 0.25,
+    "rotationDeg": 120
+  },
+  "camera": {
+    "positionMm": [
+      -380,
+      -720,
+      300
+    ],
+    "aimMm": [
+      -10,
+      -60,
+      70
+    ],
+    "focusMm": [
+      -20,
+      0,
+      120
+    ],
+    "lensMm": 85,
+    "fStop": 4
+  },
+  "render": {
+    "size": [
+      1600,
+      900
+    ],
+    "samples": 96,
+    "exposure": 0
+  }
+}

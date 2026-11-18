@@ -14,4 +14,4 @@
 
 **Failure mode.** A procedural noise texture pretending to be material, and a camera that never leaves macro so the product is never seen.
 
-**Exemplars.** None captured yet.
+**Exemplars.** None accepted yet. Candidates were rejected as fourth-generation or could not be captured in headless Chrome (2026-11-13).

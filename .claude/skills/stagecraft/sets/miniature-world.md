@@ -14,4 +14,7 @@
 
 **Failure mode.** Generic low-poly city blocks that have no connection to the client.
 
-**Exemplars.** None captured yet.
+**Exemplars.**
+
+- `references/chartogne-taillet.md` (captured 2026-11-13): Fifth with gaps. A real village as an engraved cadastral map; colour arrives only when the camera dives into a plot. Scroll drives only the opening.
+- A second exemplar is open.

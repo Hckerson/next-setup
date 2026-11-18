@@ -1,6 +1,8 @@
 import type { gsap } from "gsap";
 import { addRecolour, addRotate, addScale } from "@/lib/stage/moves/change";
+import { addDraw, addFold, addResolve } from "@/lib/stage/moves/drawing";
 import { addEnter, addExit, addSwap } from "@/lib/stage/moves/presence";
+import { addSimulate } from "@/lib/stage/moves/simulate";
 import { addLand, addLift, addTravel } from "@/lib/stage/moves/transit";
 import type { Move, Script, StageContext } from "@/lib/types";
 
@@ -32,6 +34,14 @@ const addMove = (
             return addRotate(film, move, at, length, context);
         case "scale":
             return addScale(film, move, at, length, context);
+        case "simulate":
+            return addSimulate(film, move, at, length, context);
+        case "draw":
+            return addDraw(film, move, at, length, context);
+        case "fold":
+            return addFold(film, move, at, length, context);
+        case "resolve":
+            return addResolve(film, move, at, length, context);
         case "hold":
             return undefined;
     }

@@ -1,0 +1,218 @@
+{
+  "objects": [
+    {
+      "type": "heightfield",
+      "name": "top",
+      "toolmarks": "../toolmarks-finished.json",
+      "topMm": 20,
+      "meshStep": 5,
+      "material": {
+        "color": "#d6d9dc",
+        "metalness": 1,
+        "roughness": 0.13,
+        "rawRoughness": 0.34,
+        "bumpStrength": 1
+      },
+      "wallMaterial": {
+        "color": "#a9adb1",
+        "metalness": 1,
+        "roughness": 0.5
+      },
+      "holes": [
+        {
+          "centreMm": [
+            30,
+            20
+          ],
+          "diameterMm": 20
+        }
+      ]
+    },
+    {
+      "type": "box",
+      "name": "body",
+      "minMm": [
+        0,
+        0,
+        0
+      ],
+      "sizeMm": [
+        60,
+        40,
+        19.5
+      ],
+      "bevelMm": 0.15,
+      "holes": [
+        {
+          "centreMm": [
+            30,
+            20
+          ],
+          "diameterMm": 20
+        }
+      ],
+      "material": {
+        "color": "#c4c8cc",
+        "metalness": 1,
+        "roughness": 0.34
+      }
+    },
+    {
+      "type": "cylinder",
+      "name": "bore",
+      "centreMm": [
+        30,
+        20,
+        9.75
+      ],
+      "diameterMm": 19.98,
+      "lengthMm": 19.5,
+      "capped": false,
+      "material": {
+        "color": "#cfd2d5",
+        "metalness": 1,
+        "roughness": 0.18
+      }
+    },
+    {
+      "type": "box",
+      "name": "granite",
+      "minMm": [
+        -300,
+        -300,
+        -40
+      ],
+      "sizeMm": [
+        600,
+        600,
+        40
+      ],
+      "material": {
+        "color": "#2a2b2d",
+        "metalness": 0,
+        "roughness": 0.42
+      }
+    },
+    {
+      "type": "sphere",
+      "name": "ruby",
+      "centreMm": [
+        38.5,
+        20,
+        14
+      ],
+      "diameterMm": 3,
+      "material": {
+        "color": "#b3122a",
+        "metalness": 0,
+        "roughness": 0.03,
+        "transmission": 1,
+        "ior": 1.77
+      }
+    },
+    {
+      "type": "cylinder",
+      "name": "stylus",
+      "centreMm": [
+        38.5,
+        20,
+        29.5
+      ],
+      "diameterMm": 1.5,
+      "lengthMm": 30,
+      "material": {
+        "color": "#8a8d90",
+        "metalness": 0.85,
+        "roughness": 0.22
+      }
+    },
+    {
+      "type": "cylinder",
+      "name": "extension",
+      "centreMm": [
+        38.5,
+        20,
+        52.5
+      ],
+      "diameterMm": 4,
+      "lengthMm": 16,
+      "material": {
+        "color": "#b9bcbf",
+        "metalness": 1,
+        "roughness": 0.15
+      }
+    }
+  ],
+  "lights": [
+    {
+      "name": "inspection-overhead",
+      "positionMm": [
+        30,
+        20,
+        420
+      ],
+      "aimMm": [
+        30,
+        20,
+        0
+      ],
+      "sizeMm": [
+        600,
+        600
+      ],
+      "watts": 12,
+      "kelvin": 5000
+    },
+    {
+      "name": "window-side",
+      "positionMm": [
+        260,
+        -120,
+        160
+      ],
+      "aimMm": [
+        38.5,
+        20,
+        14
+      ],
+      "sizeMm": [
+        200,
+        300
+      ],
+      "watts": 8,
+      "kelvin": 5600
+    }
+  ],
+  "world": {
+    "path": "../aircraft_workshop_01/aircraft_workshop_01_2k.hdr",
+    "strength": 0.1,
+    "rotationDeg": 200
+  },
+  "camera": {
+    "positionMm": [
+      -22,
+      -46,
+      78
+    ],
+    "aimMm": [
+      36,
+      20,
+      15
+    ],
+    "focusMm": [
+      38.5,
+      20,
+      14
+    ],
+    "lensMm": 100,
+    "fStop": 8
+  },
+  "render": {
+    "size": [
+      1600,
+      900
+    ],
+    "samples": 96,
+    "exposure": -0.3
+  }
+}

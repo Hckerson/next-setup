@@ -22,12 +22,14 @@ export const compileTone = (
         const to = tones[shot.tone ?? ""];
         const previous = toned[index - 1];
         const from = previous ? tones[previous.tone ?? ""] : to;
-        if (!to || !from) throw new Error(`The script names an unknown tone: ${shot.tone}`);
+        if (!to || !from)
+            throw new Error(`The script names an unknown tone: ${shot.tone}`);
         const progress = { t: 0 };
         film.fromTo(
             progress,
-            { t: 0, immediateRender: false },
+            { t: 0 },
             {
+                immediateRender: false,
                 t: 1,
                 duration: shot.length * TONE_SHARE,
                 ease: smoother,

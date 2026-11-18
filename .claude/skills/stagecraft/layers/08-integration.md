@@ -1,6 +1,6 @@
 # Layer 8: Integration
 
-How each frame and its copy are one composition. The stage's side only: type, tokens and layout of the copy belong to web-generations. Upstream: render, and the copy web-generations supplies.
+How each frame and its copy are one composition. The stage's side only: type, tokens and layout of the copy belong to pagecraft. Upstream: render, and the copy pagecraft supplies.
 
 ## Tells
 
@@ -17,7 +17,7 @@ How each frame and its copy are one composition. The stage's side only: type, to
 2. Copy contrast at least 4.5:1, measured on the real frame region. `(J)`
 3. Copy appears on a verb's label. `(J)`
 4. Text placed in the world (on a label, a receipt, a screen) stays real DOM, tracked to the 3D surface. `(J)`
-5. The stage hands web-generations its per-shot tones (ground and ink); nothing else is shared. `(J)`
+5. The stage hands pagecraft its per-shot tones (ground and ink); nothing else is shared. `(J)`
 
 ## Checks
 

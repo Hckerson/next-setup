@@ -4,3 +4,4 @@ One row per shipped build. `tools/draw.mjs` strikes every value in the Actor to 
 
 | Build | Date | Actor | Arc | Set | Destination | Camera | Time | Signature | Ground L | Ground range | Ground hue | Accent hue | Type |
 | ----- | ---- | ----- | --- | --- | ----------- | ------ | ---- | --------- | -------- | ------------ | ---------- | ---------- | ---- |
+| Receipt (Tidemark) | 2026-11-17 | artefact-of-use | metamorphosis | technical-drawing | pocket | no-camera-flat | reversed | text-in-the-world | 0.617 | 0.307 | 61 | 54 | condensed grotesque, mono legends |

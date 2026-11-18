@@ -1,10 +1,10 @@
 # Generations of the stage
 
-web-generations grades the layers of an interface. This file grades the stage: everything stagecraft makes. That means the actors and their form, materials, light, set, camera, motion, render, how each frame sits with its copy, and how it is delivered. It uses web-generations' dial: third or older fails, fourth passes only with a stated reason, fifth is the goal.
+pagecraft grades the layers of an interface. This file grades the stage: everything stagecraft makes. That means the actors and their form, materials, light, set, camera, motion, render, how each frame sits with its copy, and how it is delivered. It uses pagecraft's dial: third or older fails, fourth passes only with a stated reason, fifth is the goal.
 
 ## The ladder
 
-Named like web-generations' generations: each is defined by the technology shift that produced its look.
+Named like pagecraft's generations: each is defined by the technology shift that produced its look.
 
 | Generation    | Enabling shift                                     | What the stage looks like                                                                                          |
 | ------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -15,7 +15,7 @@ Named like web-generations' generations: each is defined by the technology shift
 | **Fourth**    | PBR and post-processing defaults                   | The premium template: dark ground, studio-HDRI gloss, bloom, one flawless object floating, a field of fine glowing lines, everything clean |
 | **Fifth**     | Decided pipelines: scan, simulate, bake, grade, critique | A world you could photograph, that reacts to the visitor, filmed by someone who knows what they are doing      |
 
-The fourth is the dangerous one, as in web-generations: it looks expensive and passes structural checks. Its **default cluster** on the stage: dark ground, emitted glow, a floating hero, perfect materials, library tone mapping, one ease. One axis at default is a gap; three at once is the fourth generation.
+The fourth is the dangerous one, as in pagecraft: it looks expensive and passes structural checks. Its **default cluster** on the stage: dark ground, emitted glow, a floating hero, perfect materials, library tone mapping, one ease. One axis at default is a gap; three at once is the fourth generation.
 
 ## The fifth, defined
 
@@ -47,12 +47,29 @@ The stage is graded per layer, never as a whole. Each layer file has tells with 
 
 A recurring tell is usually inherited: a flat frame is a light problem before it is a render problem. Trace it upstream and fix it where it starts.
 
+## Convergence
+
+| ID        | Gen    | Tell                                                         | Detector                                                                                   | Instead                                                        |
+| --------- | ------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| CONV-G4-1 | Fourth | The build resembles an earlier build on its measured frames | `tools/shoot.mjs --compare` finds a row in `references/fingerprints.md` within the threshold | Change the set, the light's world rule or the arc, and measure again |
+| CONV-G4-2 | Fourth | The frame is the category's stock photo: a heap of gold coins under shallow focus, a sneaker floating on colour, a laptop on a desk at golden hour | Frame (J): a blind viewer names it as stock imagery of the category | The concept's own frame: the signature move, the story's moment, a view the stock library does not have |
+
+A build can pass every layer and still be the last build again. This tell is graded across the whole stage, not per layer.
+
 ## Grading
 
-- **Prevalence**, as in web-generations: a tell on 3 or more shots, or in one shared material, rig or ease, sets the layer's grade. An isolated hit is listed and fixed.
+- **Prevalence**, as in pagecraft: a tell on 3 or more shots, or on at least half the graded shots when fewer than five are graded, or in one shared material, rig or ease, sets the layer's grade. A tell on a small prop (anything that is not the hero or the set's ground) is isolated unless it appears in 3 or more shots: it is listed and fixed, but does not set the layer's grade. The opening shot is the first paint: a tell on it sets the grade of Set and Delivery whatever the count. An isolated hit is listed and fixed.
 - **Evidence** is a file and line, an asset report (`gltf-transform inspect`), or a captured frame with its measured numbers. A grade without evidence is not a grade.
 - **Blind.** Frame grades come from the critic (`critic.md`), who never sees who made the frames, the concept's story, or the grade anyone hopes for.
 - **Fifth with gaps** when no tell recurs but a baseline criterion is unmet; it is not Fifth until met or named as a deliberate exception.
+
+## Overall reading
+
+The stage plays as one film, so it reads at its weakest layer, never by majority.
+
+- **The weakest confirmed layer sets it.** A layer graded Fourth or older by a tell both critics cite (`critic.md`, Two critics) makes the stage that grade overall. Prevalence still applies, so an isolated hit or a disputed tell never sets it.
+- **Fifth with gaps allows one unmet property.** Check the five properties in The fifth, defined: met, unmet, or not visible in the frames. Two or more unmet read Fourth overall, however well each layer is made. A property the frames cannot show is listed under Unverified, not counted as met.
+- A range between the critics stays a range: report both readings.
 
 ## Deliberate exceptions
 
@@ -68,6 +85,8 @@ The ladder is only useful if it reproduces the owner's eye. Two verdicts were gi
 | The Ward healthcare filament page        | First-generation in quality; fourth by its cluster |
 
 The Ward frames were lost before the first run, so that specimen is replaced by a captured fourth-generation page (see `references/calibration.md`). A change to any layer file must be re-run blind against the specimens. If the critic grades either above the owner's verdict, the layer files are too vague: report that instead of grading. Calibration results are recorded in `references/calibration.md`.
+
+The owner's full scale, including the specimens graded since, is pagecraft's (`../pagecraft/generations.md`, Where the owner's bar sits); a critic that reads anything there above the owner's grade is too soft.
 
 ## Report
 
