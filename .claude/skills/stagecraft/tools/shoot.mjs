@@ -9,7 +9,6 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const CHROME =
     process.env.CHROME_PATH ??
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const FINGERPRINTS = join(HERE, "..", "references", "fingerprints.md");
 const SAMPLE_WIDTH = 160;
 const REGION_WIDTH = 480;
 const BORDER = 8;
@@ -35,6 +34,8 @@ const threshold = Number(value("threshold", "0.25"));
 const track = value("track", "");
 const reduce = flag("reduce");
 const compare = flag("compare");
+const styles = flag("styles");
+const FINGERPRINTS = resolve(value("fingerprints", join(HERE, "..", "references", "fingerprints.md")));
 const PORT = Number(value("port", "9333"));
 const clicks = value("click", "").split("|").filter(Boolean);
 const wheelTotal = Number(value("wheel", "0"));
@@ -158,6 +159,7 @@ const READ_COPY = `(() => {
 
 await send("Runtime.enable");
 await send("Page.enable");
+await send("Page.setBypassCSP", { enabled: true });
 if (reduce)
     await send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
 await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: width < 500 });
@@ -230,6 +232,33 @@ if (sequence > 1) {
     finish(0);
 } else {
 
+const CENSUS = `(() => {
+    const tally = {};
+    const count = (key, raw) => { if (!raw) return; const bucket = (tally[key] ??= {}); bucket[raw] = (bucket[raw] ?? 0) + 1; };
+    const many = (key, raw) => raw.split(",").map((part) => part.trim()).forEach((part) => count(key, part));
+    for (const element of document.body.querySelectorAll("*")) {
+        if (!element.getClientRects().length) continue;
+        const style = getComputedStyle(element);
+        if (style.visibility === "hidden") continue;
+        const text = [...element.childNodes].some((node) => node.nodeType === 3 && node.textContent.trim());
+        if (text) {
+            count("family", style.fontFamily.split(",")[0].replace(/["']/g, "").trim());
+            count("size", style.fontSize);
+            count("weight", style.fontWeight);
+            count("tracking", style.letterSpacing);
+            count("text", style.color);
+        }
+        if (style.borderRadius !== "0px") count("radius", style.borderRadius);
+        if (style.boxShadow !== "none") count("shadow", style.boxShadow);
+        if (style.backgroundColor !== "rgba(0, 0, 0, 0)") count("background", style.backgroundColor);
+        if (style.borderTopWidth !== "0px" && style.borderTopStyle !== "none") count("border", style.borderTopWidth + " " + style.borderTopColor);
+        if (style.transitionDuration !== "0s") { many("duration", style.transitionDuration); many("easing", style.transitionTimingFunction); count("transition", style.transitionProperty); }
+        if (style.animationName !== "none") { many("duration", style.animationDuration); many("easing", style.animationTimingFunction); }
+    }
+    const order = (bucket) => Object.entries(bucket).sort((a, b) => b[1] - a[1]).map(([value, uses]) => ({ value, uses }));
+    return Object.fromEntries(Object.entries(tally).map(([key, bucket]) => [key, { distinct: Object.keys(bucket).length, values: order(bucket).slice(0, 12) }]));
+})()`;
+
 const hideOverlays = () => evaluate(`document.querySelectorAll(${JSON.stringify(hide)}).forEach((element) => element.remove())`);
 
 const results = [];
@@ -266,6 +295,9 @@ for (const fraction of frames) {
     const probe = await evaluate(`window.__stage ? window.__stage.snapshot() : null`);
     results.push({ fraction, file, ...metrics, probe });
 }
+
+const census = styles ? await evaluate(CENSUS) : null;
+const distinct = census ? Object.fromEntries(Object.entries(census).map(([key, entry]) => [key, entry.distinct])) : null;
 
 const grounds = results.map((frame) => frame.groundL);
 const colourful = results.filter((frame) => frame.groundChroma > CHROMA_FLOOR);
@@ -338,9 +370,9 @@ const critic = {
     })),
 };
 
-const report = { url, tag, critic, size: `${width}x${height}`, range, drive, wheelRange: drive === "wheel" ? wheelRange : null, clicked, fingerprint, frames: results, tooClose: near, console: logs.slice(0, 20) };
+const report = { url, tag, critic, styles: census, size: `${width}x${height}`, range, drive, wheelRange: drive === "wheel" ? wheelRange : null, clicked, fingerprint, frames: results, tooClose: near, console: logs.slice(0, 20) };
 writeFileSync(join(out, `${tag}-report.json`), JSON.stringify(report, null, 2));
-console.log(JSON.stringify({ fingerprint, critic, tooClose: near, report: join(out, `${tag}-report.json`) }, null, 2));
+console.log(JSON.stringify({ fingerprint, critic, distinct, tooClose: near, report: join(out, `${tag}-report.json`) }, null, 2));
 
 socket.close();
 clearTimeout(watchdog);

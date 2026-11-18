@@ -63,6 +63,14 @@ A build can pass every layer and still be the last build again. This tell is gra
 - **Blind.** Frame grades come from the critic (`critic.md`), who never sees who made the frames, the concept's story, or the grade anyone hopes for.
 - **Fifth with gaps** when no tell recurs but a baseline criterion is unmet; it is not Fifth until met or named as a deliberate exception.
 
+## Overall reading
+
+The stage plays as one film, so it reads at its weakest layer, never by majority.
+
+- **The weakest confirmed layer sets it.** A layer graded Fourth or older by a tell both critics cite (`critic.md`, Two critics) makes the stage that grade overall. Prevalence still applies, so an isolated hit or a disputed tell never sets it.
+- **Fifth with gaps allows one unmet property.** Check the five properties in The fifth, defined: met, unmet, or not visible in the frames. Two or more unmet read Fourth overall, however well each layer is made. A property the frames cannot show is listed under Unverified, not counted as met.
+- A range between the critics stays a range: report both readings.
+
 ## Deliberate exceptions
 
 An older device used on purpose is a decision: a 360 drag viewer in a configurator section, a stepped flat cut-out in a paper-cut set. Name the device, the reason and where it is confined.
@@ -77,6 +85,8 @@ The ladder is only useful if it reproduces the owner's eye. Two verdicts were gi
 | The Ward healthcare filament page        | First-generation in quality; fourth by its cluster |
 
 The Ward frames were lost before the first run, so that specimen is replaced by a captured fourth-generation page (see `references/calibration.md`). A change to any layer file must be re-run blind against the specimens. If the critic grades either above the owner's verdict, the layer files are too vague: report that instead of grading. Calibration results are recorded in `references/calibration.md`.
+
+The owner's full scale, including the specimens graded since, is pagecraft's (`../pagecraft/generations.md`, Where the owner's bar sits); a critic that reads anything there above the owner's grade is too soft.
 
 ## Report
 

@@ -8,13 +8,14 @@ A model asked for three ideas returns three nouns from the same neighbourhood, a
 
 ```
 node .claude/skills/stagecraft/tools/draw.mjs --kind physical|digital|service
+  --sector NAME        deal only the sets the sector's line in docs/economy-coverage-map.md lists
   --lock axis=value    keep one axis fixed (the client demands it)
   --seed N             reproduce a draw
   --allow-repeat       ignore earlier builds (a deliberate re-use, state why)
   --json
 ```
 
-`--kind` filters arcs, actors and destinations to those that make sense: a bank is `service` or `digital`, a shoe is `physical`. A lock the product truth really demands (a restaurant's destination is a table) goes in as `--lock`; do not lock anything for taste.
+`--sector` reads the sector's sets from `docs/economy-coverage-map.md`, the map pagecraft's draw reads for the sector's world, so the stage and the page draw from one source; when a sector lists three sets, a set an earlier build used stays dealable. `--kind` filters arcs, actors and destinations to those that make sense: a bank is `service` or `digital`, a shoe is `physical`. A lock the product truth really demands (a restaurant's destination is a table) goes in as `--lock`; do not lock anything for taste.
 
 ## The seven axes
 
@@ -44,6 +45,10 @@ For each card:
 8. **Run the stock test.** For each panel, ask what a stock library returns for the category ("savings jar", "gold coins", "running shoe", "laptop on desk"). A panel that a library already holds is the category's photo, not this client's: a blind critic graded a fully lit, physically baked jar of coins Fourth for that alone (CONV-G4-2, 2026-11-14). Change the actor's state, the view or the moment until the panel shows something only this product's story has.
 
 Recommend one card and say what you kept from the user's idea. An idea is a seed: when it fits the truth, build on it; when it does not, say why and propose what replaces it. Never discard an idea silently and never copy it blindly.
+
+## The floor and the copy test
+
+The creativity floor and the copy test are pagecraft's (`../pagecraft/generations.md`, Where the owner's bar sits; `../pagecraft/differentiation.md`, References the owner names). A concept that fails either is redealt.
 
 ## World rules
 

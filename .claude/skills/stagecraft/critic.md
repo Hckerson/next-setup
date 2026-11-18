@@ -11,6 +11,7 @@ A separate agent (the Agent tool), started fresh for each review, never the sess
 - The frames: a contact sheet of captures from `tools/shoot.mjs` (every shot, desktop and phone), copied to a neutral folder with neutral names.
 - The measured report for those frames, when there is one.
 - `generations.md` and `layers/`.
+- The set file the stage brief names (`sets/<set>.md`). Its rules and grading notes say which tells do not apply to it (an unlit line state in `technical-drawing`, no cast light in `print-catalogue`); a tell the set exempts is not graded. A calibration specimen gets the set its frames fit most closely, recorded in `references/calibration.md`.
 
 ## What the critic never gets
 
@@ -24,6 +25,8 @@ The maker's name, the concept's story, the client, the grade anyone hopes for, e
 
 Then:
 
+- **The fifth properties:** each of the five in `generations.md` (The fifth, defined) as met, unmet or not visible, with frames.
+- **Overall reading:** by the rule in `generations.md` (Overall reading).
 - **Would a client see this today:** yes or no, one sentence.
 - **The three changes that would lift it most**, each naming the layer and the frame.
 - **Unverified:** anything a frame cannot show (source checks, motion feel between frames).

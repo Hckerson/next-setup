@@ -2,6 +2,7 @@ import { randomInt } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { findSector } from "../../pagecraft/tools/sector.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MENUS = JSON.parse(readFileSync(join(HERE, "menus.json"), "utf8"));
@@ -22,13 +23,14 @@ const MIN_FROM_LAST = 4;
 const ATTEMPTS = 20000;
 
 const options = (() => {
-    const found = { kind: "physical", seed: null, json: false, repeat: false, lock: {}, avoid: {} };
+    const found = { kind: "physical", sector: null, seed: null, json: false, repeat: false, lock: {}, avoid: {} };
     const args = process.argv.slice(2);
     for (let i = 0; i < args.length; i += 1) {
         const arg = args[i];
         if (arg === "--json") found.json = true;
         else if (arg === "--allow-repeat") found.repeat = true;
         else if (arg === "--kind") found.kind = args[(i += 1)];
+        else if (arg === "--sector") found.sector = args[(i += 1)];
         else if (arg === "--seed") found.seed = Number(args[(i += 1)]);
         else if (arg === "--lock") {
             const [axis, value] = args[(i += 1)].split("=");
@@ -73,15 +75,19 @@ if (!KINDS.has(options.kind)) {
 const rows = readRows();
 const struck = (axis) => new Set(rows.map((row) => row[axis]).filter(Boolean));
 
+const sectorSets = options.sector ? new Set(findSector(options.sector).sets) : null;
+
 const pool = (axis) => {
     const fitting = MENUS[MENU_KEY[axis]].filter(
-        (entry) => !entry.fits || entry.fits.includes(options.kind),
+        (entry) =>
+            (!entry.fits || entry.fits.includes(options.kind)) &&
+            (axis !== "set" || !sectorSets || sectorSets.has(entry.id)),
     );
     if (options.lock[axis]) return fitting.filter((entry) => entry.id === options.lock[axis]);
     if (options.repeat) return fitting;
     const used = new Set([...struck(axis), ...(options.avoid[axis] ?? [])]);
     const fresh = fitting.filter((entry) => !used.has(entry.id));
-    return fresh.length >= 2 ? fresh : fitting;
+    return fresh.length >= (axis === "set" ? CARDS : 2) ? fresh : fitting;
 };
 
 const pools = Object.fromEntries(AXES.map((axis) => [axis, pool(axis)]));
