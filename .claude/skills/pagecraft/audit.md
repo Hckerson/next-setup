@@ -1,6 +1,6 @@
 # Audit
 
-Run after building, or on request to review existing UI. Grade each layer touched; never grade a project as a whole.
+Run after building, or on request to review existing UI. This is the builder's pass: it finds tells and fixes them. The grade a user sees comes from the blind critics (`critic.md`); when no critic has run, report this audit's grades as the builder's, not as the verdict. Grade each layer touched; never grade a project as a whole.
 
 ## 0. Scope before searching
 
@@ -98,7 +98,7 @@ A single-consumer role or material class is an isolated finding, never a recurri
 
 **Drift signals** from the detector table are graded under register fit, not under the generation: they show where the build slid toward a default or toward the developer-tool family against its brief.
 
-Checks tagged `[app]` need a running app: rendered colour and contrast, motion feel, hover and focus order, alignment, "dimmer" and composition. When the user asks to verify, run them with `verify.md`; otherwise they go to **Unverified**, never to pass or fail. Checks tagged `[source]` or untagged can be answered from the code.
+Checks tagged `[app]` need a running app: rendered colour and contrast, motion feel, hover and focus order, alignment, "dimmer" and composition. Answer them with `verify.md` at the styleframes step, after each iteration, or when the user asks; otherwise they go to **Unverified**, never to pass or fail. Checks tagged `[source]` or untagged can be answered from the code.
 
 Evidence is a file and line, or a screenshot region, with the count of sites. A grade without evidence is not a grade.
 

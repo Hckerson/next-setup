@@ -11,7 +11,7 @@ The 14 layers cover structure. These concerns cut across every layer and have no
 
 ## Imagery and illustration
 
-- Imagery is owned by the product: the real UI, the real object, a deliberate type treatment. Generic stock, a handshake or a laptop on a desk, is a third-generation tell. A blurred gradient blob or abstract 3D shape that stands for "AI" is a fourth.
+- Imagery is owned by the product: the real UI, the real object, a deliberate type treatment. Generic stock, a handshake or a laptop on a desk, is a third-generation tell. A blurred gradient blob or abstract 3D shape that stands for "AI" is a fourth. Stock footage is stock photography that moves: still third. An abstract render standing in for a physical product the company makes is also third, because the real object existed and was replaced by a stand-in.
 - Illustration is small and purposeful (an empty state), single-weight, from the token palette. `(S)` Linear empty states.
 - Product screenshots are cropped and framed in the register's depth recipe (a hairline, a fill, a rule), not floated with a glow.
 

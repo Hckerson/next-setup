@@ -2,6 +2,20 @@
 
 Copy to `docs/DESIGN_BRIEF.md` in the project. Roles and choices only; token values live in `styles/tokens.css`. Mark anything not yet decided as **open**, not guessed.
 
+## Sector, truth sheet and direction
+
+- **Sector:** from `docs/economy-coverage-map.md`, with its interface archetype.
+- **World:** the sector's world (`worlds/`), or a second one with the reason.
+- **Direction:** the card dealt by `tools/draw.mjs` (seed, register, nine positions), and why it was recommended over the other two.
+
+| Truth | Answer |
+| ----- | ------ |
+| What it is | |
+| What it replaces | |
+| The moment of use | |
+| The moment of action | |
+| The feeling it leaves | |
+
 ## Product
 
 - **What it does, and for whom:**
@@ -25,7 +39,7 @@ Copy to `docs/DESIGN_BRIEF.md` in the project. Roles and choices only; token val
 
 Each must name its source in the product's own domain. The rendered result counts, not the story: a domain blue that renders like an exemplar's blue is that exemplar's blue.
 
-| Decision                                         | Choice | Source in the domain | Other candidate sources considered |
+| Decision                                         | Choice | Source in the domain (world artefact or standard) | Other candidate sources considered |
 | ------------------------------------------------ | ------ | -------------------- | ---------------------------------- |
 | Accent (hues, their jobs, where spent)           |        |                      |                                    |
 | Neutral temperature                              |        |                      |                                    |
@@ -91,4 +105,11 @@ Pass: against every exemplar, at most half of the free judgeable axes match. Aga
 
 ## Fingerprint row
 
-The row to append to `references/fingerprints.md` after building: build name, date, and this build's instance on each of the nine axes.
+The row to append to `references/fingerprints.md` after building: build name, date, sector, world, world source, register, this build's position on each of the nine axes (ids from `tools/menus.json`), and the measured columns from `verify.md`.
+
+## Styleframes and dailies
+
+The key screens chosen for styleframes (a marketing band, the densest app screen, one non-populated state), then one row per critic round (`critic.md`).
+
+| Round | Date | Capture command | Critics' grades by layer (range if they differ) | Disputed tells | The three changes | Done |
+| ----- | ---- | --------------- | ----------------------------------------------- | -------------- | ----------------- | ---- |

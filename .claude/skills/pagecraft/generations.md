@@ -6,6 +6,7 @@ A generation is a technology shift and the look it produced. The tells in the la
 
 | Generation | Era               | Enabling shift                                                                              | Signature                                                                                                                      | How it leaks into modern code                                                                                                                                  |
 | ---------- | ----------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pre-first** | Any         | Nothing; a placeholder shown as work                                                        | Unstyled browser defaults, lorem ipsum, grey boxes for images, a library's demo page with the name changed                     | Scaffolds left in place: `Lorem`, `placeholder.svg`, a starter's demo copy, an unstyled `<button>`. Never shown to the owner or a client                          |
 | **First**  | 1990s             | Hand-written HTML; layout by tables                                                         | Default fonts and colours, fixed centred column, rules and `<br>` for space, counters and "NEW!" markers                       | Literal reads of "classic" or "retro": `<table>` layout, `<hr>`, `window.confirm`, `[edit] [delete]` strings, `>>` markers                                     |
 | **Second** | 2000s             | CSS layout, Flash, sliced images, early CSS3                                                | Bevels, gloss, gradients, reflections, ribbons, inset shadows, fixed 960px wrapper                                             | "Skeuomorphic" or "Web 2.0" prompts, copied gradient-button snippets: `bg-gradient-to-b` plus `shadow-[inset_...]`, `drop-shadow` on text, `rotate-45` banners |
 | **Third**  | 2010s             | Bootstrap, jQuery, responsive grids                                                         | Flat saturated role colours, carousels, stock-photo heroes, three icon columns, hamburgers, admin templates                    | Bootstrap class names, `col-md-4 text-center`, `carousel`, `navbar-toggler`, Font Awesome                                                                      |
@@ -32,6 +33,58 @@ The fourth-generation tell is the **default cluster**: several axes left at a li
 | State coverage  | Populated state only                                                                  | Empty, loading, error, selected, disabled designed `(S)`                                                                                                                                     |
 
 One axis at a default is a gap. Three or more at once is the fourth generation.
+
+## The fifth, defined
+
+Six properties. All are required; none is a look.
+
+1. **Every key screen could be a styleframe.** Two or three screens at final quality (a marketing band, the densest app screen, one state that is not the populated one) pass the blind critic (`critic.md`) before the rest is built.
+2. **Decided per context, tied by a system with tension.** The idea above: the fourth decides once, the fifth decides per context and ties the decisions together.
+3. **The world is the source.** Every instance (accent, neutrals, type, status vocabulary, signature) traces to an artefact or standard of the sector's world (`worlds/`), so the build fails the swap test: with a competitor's logo it reads wrong.
+4. **Every state is designed.** Empty, loading, error, selected, disabled, too long, and offline where it applies, each in the same system as the populated state.
+5. **Marketing: one composed world, not a stack of boxes** (PAG-B5). Owned imagery and decided tokens inside stacked boxes are the third generation polished (PAG-G3-2).
+6. **One product on every device.** A phone gets the same product rearranged for the hand, never a cut-down page.
+
+On top of the baseline, each build earns **one signature move**: its signature device, taken from a world artefact, carried through at least three layers. It is recorded in `references/fingerprints.md` with its source and struck from the next draw, so no signature hardens into the next template.
+
+## Convergence
+
+A build can pass every layer and still be the last build again, someone else's build, or the category's template. These tells are graded across the whole build, not per layer.
+
+| ID        | Gen    | Tell | Detector | Instead |
+| --------- | ------ | ---- | -------- | ------- |
+| CONV-G4-1 | Fourth | The build resembles an earlier build | Fewer than 4 axes differ from a row in `references/fingerprints.md`, or `shoot.mjs --compare --fingerprints` finds a row within the threshold | Redraw the axes that match, with `--avoid`, and measure again |
+| CONV-G4-2 | Fourth | The build clones an exemplar of its register | More than half the free judgeable axes match one exemplar at instance level (`differentiation.md`, Test 2) | Take the matching axes' instances from the world instead |
+| CONV-G4-3 | Fourth | The frame is the category's template: what a template marketplace or stock library returns for the sector | Frame (J): a blind viewer names it as the sector's template; the world file lists what that template is | The world's own artefacts: its documents, panels and standards, not its stock photo |
+| CONV-G4-4 | Fourth | The swap test fails: a competitor's logo fits | Frame (J): with the logo replaced by a competitor's in the same sector, nothing reads wrong; or the brief cannot name a world source for the accent, type or signature | Trace the failing cue to a world artefact the competitor does not own |
+
+## Grading
+
+- **Prevalence.** In code: a tell in 3 or more files, or in a shared primitive, class or token. In frames: a tell on at least half the sampled frames of one surface (`critic.md`, Sampling). Either sets the layer's grade. The first paint of the home route is the first impression: a tell on it sets the grade of Page and Root layout whatever the count. An isolated hit is listed and fixed.
+- **Evidence** is a file and line, or a captured frame with its measured numbers. A grade without evidence is not a grade.
+- **Blind.** Frame grades come from the critic (`critic.md`), never from the session that built the frames. The builder's own audit (`audit.md`) finds tells to fix; it does not grade.
+- **Fifth with gaps** when no tell recurs but a baseline criterion is unmet; it is not Fifth until met or named as a deliberate exception.
+- **First paint before the overall reading.** Apply the first-paint rule to Page before reading the build as a whole: a third-generation tell on the home route's first screen makes Page Third, whatever the other screens show.
+
+## Where the owner's bar sits
+
+The owner's scale is stricter than any published jury, and it is the scale this ladder serves (`references/calibration.md`):
+
+| Specimen | Owner's grade |
+| -------- | ------------- |
+| Best-selling sector templates | Third |
+| Award-winning marketing sites built as stacked bands of boxes, however polished | Third: "boxed up" |
+| A scripted stage beside a copy column, the best this repo has built | Fourth |
+| A playful, composed studio page: objects for content, pinned scenes, one moment of visitor play | Fourth |
+| Fifth | Nothing captured yet. Above the stage build; it is not the ceiling |
+
+The playful studio page sets the floor for creativity, not the target: every build starts at that level of invention (content as objects, scroll as choreography, one moment of play tied to the story) and goes past it in its own direction. A build whose ideas are less inventive than that page's is not shown to the owner, whatever its craft. Reaching that level by borrowing that page's devices, with no source in the build's own world, is a clone (CONV-G4-2), not a pass.
+
+A critic that reads anything here above the owner's grade is too soft. Named specimens are in `references/calibration.md`, which critics never read. Never treat an earlier build as the target.
+
+## Overall reading
+
+Layers are graded one by one; an owner judges the whole. The overall reading is the generation most graded layers sit at, capped by the Page layer on a marketing surface: **a marketing page never reads above its Page grade**, because the page is the composition and polish inside a boxed page does not lift it (PAG-G3-2 on the first paint caps the build at Third). Then one override: **a build that is the sector's template (CONV-G4-3) and fits a competitor's logo (CONV-G4-4) and carries a third-generation or older tell on its first paint reads Third**, however finished its primitives and chrome. Polish on top of a template does not lift the template. Set by the owner's verdict on a Site of the Day the critics had read Fourth by majority (`references/calibration.md`, 2026-11-18).
 
 ## Calibration: what real code reads as
 

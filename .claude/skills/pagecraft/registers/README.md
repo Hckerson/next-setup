@@ -2,7 +2,7 @@
 
 The fifth generation is a quality bar, not a look. A **register** is one coherent point of view that meets the bar: a family of style decisions that hang together. Premium products in different registers legitimately disagree about borders, accent, radius, tracking, chrome and density; they agree on the baseline in each layer file.
 
-Three axes, never merged:
+Four axes, never merged (the fourth, **World**, is where a build's instances come from: `worlds/`):
 
 | Axis       | Question                    | Where it lives                                    |
 | ---------- | --------------------------- | ------------------------------------------------- |

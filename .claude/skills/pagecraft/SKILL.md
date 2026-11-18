@@ -11,8 +11,10 @@ description: >-
     list or modal, section, console, page, chrome, portal layout, root layout),
     for app screens and ordinary marketing pages (an animated, scroll-driven landing page is built with the stagecraft skill), and on "make it premium", "this
     looks basic", "looks like a template", "looks dated", "give it a different
-    style" or "audit the UI". Tokens, primitives and file structure stay with
-    .claude/CLAUDE.md.
+    style" or "audit the UI", for any client in any sector of the economy
+    (each sector's world supplies the look's sources). A blind critic grades
+    styleframes before the build. Tokens, primitives and file structure stay
+    with .claude/CLAUDE.md.
 ---
 
 # Pagecraft
@@ -21,12 +23,13 @@ Basic output is what happens when every look decision is made once, globally, as
 
 Read `.claude/CLAUDE.md` alongside this. It owns vocabulary, tokens and structure; this skill owns how good the look decisions are.
 
-## Three axes, never merged
+## Four axes, never merged
 
 | Axis           | Question                    | Where it lives                                    |
 | -------------- | --------------------------- | ------------------------------------------------- |
 | **Generation** | How good are the decisions? | `generations.md`; the Baseline in each layer file |
 | **Register**   | Which family of decisions?  | `registers/`                                      |
+| **World**      | Where do the instances come from? | `worlds/`, one per sector in `docs/economy-coverage-map.md` |
 | **Surface**    | App or marketing?           | The App and Marketing variants in each layer file |
 
 The fifth generation is a quality bar, not a look. Linear, Teenage Engineering, Aesop, Duolingo and Mercury look nothing alike and all meet it. A register is one coherent point of view that meets the bar; the baseline is what every register shares. Confusing the two is how a skill turns one famous product into everyone's template.
@@ -68,14 +71,18 @@ A product may use one register for the app and another for marketing; the brief 
 
 ## Workflow
 
-0. **Brief.** Read `docs/DESIGN_BRIEF.md`. If it does not exist, follow `differentiation.md` to create it, and end the turn for approval unless the user said "just build it". The brief names the register (chosen from `registers/README.md` or composed from its axis menu) and is the authority for the project's own decisions. Every instance (shapes, field order, vocabulary, accent, neutrals) is chosen from it before a layer is built, not after (`differentiation.md`, Property versus instance), and the brief's fingerprint table commits, before building, to how the build's free axes differ from each exemplar of its register.
-1. **Classify.** App or marketing. List the layers the work touches (use the table in `docs/UI_LAYERS.md`).
-2. **Load.** `generations.md`, `cross-cutting.md`, the register file the brief names, then only the layer files for those layers, from `layers/`. Do not load the rest. Each layer file names its upstream layers; a recurring tell is traced there.
-3. **Decide before you write.** For each layer, state the baseline decisions and how the register realises them: roles and ratios, not values. The starter ships no look; project tokens hold every value. Never write a value into this skill's output as "the answer".
-4. **Build** against the layer file's Baseline and the register's realisation. Project rules in `.claude/CLAUDE.md` still bind every edit.
-5. **Audit** with `audit.md`: run the cross-layer detectors, grade the baseline, check register fit, fix anything at the third generation or older. When the user asks to verify in the app, run `verify.md`. To add a new reference, follow `capture.md`.
-6. **Differentiate.** Re-run the brief's fingerprint table against the code, run the checks in `differentiation.md`, and append the build to `references/fingerprints.md`.
-7. **Report** the audit table. A layer not audited is reported as **Not audited**, never as passing.
+Steps 2 and 4 end the turn for approval unless the user said "just build it".
+
+0. **Intake.** Ask once, only what is missing: what the client does and for whom, the belief after five seconds, the action, mood (never "modern", "clean", "sleek" or "premium"). Find the sector in `docs/economy-coverage-map.md`; its interface archetype is a requirement and its world is the source of every instance. With no client, take an open sector (the next ten first) and invent a realistic client; placeholder copy is marked.
+1. **Truth sheet.** Five lines: what it is, what it replaces, the moment of use, the moment of action, the feeling. When the page also has a stage, it is the same truth sheet as `docs/STAGE_BRIEF.md`.
+2. **Directions.** `node .claude/skills/pagecraft/tools/draw.mjs --sector "<sector>"` deals three directions (a register plus a position on each of the nine axes), striking every value earlier builds used. Bind each to the world: name the artefact or standard that supplies the accent, neutrals, type, status vocabulary and signature, and run the swap and stock tests (CONV-G4-3, CONV-G4-4). Recommend one and say what you kept from the user's idea. Never override a card because it feels unfamiliar; redraw with `--lock` only for a truth the client demands.
+3. **Brief.** `docs/DESIGN_BRIEF.md` from `references/_brief-template.md`: the direction, its world sources, every decision as a role, and the fingerprint comparison (`differentiation.md`). The brief is the authority from here on.
+4. **Styleframes.** Build two or three key screens at final quality (a marketing band, the densest app screen the archetype needs, and one non-populated state), capture them (`verify.md`), and have two critics grade them blind (`critic.md`). Only frames graded Fifth, or Fifth with named gaps, go to the user, with the tables. The look is approved before the rest is built.
+5. **Build.** Classify the surface and the layers (`docs/UI_LAYERS.md`); load `generations.md`, `cross-cutting.md`, the register file, the world file, and only the layer files touched. Decide each layer's baseline and its realisation before writing, as roles, never values. Project rules in `.claude/CLAUDE.md` bind every edit.
+6. **Dailies.** After each iteration, capture with the fixed sampling, run the critics, and take their three changes as the next iteration's list. Log each round in the brief.
+7. **Audit and verify.** `audit.md` finds tells to fix (the builder's pass); `verify.md` answers the `[app]` checks with frames and the style census. The critics' tables are the grade.
+8. **Differentiate.** Re-run the fingerprint comparison against the rendered build, append the measured row to `references/fingerprints.md`, and tick the sector in the coverage map.
+9. **Report** the critics' audit table. A layer not graded is reported as **Not graded**, never as passing. To add a reference, follow `capture.md`.
 
 ## How the layer files work
 
@@ -103,5 +110,7 @@ A replacement is always a decision with a property you can check, never a flat p
 - `references/measured-captures.md`: computed values from the user's rendered captures of 22 sites.
 - `references/classification-ledger.md`: every layer criterion classified as baseline or register, with counts.
 - `references/ground-truth.md`: what real frontends read as; the calibration for the audit.
+- `references/calibration.md`: the critic's blind grades against the owner's verdicts.
+- `worlds/`: each world's artefacts, standards and category template; captured exemplars per world as they are added.
 
 The tells for the first to fourth generations are from design history and code-pattern knowledge, not cited sources; treat them as strong heuristics. Do not assert anything the evidence marks UNVERIFIED. Exemplars set the aesthetic bar, not the accessibility bar: several fail baseline properties, and each register file lists those gaps.

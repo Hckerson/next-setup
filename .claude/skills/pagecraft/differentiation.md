@@ -4,6 +4,19 @@ Every register has a house style, and copying it is the fourth generation again,
 
 Borrow structure, technique and measured properties. Never borrow a reference's identity.
 
+The divergence is mechanical, as in stagecraft: `tools/draw.mjs` deals the positions on the nine axes, striking the values earlier builds used, and the world supplies the instances. A builder choosing a position by taste returns to the familiar one.
+
+## References the owner names
+
+A site the owner names as a bar (`references/tekcify.md`) teaches a level, never a look. This section is the one home of the copy test, for pagecraft and stagecraft alike.
+
+No device is banned. Cards, notes, a cursor effect, a pinned scene or a moment of play are all open to any build. Every device must trace to a source in the build's own world (`worlds/`), the same test as step 3 below:
+
+- **Its own:** the world produces the device independently. A factory's machines each have a spec sheet, so spec cards are its own. A restaurant guest walks a route to a table, so drawing that route is its own.
+- **A copy:** the device exists only because a reference or an earlier build had it. A fanned deck, tilted the same way and recoloured, is a copy on any site.
+
+Each owner reference lists its copy tells: its devices that must show their own source before they appear. The same test keeps builds apart from each other. A signature move, play mechanic or scene structure that an earlier build used (`references/fingerprints.md`) appears again only when the new build's world supplies it on its own; otherwise it is a repeat and fails this gate, even when both builds clear the floor.
+
 ## The brief comes first
 
 Every project has a design brief at `docs/DESIGN_BRIEF.md`, written from `references/_brief-template.md`. It records the project's own decisions so they are made once, on purpose, and so every later session builds and audits against them instead of re-deriving a look.
@@ -19,7 +32,7 @@ The layer files state properties ("a distinct silhouette per state", "one line w
 Before building a layer, decide the instance from the brief:
 
 1. State the property the layer file requires.
-2. Name the project's domain cue that supplies the instance (a real status in the product's world, the first thing an operator reads about this entity, a unit the domain measures in). List at least three candidate sources per cue, note which earlier builds in the same domain already used which, and choose an unused one.
+2. Name the project's domain cue that supplies the instance (a real status in the product's world, the first thing an operator reads about this entity, a unit the domain measures in). Start from the artefacts and standards in the sector's world file (`worlds/`). List at least three candidate sources per cue, check the World source column of `references/fingerprints.md` for what earlier builds in the same world already used, and choose an unused one.
 3. The alternatives listed in a register file are directions, not instances. If you take one, show the domain source that produces it independently.
 4. If no domain cue supplies it, the instance is a default: stop and either find the cue or ask.
 
@@ -27,6 +40,7 @@ A build that reproduces an exemplar's instances on most of its free axes is a cl
 
 ## What the brief must contain
 
+- **Sector and world**, from `docs/economy-coverage-map.md`, and the direction dealt by `tools/draw.mjs` (its seed, so it can be reproduced).
 - **Product and audience**, and what the user must feel after five seconds.
 - **Register**: one of the eight in `registers/README.md`, or a composed one with a position on every axis of its menu. Name it per surface if app and marketing differ. The register is chosen from the domain and the audience, never from what is most familiar.
 - **Mood**: three adjectives, none of them "modern", "clean" or "sleek".

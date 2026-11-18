@@ -1,0 +1,36 @@
+{
+    "axes": {
+        "neutral": ["cool", "warm", "ink-tinted", "pure", "strong-ground"],
+        "accent": ["none-ink", "one-hue", "paired", "many-with-jobs", "object-palette"],
+        "type": ["neo-grotesque", "humanist", "geometric", "rounded", "serif", "slab", "mono-led", "condensed", "two-family-contrast"],
+        "density": ["expert-high", "medium", "low", "poster"],
+        "shape": ["zero", "stepped", "one-value", "pill", "soft"],
+        "elevation": ["ladder", "hairline", "fill", "lip", "rules", "glass", "shadow", "none"],
+        "signature": ["label-system", "numeric-style", "rule-treatment", "mark-family", "document-artefact", "object-as-navigation", "physical-feedback", "motion-grammar"],
+        "chrome": ["sidebar", "top-bar", "tabs", "rail", "command-first", "masthead", "none"],
+        "economy": ["very-economical", "economical", "moderate", "expressive"]
+    },
+    "registers": {
+        "developer-tool": { "density": ["expert-high"], "elevation": ["ladder", "hairline"], "chrome": ["sidebar", "command-first"] },
+        "editorial": { "type": ["serif", "two-family-contrast"], "density": ["low"], "signature": ["object-as-navigation"] },
+        "warm-utility": { "elevation": ["shadow", "fill"], "accent": ["one-hue"], "density": ["medium"] },
+        "tactile": { "signature": ["label-system"], "elevation": ["none", "fill"], "economy": ["very-economical"] },
+        "industrial": { "neutral": ["pure", "strong-ground"], "elevation": ["rules", "none"], "shape": ["zero"] },
+        "trust": { "signature": ["numeric-style"], "accent": ["paired"], "type": ["neo-grotesque", "humanist", "geometric", "two-family-contrast"] },
+        "playful": { "accent": ["many-with-jobs"], "signature": ["physical-feedback", "mark-family"], "economy": ["expressive"] },
+        "luxury": { "economy": ["very-economical"], "elevation": ["none", "glass"], "accent": ["none-ink", "object-palette"] }
+    },
+    "worlds": {
+        "instrument-panel": ["industrial", "tactile", "developer-tool", "trust"],
+        "ledger": ["trust", "editorial", "tactile", "industrial"],
+        "live-board": ["industrial", "playful", "developer-tool", "trust"],
+        "survey-map": ["editorial", "tactile", "warm-utility", "industrial"],
+        "case-file": ["warm-utility", "trust", "editorial", "tactile"],
+        "batch-record": ["tactile", "industrial", "trust", "editorial"],
+        "service-floor": ["warm-utility", "playful", "luxury", "tactile"],
+        "site-schedule": ["industrial", "tactile", "warm-utility", "playful"],
+        "catalogue": ["luxury", "editorial", "playful", "tactile"],
+        "printed-page": ["editorial", "warm-utility", "developer-tool", "luxury"],
+        "playbill": ["playful", "editorial", "luxury", "industrial"]
+    }
+}
