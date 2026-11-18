@@ -74,11 +74,11 @@ The owner's scale is stricter than any published jury, and it is the scale this 
 | -------- | ------------- |
 | Best-selling sector templates | Third |
 | Award-winning marketing sites built as stacked bands of boxes, however polished | Third: "boxed up" |
-| A scripted stage beside a copy column, the best this repo has built | Fourth |
-| A playful, composed studio page: objects for content, pinned scenes, one moment of visitor play | Fourth |
+| A page whose stage is crafted but sits beside a conventional copy column, so page and stage never become one composition | Fourth |
+| A page inventive throughout (content as objects, scroll as choreography, play tied to the story) whose craft or world-binding stops short of the five Fifth properties | Fourth |
 | Fifth | Nothing captured yet. Above the stage build; it is not the ceiling |
 
-The playful studio page sets the floor for creativity, not the target: every build starts at that level of invention (content as objects, scroll as choreography, one moment of play tied to the story) and goes past it in its own direction. A build whose ideas are less inventive than that page's is not shown to the owner, whatever its craft. Reaching that level by borrowing that page's devices, with no source in the build's own world, is a clone (CONV-G4-2), not a pass.
+The inventive page above sets the floor for creativity, not the target: every build starts at that level of invention (content as objects, scroll as choreography, one moment of play tied to the story) and goes past it in its own direction. A build whose ideas are less inventive than that page's is not shown to the owner, whatever its craft. Reaching that level by borrowing its devices, with no source in the build's own world, is a clone (CONV-G4-2), not a pass.
 
 A critic that reads anything here above the owner's grade is too soft. Named specimens are in `references/calibration.md`, which critics never read. Never treat an earlier build as the target.
 
