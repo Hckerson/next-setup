@@ -6,11 +6,15 @@ import {
     type Node,
     type PassNode,
 } from "three/webgpu";
+import type { Camera, Scene } from "three";
 import { pass } from "three/tsl";
 
 const RENDER_PRIORITY = 1;
+const SAMPLES = 4;
 
-export const useRenderPipeline = (compose: (scene: PassNode) => Node) => {
+export const useRenderPipeline = (
+    compose: (scenePass: PassNode, scene: Scene, camera: Camera) => Node,
+) => {
     const gl = useThree((state) => state.gl);
     const scene = useThree((state) => state.scene);
     const camera = useThree((state) => state.camera);
@@ -19,7 +23,10 @@ export const useRenderPipeline = (compose: (scene: PassNode) => Node) => {
     useEffect(() => {
         if (!(gl instanceof WebGPURenderer))
             throw new Error("The render pipeline needs the stage renderer");
-        const pipeline = new RenderPipeline(gl, compose(pass(scene, camera)));
+        const pipeline = new RenderPipeline(
+            gl,
+            compose(pass(scene, camera, { samples: SAMPLES }), scene, camera),
+        );
         pipelineRef.current = pipeline;
         return () => {
             pipeline.dispose();

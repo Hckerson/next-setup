@@ -37,7 +37,7 @@ const ID_SYNTAX = [
     `Property[key.name=/^id$|Id$/] > ${DATE_NOW}`,
 ].map((selector) => ({ selector, message: ID_SOURCE }));
 
-const SKILL = "See .claude/skills/web-generations";
+const SKILL = "See .claude/skills/pagecraft";
 
 const classStrings = (pattern: string, message: string) => [
     { selector: `Literal[value=${pattern}]`, message },

@@ -4,6 +4,13 @@ import { anticipate, rebound, settle, smoother } from "@/lib/stage/ease";
 const samples = Array.from({ length: 101 }, (_, index) => index / 100);
 
 describe("ease", () => {
+    it("rebound lands on its end and never passes it, so a path ease never leaves the path", () => {
+        const ease = rebound(6, 1.2);
+        const samples = Array.from({ length: 501 }, (_, step) => ease(step / 500));
+        expect(Math.max(...samples)).toBeLessThanOrEqual(1);
+        expect(ease(1)).toBeCloseTo(1, 9);
+    });
+
     it("smoother starts at 0 and ends at 1 with zero slope at both ends", () => {
         expect(smoother(0)).toBe(0);
         expect(smoother(1)).toBe(1);

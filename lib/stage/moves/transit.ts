@@ -22,15 +22,18 @@ export const addTravel = (
     const progress = { t: 0 };
     film.fromTo(
         progress,
-        { t: 0, immediateRender: false },
+        { t: 0 },
         {
+            immediateRender: false,
             t: 1,
             duration: length,
-            ease: smoother,
+            ease: rebound(context.mass.damping, context.mass.frequency),
             onUpdate: () => {
                 actor.position.copy(curve.getPoint(progress.t));
+                if (move.face === false) return;
                 actor.rotation.y = headingAt(curve, progress.t);
-                actor.rotation.z = move.bank * turnAt(curve, progress.t, BANK_SAMPLE_STEP);
+                actor.rotation.z =
+                    move.bank * turnAt(curve, progress.t, BANK_SAMPLE_STEP);
             },
         },
         at,
@@ -47,8 +50,13 @@ export const addLift = (
     const actor = actorOf(context, move.actor);
     film.fromTo(
         actor.position,
-        { y: move.from, immediateRender: false },
-        { y: move.from + move.height, duration: length, ease: smoother },
+        { y: move.from },
+        {
+            immediateRender: false,
+            y: move.from + move.height,
+            duration: length,
+            ease: smoother,
+        },
         at,
     );
 };
@@ -63,8 +71,9 @@ export const addLand = (
     const actor = actorOf(context, move.actor);
     film.fromTo(
         actor.position,
-        { y: move.from, immediateRender: false },
+        { y: move.from },
         {
+            immediateRender: false,
             y: move.surface,
             duration: length,
             ease: rebound(context.mass.damping, context.mass.frequency),

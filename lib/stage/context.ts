@@ -6,6 +6,12 @@ export const actorOf = (context: StageContext, id: string): ActorHandle => {
     return actor;
 };
 
+export const layerOf = (actor: ActorHandle, id: string, layer: string) => {
+    const drawn = actor.drawn[layer];
+    if (!drawn) throw new Error(`The script draws an unknown layer: ${id}.${layer}`);
+    return drawn;
+};
+
 export const variantOf = (context: StageContext, id: string) => {
     const colour = context.variants[id];
     if (!colour) throw new Error(`The script names an unknown variant: ${id}`);

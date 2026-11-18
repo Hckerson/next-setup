@@ -21,8 +21,9 @@ export const addEnter = (
     const actor = actorOf(context, move.actor);
     film.fromTo(
         actor.position,
-        { ...place(move.from), immediateRender: false },
+        { ...place(move.from) },
         {
+            immediateRender: false,
             ...place(move.to),
             duration: length,
             ease: rebound(context.mass.damping, context.mass.frequency),
@@ -31,8 +32,13 @@ export const addEnter = (
     );
     film.fromTo(
         actor.presence,
-        { value: 0, immediateRender: false },
-        { value: 1, duration: length * PRESENCE_SHARE, ease: "none" },
+        { value: 0 },
+        {
+            immediateRender: false,
+            value: 1,
+            duration: length * PRESENCE_SHARE,
+            ease: "none",
+        },
         at,
     );
 };
@@ -47,8 +53,9 @@ export const addExit = (
     const actor = actorOf(context, move.actor);
     film.fromTo(
         actor.position,
-        { ...place(move.from), immediateRender: false },
+        { ...place(move.from) },
         {
+            immediateRender: false,
             ...place(move.to),
             duration: length,
             ease: anticipate(context.mass.anticipation),
@@ -57,8 +64,13 @@ export const addExit = (
     );
     film.fromTo(
         actor.presence,
-        { value: 1, immediateRender: false },
-        { value: 0, duration: length * PRESENCE_SHARE, ease: "none" },
+        { value: 1 },
+        {
+            immediateRender: false,
+            value: 0,
+            duration: length * PRESENCE_SHARE,
+            ease: "none",
+        },
         at + length * (1 - PRESENCE_SHARE),
     );
 };

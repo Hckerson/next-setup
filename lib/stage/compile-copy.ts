@@ -1,5 +1,5 @@
 import type { gsap } from "gsap";
-import { COPY_FADE, COPY_RISE } from "@/lib/stage/constants";
+import { COPY_ENTRANCES, COPY_FADE, type CopyEntrance } from "@/lib/stage/constants";
 import type { Script } from "@/lib/types";
 
 const SHOT_ATTRIBUTE = "data-shot";
@@ -8,26 +8,36 @@ export const compileCopy = (
     film: gsap.core.Timeline,
     script: Script,
     root: HTMLElement,
+    entrance: CopyEntrance = "rise",
 ) => {
-    const last = script.shots.filter((shot) => shot.copy).at(-1);
-    script.shots.forEach((shot) => {
-        if (!shot.copy) return;
+    const { from, to, duration } = COPY_ENTRANCES[entrance];
+    const cued = script.shots
+        .filter((shot) => shot.copy)
+        .map((shot) => ({ shot, at: shot.at + shot.length * (shot.copyAt ?? 0) }));
+    cued.forEach(({ shot, at }, index) => {
         const element = root.querySelector<HTMLElement>(
             `[${SHOT_ATTRIBUTE}="${shot.id}"]`,
         );
         if (!element) return;
-        if (shot.at > 0)
+        if (at > 0)
             film.fromTo(
                 element,
-                { autoAlpha: 0, y: COPY_RISE, immediateRender: false },
-                { autoAlpha: 1, y: 0, duration: COPY_FADE, ease: "none" },
-                shot.at,
+                { ...from },
+                {
+                    immediateRender: false,
+                    ...to,
+                    duration,
+                    ease: "none",
+                },
+                at,
             );
-        if (shot !== last)
+        else film.set(element, { ...to, immediateRender: true }, 0);
+        const next = cued[index + 1];
+        if (next)
             film.to(
                 element,
                 { autoAlpha: 0, duration: COPY_FADE, ease: "none" },
-                shot.at + shot.length - COPY_FADE,
+                next.at - COPY_FADE,
             );
     });
 };
