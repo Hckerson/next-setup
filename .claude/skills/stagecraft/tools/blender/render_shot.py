@@ -1,5 +1,5 @@
 import json
-import math
+import math as math_module
 import os
 import sys
 import time
@@ -32,7 +32,94 @@ def linear(value):
     return [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in srgb] + [1]
 
 
-def principled(name, spec):
+def value_socket(nodes, socket):
+    if socket.links:
+        return socket.links[0].from_socket
+    node = nodes.new("ShaderNodeValue")
+    node.outputs[0].default_value = socket.default_value
+    return node.outputs[0]
+
+
+def math(nodes, links, operation, first, second=None):
+    node = nodes.new("ShaderNodeMath")
+    node.operation = operation
+    for slot, operand in enumerate((first, second)):
+        if operand is None:
+            continue
+        if isinstance(operand, (int, float)):
+            node.inputs[slot].default_value = operand
+        else:
+            links.new(operand, node.inputs[slot])
+    return node.outputs[0]
+
+
+def projected(nodes, links, path, tile_mm, offset_mm=(0, 0, 0)):
+    coordinates = nodes.new("ShaderNodeTexCoord")
+    mapping = nodes.new("ShaderNodeMapping")
+    mapping.inputs["Scale"].default_value = [1 / (tile_mm * MM)] * 3
+    mapping.inputs["Location"].default_value = [value / tile_mm for value in offset_mm]
+    links.new(coordinates.outputs["Object"], mapping.inputs["Vector"])
+    texture = nodes.new("ShaderNodeTexImage")
+    texture.image = bpy.data.images.load(os.path.join(BASE, path))
+    texture.image.colorspace_settings.name = "Non-Color"
+    texture.projection = "BOX"
+    texture.projection_blend = 0.2
+    links.new(mapping.outputs["Vector"], texture.inputs["Vector"])
+    return texture.outputs["Color"]
+
+
+def overlays(material, shader, layers):
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    socket = shader.inputs["Roughness"]
+    source = value_socket(nodes, socket)
+    for layer in layers:
+        scan = projected(nodes, links, layer["path"], layer["tileMm"], layer.get("offsetMm", (0, 0, 0)))
+        ramp = nodes.new("ShaderNodeMapRange")
+        ramp.inputs["From Min"].default_value, ramp.inputs["From Max"].default_value = layer.get("from", [0, 1])
+        ramp.inputs["To Max"].default_value = layer["amount"]
+        links.new(scan, ramp.inputs["Value"])
+        added = math(nodes, links, "ADD", source, ramp.outputs["Result"])
+        added.node.use_clamp = True
+        source = added
+    links.new(source, socket)
+
+
+def flutes(material, shader, size, centre, spec):
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    thin = int(numpy.argmin(size[:2]))
+    along = 1 - thin
+    coordinates = nodes.new("ShaderNodeTexCoord")
+    position = nodes.new("ShaderNodeSeparateXYZ")
+    normal = nodes.new("ShaderNodeSeparateXYZ")
+    links.new(coordinates.outputs["Object"], position.inputs["Vector"])
+    links.new(coordinates.outputs["Normal"], normal.inputs["Vector"])
+    half = size[thin] * MM / 2
+    across = math(nodes, links, "DIVIDE", math(nodes, links, "SUBTRACT", position.outputs[thin], centre[thin] * MM), half)
+    phase = math(nodes, links, "MULTIPLY", position.outputs[along], 2 * math_module.pi / (spec["pitchMm"] * MM))
+    medium = math(nodes, links, "MULTIPLY", math(nodes, links, "SINE", phase), 0.72)
+    gap = math(nodes, links, "GREATER_THAN", math(nodes, links, "ABSOLUTE", math(nodes, links, "SUBTRACT", across, medium)), 0.12)
+    inner = math(nodes, links, "LESS_THAN", math(nodes, links, "ABSOLUTE", across), 0.8)
+    edge = math(nodes, links, "LESS_THAN", math(nodes, links, "ABSOLUTE", normal.outputs[thin]), 0.5)
+    mask = math(nodes, links, "MULTIPLY", math(nodes, links, "MULTIPLY", gap, inner), edge)
+    mix = nodes.new("ShaderNodeMix")
+    mix.data_type = "RGBA"
+    links.new(value_socket_color(nodes, shader.inputs["Base Color"]), mix.inputs["A"])
+    mix.inputs["B"].default_value = linear(spec["hollow"])
+    links.new(mask, mix.inputs["Factor"])
+    links.new(mix.outputs["Result"], shader.inputs["Base Color"])
+
+
+def value_socket_color(nodes, socket):
+    if socket.links:
+        return socket.links[0].from_socket
+    node = nodes.new("ShaderNodeRGB")
+    node.outputs[0].default_value = socket.default_value
+    return node.outputs[0]
+
+
+def principled(name, spec, layered=True):
     material = bpy.data.materials.new(name)
     material.use_nodes = True
     shader = material.node_tree.nodes["Principled BSDF"]
@@ -59,6 +146,7 @@ def principled(name, spec):
         links.new(mapping.outputs["Vector"], texture.inputs["Vector"])
         if key == "normal":
             normal = nodes.new("ShaderNodeNormalMap")
+            normal.inputs["Strength"].default_value = spec.get("normalStrength", 1)
             links.new(texture.outputs["Color"], normal.inputs["Color"])
             links.new(normal.outputs["Normal"], shader.inputs["Normal"])
         elif key == "color" and spec.get("tint"):
@@ -81,9 +169,14 @@ def principled(name, spec):
         bump.invert = True
         links.new(cells.outputs["Distance"], bump.inputs["Height"])
         links.new(bump.outputs["Normal"], shader.inputs["Normal"])
+    if spec.get("emission"):
+        shader.inputs["Emission Color"].default_value = linear(spec["emission"])
+        shader.inputs["Emission Strength"].default_value = spec.get("emissionStrength", 1)
     if spec.get("transmission"):
         shader.inputs["Transmission Weight"].default_value = spec["transmission"]
         shader.inputs["IOR"].default_value = spec.get("ior", 1.5)
+    if layered:
+        overlays(material, shader, spec.get("overlays", []))
     return material, shader
 
 
@@ -99,7 +192,7 @@ def detail_image(detail, raw):
 
 
 def surface_material(name, spec, image):
-    material, shader = principled(name, spec)
+    material, shader = principled(name, spec, layered=False)
     nodes = material.node_tree.nodes
     links = material.node_tree.links
     texture = nodes.new("ShaderNodeTexImage")
@@ -117,6 +210,7 @@ def surface_material(name, spec, image):
     ramp.inputs["To Max"].default_value = spec.get("rawRoughness", spec["roughness"])
     links.new(channels.outputs["Green"], ramp.inputs["Value"])
     links.new(ramp.outputs["Result"], shader.inputs["Roughness"])
+    overlays(material, shader, spec.get("overlays", []))
     return material
 
 
@@ -126,7 +220,8 @@ def heightfield(spec, base):
     heights = toolmarks.heights(marks)
     step = spec.get("meshStep", 5)
     rows, columns = heights.shape[0] // step, heights.shape[1] // step
-    coarse = heights[:rows * step, :columns * step].reshape(rows, step, columns, step).mean(axis=(1, 3))
+    raw = heights > marks["depthOfCut"] / 2
+    coarse = raw[:rows * step, :columns * step].reshape(rows, step, columns, step).mean(axis=(1, 3)) * marks["depthOfCut"]
     size = marks["sizeMm"]
     xs = numpy.linspace(0, size[0], columns)
     ys = numpy.linspace(0, size[1], rows)
@@ -159,7 +254,6 @@ def heightfield(spec, base):
     mesh.polygons.foreach_set("material_index", wall.astype(numpy.int32))
     obj = bpy.data.objects.new(spec["name"], mesh)
     bpy.context.collection.objects.link(obj)
-    raw = heights > marks["depthOfCut"] / 2
     detail = heights - raw * marks["depthOfCut"]
     obj.data.materials.append(surface_material(spec["name"], spec["material"], detail_image(detail, raw)))
     obj.data.materials.append(principled(spec["name"] + "-wall", spec.get("wallMaterial", spec["material"]))[0])
@@ -175,8 +269,14 @@ def box(spec):
     bpy.ops.object.transform_apply(scale=True)
     cutters = []
     for hole in spec.get("holes", []):
-        bpy.ops.mesh.primitive_cylinder_add(vertices=128, radius=hole["diameterMm"] / 2 * MM, depth=1, location=mm(hole["centreMm"] + [0]))
+        bpy.ops.mesh.primitive_cylinder_add(vertices=512, radius=hole["diameterMm"] / 2 * MM, depth=1, location=mm(hole["centreMm"] + [0]))
         cutters.append(bpy.context.active_object)
+        if hole.get("chamferMm"):
+            chamfer = hole["chamferMm"]
+            radius = hole["diameterMm"] / 2
+            bpy.ops.mesh.primitive_cone_add(vertices=512, radius1=radius * MM, radius2=(radius + 2 * chamfer) * MM, depth=2 * chamfer * MM,
+                                            location=mm(hole["centreMm"] + [hole["topMm"]]))
+            cutters.append(bpy.context.active_object)
     for pocket in spec.get("pockets", []):
         bpy.ops.mesh.primitive_cube_add(size=1)
         cutter = bpy.context.active_object
@@ -189,16 +289,20 @@ def box(spec):
         bpy.context.view_layer.objects.active = obj
         bpy.ops.object.modifier_apply(modifier="hole")
         bpy.data.objects.remove(cutter)
+    centre = Vector((0, 0, 0))
     if spec.get("hingeMm"):
         hinge = mm(spec["hingeMm"])
+        centre = (obj.location - hinge) / MM
         obj.data.transform(Matrix.Translation(obj.location - hinge))
         obj.location = hinge
-        obj.rotation_euler = [math.radians(angle) for angle in spec.get("rotationDeg", [0, 0, 0])]
+        obj.rotation_euler = [math_module.radians(angle) for angle in spec.get("rotationDeg", [0, 0, 0])]
     if spec.get("bevelMm"):
         bevel = obj.modifiers.new("bevel", "BEVEL")
         bevel.width = spec["bevelMm"] * MM
         bevel.segments = 3
-    material, _ = principled(spec["name"], spec["material"])
+    material, shader = principled(spec["name"], spec["material"])
+    if spec["material"].get("flutes"):
+        flutes(material, shader, spec["sizeMm"], centre, spec["material"]["flutes"])
     obj.data.materials.append(material)
     return obj
 
@@ -206,13 +310,33 @@ def box(spec):
 def round_solid(spec):
     if spec["type"] == "sphere":
         bpy.ops.mesh.primitive_uv_sphere_add(segments=96, ring_count=48, radius=spec["diameterMm"] / 2 * MM)
+    elif spec["type"] == "cone":
+        bpy.ops.mesh.primitive_cone_add(vertices=spec.get("segments", 512), radius1=spec["diameterMm"] / 2 * MM,
+                                        radius2=spec["topDiameterMm"] / 2 * MM, depth=spec["lengthMm"] * MM,
+                                        end_fill_type="NGON" if spec.get("capped", True) else "NOTHING")
     else:
-        bpy.ops.mesh.primitive_cylinder_add(vertices=spec.get("segments", 128), radius=spec["diameterMm"] / 2 * MM,
+        bpy.ops.mesh.primitive_cylinder_add(vertices=spec.get("segments", 512), radius=spec["diameterMm"] / 2 * MM,
                                             depth=spec["lengthMm"] * MM, end_fill_type="NGON" if spec.get("capped", True) else "NOTHING")
     obj = bpy.context.active_object
     obj.name = spec["name"]
     obj.location = mm(spec["centreMm"])
     bpy.ops.object.shade_smooth()
+    material, _ = principled(spec["name"], spec["material"])
+    obj.data.materials.append(material)
+    return obj
+
+
+def text(spec):
+    curve = bpy.data.curves.new(spec["name"], "FONT")
+    curve.body = spec["body"]
+    curve.size = spec["sizeMm"] * MM
+    curve.align_x = spec.get("align", "LEFT")
+    curve.space_line = spec.get("lineSpacing", 1)
+    curve.extrude = spec.get("extrudeMm", 0) * MM
+    obj = bpy.data.objects.new(spec["name"], curve)
+    bpy.context.collection.objects.link(obj)
+    obj.location = mm(spec["positionMm"])
+    obj.rotation_euler = [math_module.radians(angle) for angle in spec.get("rotationDeg", [0, 0, 0])]
     material, _ = principled(spec["name"], spec["material"])
     obj.data.materials.append(material)
     return obj
@@ -224,9 +348,13 @@ def aim(obj, target):
 
 
 def light(spec):
-    data = bpy.data.lights.new(spec["name"], "AREA")
-    data.shape = "RECTANGLE"
-    data.size, data.size_y = spec["sizeMm"][0] * MM, spec["sizeMm"][1] * MM
+    if spec.get("kind") == "sun":
+        data = bpy.data.lights.new(spec["name"], "SUN")
+        data.angle = math_module.radians(spec["angleDeg"])
+    else:
+        data = bpy.data.lights.new(spec["name"], "AREA")
+        data.shape = "RECTANGLE"
+        data.size, data.size_y = spec["sizeMm"][0] * MM, spec["sizeMm"][1] * MM
     data.energy = spec["watts"]
     data.use_nodes = True
     nodes = data.node_tree.nodes
@@ -237,7 +365,7 @@ def light(spec):
     bpy.context.collection.objects.link(obj)
     obj.location = mm(spec["positionMm"])
     aim(obj, spec["aimMm"])
-    obj.rotation_euler.rotate_axis("Z", math.radians(spec.get("rollDeg", 0)))
+    obj.rotation_euler.rotate_axis("Z", math_module.radians(spec.get("rollDeg", 0)))
 
 
 def world(spec, base):
@@ -249,7 +377,7 @@ def world(spec, base):
     environment = nodes.new("ShaderNodeTexEnvironment")
     environment.image = bpy.data.images.load(os.path.join(base, spec["path"]))
     mapping = nodes.new("ShaderNodeMapping")
-    mapping.inputs["Rotation"].default_value = (0, 0, math.radians(spec.get("rotationDeg", 0)))
+    mapping.inputs["Rotation"].default_value = (0, 0, math_module.radians(spec.get("rotationDeg", 0)))
     coordinates = nodes.new("ShaderNodeTexCoord")
     links.new(coordinates.outputs["Generated"], mapping.inputs["Vector"])
     links.new(mapping.outputs["Vector"], environment.inputs["Vector"])
@@ -279,7 +407,8 @@ def render(spec, out):
     scene.cycles.samples = spec.get("samples", 128)
     scene.cycles.use_denoising = True
     scene.render.resolution_x, scene.render.resolution_y = spec["size"]
-    scene.render.resolution_percentage = 100
+    scene.render.resolution_percentage = int(100 * spec.get("supersample", 1))
+    scene.cycles.filter_width = spec.get("filterPx", 1.5) * spec.get("supersample", 1)
     scene.view_settings.view_transform = spec.get("view", "AgX")
     scene.view_settings.look = spec.get("look", "AgX - Medium High Contrast")
     scene.view_settings.exposure = spec.get("exposure", 0)
@@ -297,7 +426,7 @@ def main():
         shot = json.load(handle)
     bpy.ops.wm.read_factory_settings(use_empty=True)
     for spec in shot["objects"]:
-        {"heightfield": lambda: heightfield(spec, base), "box": lambda: box(spec)}.get(spec["type"], lambda: round_solid(spec))()
+        {"heightfield": lambda: heightfield(spec, base), "box": lambda: box(spec), "text": lambda: text(spec)}.get(spec["type"], lambda: round_solid(spec))()
     for spec in shot["lights"]:
         light(spec)
     world(shot["world"], base)
