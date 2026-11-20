@@ -71,7 +71,18 @@
       "material": {
         "color": "#c9ccce",
         "metalness": 1,
-        "roughness": 0.28
+        "roughness": 0.28,
+        "overlays": [
+          {
+            "path": "../Fingerprints002/Fingerprints002_2K-JPG_Roughness.jpg",
+            "tileMm": 150,
+            "from": [
+              0.25,
+              0.45
+            ],
+            "amount": 0.15
+          }
+        ]
       },
       "bevelMm": 1
     },
@@ -79,24 +90,25 @@
       "type": "box",
       "name": "box-bottom",
       "minMm": [
-        -90,
-        -65,
+        -87,
+        -62,
         53
       ],
       "sizeMm": [
-        180,
-        130,
+        174,
+        124,
         3
       ],
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
-        }
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
+        },
+        "normalStrength": 0.35
       }
     },
     {
@@ -115,13 +127,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
         },
-        "tint": "#b9bcc0"
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5
     },
@@ -141,12 +157,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
-        }
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
+        },
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5
     },
@@ -166,12 +187,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
-        }
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
+        },
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5
     },
@@ -191,12 +217,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
-        }
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
+        },
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5
     },
@@ -251,7 +282,32 @@
         "metalness": 1,
         "roughness": 0.13,
         "rawRoughness": 0.34,
-        "bumpStrength": 1
+        "bumpStrength": 1,
+        "overlays": [
+          {
+            "path": "../Fingerprints002/Fingerprints002_2K-JPG_Roughness.jpg",
+            "tileMm": 150,
+            "from": [
+              0.25,
+              0.45
+            ],
+            "amount": 0.2,
+            "offsetMm": [
+              30,
+              10,
+              0
+            ]
+          },
+          {
+            "path": "../SurfaceImperfections016/SurfaceImperfections016_2K-JPG_Roughness.jpg",
+            "tileMm": 200,
+            "from": [
+              0.71,
+              0.76
+            ],
+            "amount": 0.15
+          }
+        ]
       },
       "wallMaterial": {
         "color": "#a9adb1",
@@ -264,7 +320,7 @@
             30,
             20
           ],
-          "diameterMm": 20
+          "diameterMm": 21
         }
       ]
     },
@@ -293,7 +349,9 @@
             -19.700000000000003,
             0.3000000000000007
           ],
-          "diameterMm": 20
+          "diameterMm": 20,
+          "chamferMm": 0.5,
+          "topMm": 120.5
         }
       ]
     },
@@ -303,10 +361,10 @@
       "centreMm": [
         -19.700000000000003,
         0.3000000000000007,
-        110.75
+        110.5
       ],
       "diameterMm": 19.98,
-      "lengthMm": 19.5,
+      "lengthMm": 19,
       "capped": false,
       "material": {
         "color": "#cfd2d5",
@@ -330,13 +388,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
         },
-        "tint": "#b9bcc0"
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5,
       "hingeMm": [
@@ -366,13 +428,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
         },
-        "tint": "#b9bcc0"
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5,
       "hingeMm": [
@@ -402,13 +468,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
         },
-        "tint": "#b9bcc0"
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5,
       "hingeMm": [
@@ -438,13 +508,17 @@
       "material": {
         "color": "#ffffff",
         "roughness": 0.8,
-        "tileMm": 300,
+        "tileMm": 400,
         "maps": {
-          "color": "../Cardboard004/Cardboard004_2K-JPG_Color.jpg",
-          "roughness": "../Cardboard004/Cardboard004_2K-JPG_Roughness.jpg",
-          "normal": "../Cardboard004/Cardboard004_2K-JPG_NormalGL.jpg"
+          "color": "../Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "roughness": "../Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "normal": "../Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg"
         },
-        "tint": "#b9bcc0"
+        "flutes": {
+          "pitchMm": 6.5,
+          "hollow": "#3a2a18"
+        },
+        "normalStrength": 0.35
       },
       "bevelMm": 0.5,
       "hingeMm": [
@@ -476,26 +550,26 @@
         1200,
         120
       ],
-      "watts": 30,
+      "watts": 6,
       "kelvin": 4300
     },
     {
-      "name": "side-window",
+      "name": "dispatch-window",
       "positionMm": [
-        600,
-        -350,
-        260
+        1100,
+        -300,
+        420
       ],
       "aimMm": [
         -20,
         0,
-        110
+        90
       ],
       "sizeMm": [
-        400,
-        600
+        250,
+        450
       ],
-      "watts": 28,
+      "watts": 90,
       "kelvin": 5600
     }
   ],
@@ -511,9 +585,9 @@
       300
     ],
     "aimMm": [
-      -10,
+      -75,
       -60,
-      70
+      80
     ],
     "focusMm": [
       -20,
@@ -528,7 +602,9 @@
       1600,
       900
     ],
-    "samples": 96,
-    "exposure": 0
+    "samples": 64,
+    "exposure": 0,
+    "supersample": 2,
+    "filterPx": 1.5
   }
 }

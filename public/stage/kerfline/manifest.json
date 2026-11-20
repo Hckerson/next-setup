@@ -50,6 +50,96 @@
           "bytes": 5995598
         }
       ]
+    },
+    {
+      "id": "Fingerprints002",
+      "name": "Fingerprints002",
+      "type": "textures",
+      "source": "ambientCG",
+      "licence": "CC0",
+      "authors": [
+        "Lennart Demes"
+      ],
+      "page": "https://ambientcg.com/view?id=Fingerprints002",
+      "resolution": "2K",
+      "format": "jpg",
+      "files": [
+        {
+          "map": "Color",
+          "file": "Fingerprints002/Fingerprints002_2K-JPG_Color.jpg",
+          "bytes": 3297805
+        },
+        {
+          "map": "Roughness",
+          "file": "Fingerprints002/Fingerprints002_2K-JPG_Roughness.jpg",
+          "bytes": 2152660
+        },
+        {
+          "map": "NormalGL",
+          "file": "Fingerprints002/Fingerprints002_2K-JPG_NormalGL.jpg",
+          "bytes": 4105218
+        }
+      ]
+    },
+    {
+      "id": "SurfaceImperfections016",
+      "name": "SurfaceImperfections016",
+      "type": "textures",
+      "source": "ambientCG",
+      "licence": "CC0",
+      "authors": [
+        "Lennart Demes"
+      ],
+      "page": "https://ambientcg.com/view?id=SurfaceImperfections016",
+      "resolution": "2K",
+      "format": "jpg",
+      "files": [
+        {
+          "map": "Color",
+          "file": "SurfaceImperfections016/SurfaceImperfections016_2K-JPG_Color.jpg",
+          "bytes": 4826528
+        },
+        {
+          "map": "Roughness",
+          "file": "SurfaceImperfections016/SurfaceImperfections016_2K-JPG_Roughness.jpg",
+          "bytes": 2393935
+        },
+        {
+          "map": "NormalGL",
+          "file": "SurfaceImperfections016/SurfaceImperfections016_2K-JPG_NormalGL.jpg",
+          "bytes": 7658319
+        }
+      ]
+    },
+    {
+      "id": "Cardboard002",
+      "name": "Cardboard002",
+      "type": "textures",
+      "source": "ambientCG",
+      "licence": "CC0",
+      "authors": [
+        "Lennart Demes"
+      ],
+      "page": "https://ambientcg.com/view?id=Cardboard002",
+      "resolution": "2K",
+      "format": "jpg",
+      "files": [
+        {
+          "map": "Color",
+          "file": "Cardboard002/Cardboard002_2K-JPG_Color.jpg",
+          "bytes": 5071950
+        },
+        {
+          "map": "Roughness",
+          "file": "Cardboard002/Cardboard002_2K-JPG_Roughness.jpg",
+          "bytes": 2524786
+        },
+        {
+          "map": "NormalGL",
+          "file": "Cardboard002/Cardboard002_2K-JPG_NormalGL.jpg",
+          "bytes": 6080466
+        }
+      ]
     }
   ]
 }

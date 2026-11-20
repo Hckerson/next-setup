@@ -11,7 +11,27 @@
         "metalness": 1,
         "roughness": 0.13,
         "rawRoughness": 0.34,
-        "bumpStrength": 1
+        "bumpStrength": 1,
+        "overlays": [
+          {
+            "path": "../Fingerprints002/Fingerprints002_2K-JPG_Roughness.jpg",
+            "tileMm": 150,
+            "from": [
+              0.12,
+              0.45
+            ],
+            "amount": 0.12
+          },
+          {
+            "path": "../SurfaceImperfections016/SurfaceImperfections016_2K-JPG_Roughness.jpg",
+            "tileMm": 200,
+            "from": [
+              0.71,
+              0.76
+            ],
+            "amount": 0.25
+          }
+        ]
       },
       "wallMaterial": {
         "color": "#a9adb1",
@@ -24,7 +44,7 @@
             30,
             20
           ],
-          "diameterMm": 20
+          "diameterMm": 21
         }
       ]
     },
@@ -48,7 +68,9 @@
             30,
             20
           ],
-          "diameterMm": 20
+          "diameterMm": 20,
+          "chamferMm": 0.5,
+          "topMm": 19.5
         }
       ],
       "material": {
@@ -63,10 +85,10 @@
       "centreMm": [
         30,
         20,
-        9.75
+        9.5
       ],
       "diameterMm": 19.98,
-      "lengthMm": 19.5,
+      "lengthMm": 19,
       "capped": false,
       "material": {
         "color": "#cfd2d5",
@@ -95,55 +117,137 @@
     },
     {
       "type": "sphere",
-      "name": "ruby",
+      "name": "probe-ruby",
       "centreMm": [
-        38.5,
+        39,
         20,
         14
       ],
-      "diameterMm": 3,
       "material": {
-        "color": "#b3122a",
-        "metalness": 0,
+        "color": "#a8102a",
         "roughness": 0.03,
         "transmission": 1,
         "ior": 1.77
-      }
+      },
+      "diameterMm": 2
     },
     {
       "type": "cylinder",
-      "name": "stylus",
+      "name": "probe-stem",
       "centreMm": [
-        38.5,
+        39,
         20,
-        29.5
+        19
       ],
-      "diameterMm": 1.5,
-      "lengthMm": 30,
       "material": {
-        "color": "#8a8d90",
-        "metalness": 0.85,
-        "roughness": 0.22
-      }
+        "color": "#3b3d40",
+        "metalness": 0.5,
+        "roughness": 0.42
+      },
+      "diameterMm": 1.2,
+      "lengthMm": 10
     },
     {
-      "type": "cylinder",
-      "name": "extension",
+      "type": "cone",
+      "name": "probe-taper",
       "centreMm": [
-        38.5,
+        39,
         20,
-        52.5
+        25
       ],
-      "diameterMm": 4,
-      "lengthMm": 16,
       "material": {
-        "color": "#b9bcbf",
+        "color": "#aeb1b4",
         "metalness": 1,
-        "roughness": 0.15
-      }
+        "roughness": 0.22
+      },
+      "diameterMm": 1.2,
+      "topDiameterMm": 3,
+      "lengthMm": 2
+    },
+    {
+      "type": "cylinder",
+      "name": "probe-body",
+      "centreMm": [
+        39,
+        20,
+        32
+      ],
+      "material": {
+        "color": "#aeb1b4",
+        "metalness": 1,
+        "roughness": 0.22
+      },
+      "diameterMm": 3,
+      "lengthMm": 12
+    },
+    {
+      "type": "cylinder",
+      "name": "probe-joint",
+      "centreMm": [
+        39,
+        20,
+        38.75
+      ],
+      "material": {
+        "color": "#8d9093",
+        "metalness": 1,
+        "roughness": 0.3
+      },
+      "diameterMm": 5,
+      "lengthMm": 1.5
+    },
+    {
+      "type": "cylinder",
+      "name": "probe-ring",
+      "centreMm": [
+        39,
+        20,
+        40.25
+      ],
+      "material": {
+        "color": "#c9ccce",
+        "metalness": 1,
+        "roughness": 0.12
+      },
+      "diameterMm": 13.4,
+      "lengthMm": 1.5
+    },
+    {
+      "type": "cylinder",
+      "name": "probe-module",
+      "centreMm": [
+        39,
+        20,
+        58
+      ],
+      "material": {
+        "color": "#151618",
+        "roughness": 0.38
+      },
+      "diameterMm": 13.2,
+      "lengthMm": 34
     }
   ],
   "lights": [
+    {
+      "name": "inspection-luminaire",
+      "positionMm": [
+        -260,
+        240,
+        260
+      ],
+      "aimMm": [
+        35,
+        20,
+        15
+      ],
+      "sizeMm": [
+        200,
+        40
+      ],
+      "watts": 14,
+      "kelvin": 5000
+    },
     {
       "name": "inspection-overhead",
       "positionMm": [
@@ -160,27 +264,8 @@
         600,
         600
       ],
-      "watts": 12,
+      "watts": 2,
       "kelvin": 5000
-    },
-    {
-      "name": "window-side",
-      "positionMm": [
-        260,
-        -120,
-        160
-      ],
-      "aimMm": [
-        38.5,
-        20,
-        14
-      ],
-      "sizeMm": [
-        200,
-        300
-      ],
-      "watts": 8,
-      "kelvin": 5600
     }
   ],
   "world": {
@@ -195,9 +280,9 @@
       78
     ],
     "aimMm": [
-      36,
-      20,
-      15
+      48,
+      24,
+      11
     ],
     "focusMm": [
       38.5,
@@ -212,7 +297,9 @@
       1600,
       900
     ],
-    "samples": 96,
-    "exposure": -0.3
+    "samples": 64,
+    "exposure": -0.3,
+    "supersample": 2,
+    "filterPx": 1.5
   }
 }

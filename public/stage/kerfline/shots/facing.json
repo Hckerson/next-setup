@@ -11,7 +11,18 @@
         "metalness": 1,
         "roughness": 0.13,
         "rawRoughness": 0.28,
-        "bumpStrength": 1
+        "bumpStrength": 1,
+        "overlays": [
+          {
+            "path": "../SurfaceImperfections016/SurfaceImperfections016_2K-JPG_Roughness.jpg",
+            "tileMm": 200,
+            "from": [
+              0.71,
+              0.76
+            ],
+            "amount": 0.15
+          }
+        ]
       },
       "wallMaterial": {
         "color": "#a9adb1",
@@ -103,9 +114,9 @@
     {
       "name": "machine-lamp",
       "positionMm": [
-        190,
-        45,
-        42
+        150,
+        70,
+        34
       ],
       "aimMm": [
         33,
@@ -113,17 +124,17 @@
         19.6
       ],
       "sizeMm": [
-        30,
-        160
+        12,
+        70
       ],
-      "watts": 1.5,
+      "watts": 1.2,
       "kelvin": 6000,
       "rollDeg": 0
     }
   ],
   "world": {
     "path": "../aircraft_workshop_01/aircraft_workshop_01_2k.hdr",
-    "strength": 0.12,
+    "strength": 0.03,
     "rotationDeg": 60
   },
   "camera": {
@@ -133,8 +144,8 @@
       87
     ],
     "aimMm": [
-      30,
-      8,
+      22,
+      14,
       19.6
     ],
     "lensMm": 100,
@@ -145,7 +156,9 @@
       1600,
       900
     ],
-    "samples": 96,
-    "exposure": 1.6
+    "samples": 64,
+    "exposure": 1.9,
+    "supersample": 2,
+    "filterPx": 1.5
   }
 }
